@@ -1,0 +1,15 @@
+{
+  "name": "hhvm/hsl-experimental",
+  "description": "The Hack Standard Library - Experimental Additions",
+  "license": "MIT",
+  "require-dev": {
+    "91carriage/phpunit-hhi": "^5.7",
+    "phpunit/phpunit": "^5.7",
+    "facebook/fbexpect": "^0.4"
+  },
+  "require": {
+    "hhvm": "^3.23.2",
+    "hhvm/hhvm-autoload": "^1.4",
+    "hhvm/hsl": "^1.4"
+  }
+}
