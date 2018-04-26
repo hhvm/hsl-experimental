@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Time_EXPERIMENTAL;
 
-use HH\Lib\{Math, Str};
+use namespace HH\Lib\{Math, Str};
 
 /**
  * Returns an oqaque resource representing the timezone, or throws if the
