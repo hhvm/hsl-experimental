@@ -68,6 +68,14 @@ function random_string(
   return $ret;
 }
 
+function make_temporary_file(): string {
+  $temp_dir = \sys_get_temp_dir();
+  invariant($temp_dir, 'Unable to determine system temporary directory');
+  $file = \tempnam($temp_dir, \get_current_user());
+  invariant($file !== false, 'Failed to create temporary file');
+  return $file;
+}
+
 const string ALPHABET_BASE64 =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 const string ALPHABET_BASE64_URL =
