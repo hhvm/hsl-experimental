@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Time_EXPERIMENTAL;
+namespace HH\Lib\Experimental\Time;
 
 /**
  * Returns a Unix timestamp representing the instant given by the calendar/clock

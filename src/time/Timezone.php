@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Time_EXPERIMENTAL;
+namespace HH\Lib\Experimental\Time;
 
 use namespace HH\Lib\{Math, Str};
 

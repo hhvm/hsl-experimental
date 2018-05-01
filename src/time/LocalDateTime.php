@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Time_EXPERIMENTAL;
+namespace HH\Lib\Experimental\Time;
 
 // <<__Const>>
 final class LocalDateTime extends DateTimeBase {
