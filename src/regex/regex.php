@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Regex;
+namespace HH\Lib\Experimental\Regex;
 
 use namespace HH\Lib\Str;
 

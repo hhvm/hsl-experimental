@@ -12,7 +12,7 @@
  * @emails oncall+hack
  */
 
-use namespace HH\Lib\{C, Regex, Str};
+use namespace HH\Lib\{C, Experimental\Regex, Str};
 
 use function Facebook\FBExpect\expect;
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
