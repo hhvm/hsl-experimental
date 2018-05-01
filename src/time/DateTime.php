@@ -47,16 +47,19 @@ final class DateTime extends DateTimeBase {
    */
   public static function fromTimestamp(
     Timezone $timezone,
-    int $unix_timestamp,
+    Timestamp<Unix> $timestamp,
   ): this {
-    return static::__createFromTimestamp($timezone, $unix_timestamp);
+    return static::__createFromTimestamp(
+      $timezone,
+      timestamp_to_ns($timestamp),
+    );
   }
 
   /**
    * Returns this DateTime's Unix timestamp.
    */
-  public function getTimestamp(): int {
-    return $this->unixTimestamp;
+  public function getTimestamp(): Timestamp<Unix> {
+    return timestamp_from_ns($this->unixTimestamp);
   }
 
   /**
@@ -72,6 +75,14 @@ final class DateTime extends DateTimeBase {
    */
   public function withTimezone(Timezone $timezone): this {
     return static::__createFromTimestamp($timezone, $this->unixTimestamp);
+  }
+
+  /**
+   * Returns a new DateTime that represents the given instant viewed from
+   * this DateTime's Timezone.
+   */
+  public function withTimestamp(Timestamp<Unix> $timestamp): this {
+    return static::fromTimestamp($this->timezone, $timestamp);
   }
 
   /**
@@ -99,24 +110,24 @@ final class DateTime extends DateTimeBase {
    * Returns whether this DateTime's instant is before the given Unix timestamp
    * in nanoseconds.
    */
-  public function isBeforeTimestamp(int $unix_timestamp): bool {
-    return $this->unixTimestamp < $unix_timestamp;
+  public function isBeforeTimestamp(Timestamp<Unix> $timestamp): bool {
+    return $this->unixTimestamp < timestamp_to_ns($timestamp);
   }
 
   /**
    * Returns whether this DateTime's instant is after the given Unix timestamp
    * in nanoseconds.
    */
-  public function isAfterTimestamp(int $unix_timestamp): bool {
-    return $this->unixTimestamp > $unix_timestamp;
+  public function isAfterTimestamp(Timestamp<Unix> $timestamp): bool {
+    return $this->unixTimestamp > timestamp_to_ns($timestamp);
   }
 
   /**
    * Returns whether this DateTime's instant is the same as the given Unix
    * timestamp in nanoseconds.
    */
-  public function isEqualToTimestamp(int $unix_timestamp): bool {
-    return $this->unixTimestamp === $unix_timestamp;
+  public function isEqualToTimestamp(Timestamp<Unix> $timestamp): bool {
+    return $this->unixTimestamp === timestamp_to_ns($timestamp);
   }
 
 }
