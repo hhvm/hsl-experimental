@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
-use namespace HH\Lib\{_Private,Experimental\IO};
+use namespace HH\Lib\_Private;
 
 /**
  * A wrapper around a file resource that can close and unlock the file as a
