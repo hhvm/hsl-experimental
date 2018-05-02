@@ -10,17 +10,18 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
+use namespace HH\Lib\{_Private,Experimental\IO};
+
 /**
  * A wrapper around a file resource that can close and unlock the file as a
  * disposable
  */
 abstract class FileBase implements \IDisposable {
-
   private resource $handle;
 
   public function __construct(
     private string $filename,
-    private FileMode $mode,
+    FileMode $mode,
   ) {
     $handle = @\fopen($filename, $mode);
 
@@ -46,7 +47,13 @@ abstract class FileBase implements \IDisposable {
    */
   <<__ReturnDisposable>>
   final public function lock(FileLockType $lock_type): FileLock {
-    return new FileLock($this->handle, $lock_type);
+    return new FileLock(
+      _Private\io_handle_from_resource(
+        static::class,
+        $this->handle,
+      ),
+      $lock_type,
+    );
   }
 
   /**
