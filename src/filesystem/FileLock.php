@@ -10,6 +10,8 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
+use namespace HH\Lib\{_Private, Experimental\IO};
+
 /**
  * A File Lock, which is unlocked as a disposable. To acquire one, call `lock`
  * on a FileBase object.
@@ -19,16 +21,19 @@ namespace HH\Lib\Experimental\Filesystem;
  * is not desired behavior it should be guarded against.
  */
 final class FileLock implements \IDisposable {
-  public function __construct(
-    private resource $handle,
+  private resource $resource;
+
+  public function __construct<T as FileBase>(
+    IO\Handle<T> $handle,
     FileLockType $lock_type,
   ) {
-    if (!\flock($this->handle, $lock_type)) {
+    $this->resource = _Private\resource_from_io_handle($handle);
+    if (!\flock($this->resource, $lock_type)) {
       throw new FileLockAcquisitionException();
     }
   }
 
   final public function __dispose(): void {
-    \flock($this->handle, \LOCK_UN);
+    \flock($this->resource, \LOCK_UN);
   }
 }
