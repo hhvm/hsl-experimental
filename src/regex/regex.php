@@ -33,7 +33,7 @@ function match(
 ): ?dict<arraykey, string> {
   $captures = array();
   $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
-  namespace\__verify(\is_int($return), $pattern);
+  __verify(\is_int($return), $pattern);
   if ($return === 0) {
     return null;
   }
@@ -57,7 +57,7 @@ function is_match(
 ): bool {
   $captures = array();
   $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
-  namespace\__verify(\is_int($return), $pattern);
+  __verify(\is_int($return), $pattern);
   return $return !== 0;
 }
 
@@ -79,7 +79,7 @@ function replace(
   int $limit = -1,
 ): string {
   $return = @\preg_replace($pattern, $replacement, $haystack, $limit);
-  namespace\__verify(\is_string($return), $pattern);
+  __verify(\is_string($return), $pattern);
   return $return;
 }
 
@@ -107,7 +107,7 @@ function match_all(
     \PREG_SET_ORDER,
     $offset,
   );
-  namespace\__verify(\is_int($return), $pattern);
+  __verify(\is_int($return), $pattern);
 
   return \HH\Lib\Vec\map($captures, $capture ==> dict($capture));
 }
@@ -127,7 +127,7 @@ function split(
   string $pattern,
 ): vec<string> {
   $return = @\preg_split($pattern, $haystack);
-  namespace\__verify(\is_array($return), $pattern);
+  __verify(\is_array($return), $pattern);
   return vec($return);
 }
 

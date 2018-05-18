@@ -24,6 +24,6 @@ final class TemporaryFile extends FileBase {
 
   <<__Override>>
   protected function dispose(): void {
-    namespace\remove_file($this->getName());
+    remove_file($this->getName());
   }
 }
