@@ -25,6 +25,7 @@ trait RandomTestTrait {
   ): string;
 
   public static function provideTestBoolRate(): array<mixed> {
+    /* HH_FIXME[2083]  */
     return array(
       tuple(0),
       tuple(1),
@@ -91,6 +92,7 @@ trait RandomTestTrait {
 
   public static function provideTestIntRange(
   ): array<(int, int)> {
+    /* HH_FIXME[2083]  */
     return array(
       tuple(0, 0),
       tuple(0, Math\INT32_MAX),
@@ -132,6 +134,7 @@ trait RandomTestTrait {
   }
 
   public static function provideTestIntException(): array<(int, int)> {
+    /* HH_FIXME[2083]  */
     return array(
       tuple(0, -1),
       tuple(-1, -5),
@@ -147,6 +150,7 @@ trait RandomTestTrait {
   }
 
   public static function provideAlphabets(): array<mixed> {
+    /* HH_FIXME[2083]  */
     return array(
       tuple(_Private\ALPHABET_BASE64),
       tuple(_Private\ALPHABET_BASE64_URL),

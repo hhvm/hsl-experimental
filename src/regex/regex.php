@@ -31,6 +31,7 @@ function match(
   string $pattern,
   int $offset = 0,
 ): ?dict<arraykey, string> {
+  /* HH_FIXME[2083]  */
   $captures = array();
   $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
   __verify(\is_int($return), $pattern);
@@ -55,6 +56,7 @@ function is_match(
   string $pattern,
   int $offset = 0,
 ): bool {
+  /* HH_FIXME[2083]  */
   $captures = array();
   $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
   __verify(\is_int($return), $pattern);
@@ -99,6 +101,7 @@ function match_all(
   string $pattern,
   int $offset = 0,
 ): vec<dict<arraykey, string>> {
+  /* HH_FIXME[2083]  */
   $captures = array();
   $return = @\preg_match_all(
     $pattern,
