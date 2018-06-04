@@ -24,15 +24,14 @@ trait RandomTestTrait {
     ?string $alphabet = null,
   ): string;
 
-  public static function provideTestBoolRate(): array<mixed> {
-    /* HH_FIXME[2083]  */
-    return array(
+  public static function provideTestBoolRate(): varray<mixed> {
+    return varray[
       tuple(0),
       tuple(1),
       tuple(2),
       tuple(3),
       tuple(10),
-    );
+    ];
   }
 
   /**
@@ -91,9 +90,8 @@ trait RandomTestTrait {
   }
 
   public static function provideTestIntRange(
-  ): array<(int, int)> {
-    /* HH_FIXME[2083]  */
-    return array(
+  ): varray<(int, int)> {
+    return varray[
       tuple(0, 0),
       tuple(0, Math\INT32_MAX),
       tuple(0, PHP_INT_MAX),
@@ -101,7 +99,7 @@ trait RandomTestTrait {
       tuple(-PHP_INT_MAX - 1, PHP_INT_MAX),
       tuple(-10, 0),
       tuple(-10, 10),
-    );
+    ];
   }
 
   /**
@@ -133,14 +131,13 @@ trait RandomTestTrait {
     expect($max_rand)->toBeGreaterThanOrEqualTo($expected_max);
   }
 
-  public static function provideTestIntException(): array<(int, int)> {
-    /* HH_FIXME[2083]  */
-    return array(
+  public static function provideTestIntException(): varray<(int, int)> {
+    return varray[
       tuple(0, -1),
       tuple(-1, -5),
       tuple(Math\INT32_MAX, 0),
       tuple(PHP_INT_MAX, PHP_INT_MIN),
-    );
+    ];
   }
 
   /** @dataProvider provideTestIntException */
@@ -149,13 +146,12 @@ trait RandomTestTrait {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideAlphabets(): array<mixed> {
-    /* HH_FIXME[2083]  */
-    return array(
+  public static function provideAlphabets(): varray<mixed> {
+    return varray[
       tuple(_Private\ALPHABET_BASE64),
       tuple(_Private\ALPHABET_BASE64_URL),
       tuple(_Private\ALPHABET_ALPHANUMERIC),
-    );
+    ];
   }
 
   /**
