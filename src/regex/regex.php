@@ -167,8 +167,7 @@ function __verify(
     throw new InvalidRegexException(
 Str\format( // @oss-enable
       '%s: %s',
-      /* HH_FIXME[4089] sketchy null check */
-      idx($errors, \preg_last_error()) ?: 'Invalid pattern',
+      (idx($errors, \preg_last_error()) |> $$ !== null && $$ ? $$ : 'Invalid pattern'),
       $pattern,
 ), // @oss-enable
     );
