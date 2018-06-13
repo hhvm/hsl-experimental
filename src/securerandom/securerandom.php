@@ -67,6 +67,7 @@ function string(
   ?string $alphabet = null,
 ): string {
   return _Private\random_string(
+    /* HH_FIXME[4128] random_bytes are deprecated */
     ($length) ==> \random_bytes($length),
     $length,
     $alphabet,
