@@ -53,6 +53,7 @@ function int(
     $min,
     $max,
   );
+  /* HH_FIXME[4128] */
   return \random_int($min, $max);
 }
 
@@ -67,7 +68,7 @@ function string(
   ?string $alphabet = null,
 ): string {
   return _Private\random_string(
-    /* HH_FIXME[4128] random_bytes are deprecated */
+    /* HH_FIXME[4128] */
     ($length) ==> \random_bytes($length),
     $length,
     $alphabet,
