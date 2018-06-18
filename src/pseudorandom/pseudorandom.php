@@ -10,7 +10,7 @@
 
 namespace HH\Lib\PseudoRandom;
 
-use namespace HH\Lib\{Math, SecureRandom};
+use namespace HH\Lib\{_Private, Math, SecureRandom};
 
 /**
  * Returns a pseudorandom boolean (coinflip). Returns true once in every `$rate`
@@ -53,7 +53,7 @@ function int(
     $min,
     $max,
   );
-  return \HH\pseudorandom_int($min, $max);
+  return _Private\Native\pseudorandom_int($min, $max);
 }
 
 /**
