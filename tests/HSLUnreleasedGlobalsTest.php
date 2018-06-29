@@ -42,7 +42,7 @@ final class HSLUnreleasedGlobalsTest extends PHPUnit_Framework_TestCase {
     mixed $candidate,
     bool $expected,
   ): void {
-    expect(is_hack_array($candidate))->toEqual($expected);
+    expect(is_hack_array($candidate))->toBeSame($expected);
   }
 
   public static function providesIsAnyArray(): varray<mixed> {
@@ -72,6 +72,6 @@ final class HSLUnreleasedGlobalsTest extends PHPUnit_Framework_TestCase {
     mixed $val,
     bool $expected,
   ): void {
-    expect(is_any_array($val))->toEqual($expected);
+    expect(is_any_array($val))->toBeSame($expected);
   }
 }
