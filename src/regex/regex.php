@@ -109,7 +109,7 @@ function match_all(
   );
   __verify(\is_int($return), $pattern);
 
-  return \HH\Lib\Vec\map($captures, $capture ==> dict($capture));
+  return \HH\Lib\Vec\map($captures, <<__Rx>> $capture ==> dict($capture));
 }
 
 /**
@@ -141,7 +141,7 @@ function split(
  * Regex\quote('test[]')
  * -> 'test\[\]'
  */
-<<__RxLocal>>
+<<__Rx>>
 function quote(
   string $input,
   ?string $delimiter = null,
@@ -151,23 +151,23 @@ function quote(
 
 /* Helper functions */
 
+const dict<int, string> ERRORS = dict[
+  \PREG_INTERNAL_ERROR => 'Internal error',
+  \PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit error',
+  \PREG_RECURSION_LIMIT_ERROR => 'Recursion limit error',
+  \PREG_BAD_UTF8_ERROR => 'Bad UTF8 error',
+  \PREG_BAD_UTF8_OFFSET_ERROR => 'Bad UTF8 offset error',
+];
+
 function __verify(
   bool $ret,
   string $pattern,
 ): void {
-  static $errors = dict[
-    \PREG_INTERNAL_ERROR => 'Internal error',
-    \PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit error',
-    \PREG_RECURSION_LIMIT_ERROR => 'Recursion limit error',
-    \PREG_BAD_UTF8_ERROR => 'Bad UTF8 error',
-    \PREG_BAD_UTF8_OFFSET_ERROR => 'Bad UTF8 offset error',
-  ];
-
   if ($ret === false) {
     throw new InvalidRegexException(
 Str\format( // @oss-enable
       '%s: %s',
-      (idx($errors, \preg_last_error()) |> $$ !== null && $$ ? $$ : 'Invalid pattern'),
+      (idx(namespace\ERRORS, \preg_last_error()) |> $$ !== null && $$ ? $$ : 'Invalid pattern'),
       $pattern,
 ), // @oss-enable
     );

@@ -13,7 +13,7 @@ namespace HH\Lib\Experimental\Filesystem;
 /**
  * Open a file in the given mode, returning a File object.
  */
-<<__ReturnDisposable, __RxLocal>>
+<<__ReturnDisposable>>
 function open_file(string $filename, FileMode $mode): File {
   return new File($filename, $mode);
 }
