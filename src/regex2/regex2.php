@@ -17,7 +17,6 @@ use type HH\InvariantException as InvalidRegexException; // @oss-enable
 
 // TODO(T19708752): Lift restriction and make Pattern generic with constrained type parameter
 // TODO(T19708752): Tag appropriate functions as reactive once we've gotten rid of preg_match
-/* HH_FIXME[4137] Will deal with integer field names restriction later */
 newtype Match as shape(...) = shape(...);
 newtype Pattern as string = string;
 
@@ -31,7 +30,7 @@ function re(string $pattern_string) : Pattern {
  *
  * @param string $haystack - The string to be searched
  * @param Pattern $pattern - The regular expression to match on
- * @param int $offset - The offset within $haystack at which to start the search
+ * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
  * Returns null, or a tuple of
  * first,
@@ -85,12 +84,15 @@ Str\format( // @oss-enable
 }
 
 /**
+ * Returns the first match found in a string given a regex pattern, and optionally,
+ * an offset at which to start searching.
+ *
  * @param string $haystack - The string to be searched
  * @param Pattern $pattern - The regular expression to match on
- * @param int $offset - The offset within $haystack at which to start the search
+ * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
- * @return ?Match - Null, or a Match representing the first match to occur in the
- *  haystack after the given offset, which will contain
+ * @return ?Match - Null, or a Match representing the first match to occur
+ *  $haystack after $offset, which will contain
  *    - the entire matching string, at key 0,
  *    - the results of unnamed capture groups, at integer keys corresponding to
  *        the groups' occurrence within the pattern, and
@@ -106,9 +108,12 @@ function match<T as Match>(
 }
 
 /**
+ * Returns all matches in a string given a regex pattern, and optionally,
+ * an offset at which to start searching.
+ *
  * @param string $haystack - The string to be searched
  * @param Pattern $pattern - The regular expression to match on
- * @param int $offset - The offset within $haystack at which to start the search
+ * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
  * @return Generator<mixed, Match, void> - Generator for Matches in the order
  * that they occur in $haystack after the $offset. (See match for specifics on
@@ -127,9 +132,12 @@ function match_all<T as Match>(
 }
 
 /**
+ * Returns whether a match exists in a string given a regex pattern, and optionally,
+ * an offset at which to start searching.
+ *
  * @param string $haystack - The string to be searched
  * @param Pattern $pattern - The regular expression to match on
- * @param int $offset - The offset within $haystack at which to start the search
+ * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
  * @return bool - true if $haystack matches $pattern anywhere after $offset
  */
@@ -141,13 +149,37 @@ function matches<T as Match>(
   return match_base($haystack, $pattern, $offset) !== null;
 }
 
+/**
+ * Returns the given string, but with any substrings matching a given regex pattern
+ * replaced by the replacement string. If an offset is given, replacements are made
+ * only starting from that offset.
+ *
+ * @param string $haystack - The string to be searched
+ * @param Pattern $pattern - The regular expression to match on
+ * @param string $replacement - The string to replace
+ * @param int $offset (= 0) - The offset within $haystack at which to start the search
+ *
+ * @return string - $haystack with all matching substrings replaced with $replacement
+ */
+// TODO(T19708752): Implement backreferencing. May need native replace function.
 function replace<T as Match>(
   string $haystack,
   Pattern $pattern,
   string $replacement,
   int $offset = 0,
 ): string {
-  invariant_violation('Not implemented yet.');
+  $result = Str\slice($haystack, 0, 0);
+  $match_end = 0;
+  $match = match_base($haystack, $pattern, $offset);
+  while ($match) {
+    $match_begin = $match[1];
+    $result .= Str\slice($haystack, $match_end, $match_begin - $match_end);
+    $result .= $replacement;
+    $match_end = $match_begin + Str\length($match[0][0]);
+    $match = match_base($haystack, $pattern, $match_end);
+  }
+  $result .= Str\slice($haystack, $match_end);
+  return $result;
 }
 
 function replace_with<T as Match>(
@@ -159,10 +191,45 @@ function replace_with<T as Match>(
   invariant_violation('Not implemented yet.');
 }
 
+/**
+ * Splits a given string by a regular expression. If a limit is given, stops
+ * splitting after that offset within the string.
+ *
+ * @param string $haystack - The string to be split
+ * @param Pattern $delimiter - The regular expression to match and split on
+ * @param int $limit (= null) - The offset within $haystack at which to stop the search,
+ * if provided.
+ *
+ * @throws InvariantViolationException - If $limit <= 0.
+ * @return vec<string> - Vector containing the substrings in $haystack delimited
+ * by substrings matching $delimiter; anything after the offset $limit within
+ * $haystack is appended to the vector as a final substring. If no substrings
+ * of $haystack match $delimiter, a vector containing only $haystack is returned.
+ */
 function split<T as Match>(
   string $haystack,
   Pattern $delimiter,
   ?int $limit = null,
 ): vec<string> {
-  invariant_violation('Not implemented yet.');
+  if ($limit === null) {
+    $limit = \INF;
+  } else if ($limit <= 0) {
+    throw new \InvariantViolationException('Limit, if provided, must be > 0.');
+  }
+  $result = vec[];
+  $match_end = 0;
+  $count = 1;
+  $match = match_base($haystack, $delimiter);
+  while ($match && $count <= $limit) {
+    $captures = $match[0];
+    $match_begin = $match[1];
+    $result[] = Str\slice($haystack, $match_end, $match_begin - $match_end);
+    $match_end = $match_begin + Str\length($captures[0]);
+    if ($count !== $limit) {
+      $match = match_base($haystack, $delimiter, $match_end);
+    }
+    $count += 1;
+  }
+  $result[] = Str\slice($haystack, $match_end);
+  return $result;
 }

@@ -30,6 +30,15 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       );
   }
 
+  public function testThrowsOnInvalid(): void {
+    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\match($a, Regex2\re($b)));
+    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\matches($a, Regex2\re($b)));
+    self::checkThrowsOnInvalid(
+      ($a, $b) ==> self::vecFromGenerator(Regex2\match_all($a, Regex2\re($b))));
+    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\replace($a, Regex2\re($b), $a));
+    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\split($a, Regex2\re($b)));
+  }
+
   public function testMatch(): void {
     $captures = Regex2\match('a', Regex2\re('/abc(.?)e(.*)/'));
     expect($captures)->toBeNull();
@@ -64,8 +73,6 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     expect($captures)->toBeSame(darray[
       0 => 'def',
     ]);
-
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\match($a, Regex2\re($b)));
   }
 
   public function testRecursion(): void {
@@ -77,7 +84,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       );
   }
 
-  public static function provideMatchesValid(): varray<mixed> {
+  public static function provideMatches(): varray<mixed> {
     return varray[
       tuple('a', '/abc(.?)e(.*)/', 0, false),
       tuple('abce', '/abc(.?)e(.*)/', 0, true),
@@ -87,8 +94,8 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideMatchesValid */
-  public function testMatchesValid(
+  /** @dataProvider provideMatches */
+  public function testMatches(
     string $haystack,
     string $pattern_string,
     int $offset,
@@ -98,11 +105,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       ->toBeSame($expected);
   }
 
-  public function testMatchesInvalid(): void {
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\matches($a, Regex2\re($b)));
-  }
-
-  public static function provideMatchAllValid(): varray<mixed> {
+  public static function provideMatchAll(): varray<mixed> {
     return varray[
       tuple('t1e2s3t', '/[a-z]/', 0, vec[
         dict[0 => 't'],
@@ -136,8 +139,8 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     return Vec\map($generator, $match ==> Shapes::toDict($match));
   }
 
-  /** @dataProvider provideMatchAllValid */
-  public function testMatchAllValid(
+  /** @dataProvider provideMatchAll */
+  public function testMatchAll(
     string $haystack,
     string $pattern_string,
     int $offset,
@@ -148,8 +151,56 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       ->toBeSame($expected);
   }
 
-  public function testMatchAllInvalid(): void {
-    self::checkThrowsOnInvalid(
-      ($a, $b) ==> self::vecFromGenerator(Regex2\match_all($a, Regex2\re($b))));
+// TODO(T19708752): Add backreferencing test case after implementing, e.g.
+// expect(Regex2\replace('abcd6', Regex2\re('#d(\d)#'), '\1'))->toBeSame('abc6');
+  public static function provideReplace(): varray<mixed> {
+    return varray[
+      tuple('abc', '#d#', '', 0, 'abc'),
+      tuple('abcd', '#d#', 'e', 0, 'abce'),
+      tuple('abcdcbabcdcbabcdcba', '#d#', 'D', 4, 'abcdcbabcDcbabcDcba'),
+    ];
+  }
+
+  /** @dataProvider provideReplace */
+  public function testReplace(
+    string $haystack,
+    string $pattern_string,
+    string $replacement,
+    int $offset,
+    string $expected,
+  ): void {
+    expect(Regex2\replace($haystack, Regex2\re($pattern_string), $replacement, $offset))
+      ->toBeSame($expected);
+  }
+
+  public static function provideSplit(): varray<mixed> {
+    return varray[
+      tuple('', '/x/', null, vec['']),
+      tuple('hello world', '/x/', null, vec['hello world']),
+      tuple('hello world', '/\s+/', null, vec['hello', 'world']),
+      tuple('  hello world  ', '/\s+/', null, vec['', 'hello', 'world', '']),
+      tuple('  hello world  ', '/\s+/', 1, vec['', 'hello world  ']),
+      tuple('  hello world  ', '/\s+/', 2, vec['', 'hello', 'world  ']),
+    ];
+  }
+
+  /** @dataProvider provideSplit */
+  public function testSplit(
+    string $haystack,
+    string $pattern_string,
+    ?int $limit,
+    vec<string> $expected,
+  ): void {
+    expect(Regex2\split($haystack, Regex2\re($pattern_string), $limit))
+      ->toBeSame($expected);
+  }
+
+  public function testSplitInvalidLimit(): void {
+    expect(() ==> Regex2\split('hello world', Regex2\re('/x/'), 0))
+      ->toThrow(
+        InvariantViolationException::class,
+        null,
+        'Limit, if provided, must be > 0.',
+      );
   }
 }
