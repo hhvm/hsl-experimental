@@ -26,13 +26,62 @@ function re(string $pattern_string) : Pattern {
   return $pattern_string;
 }
 
-/* Mock native match function */
+/**
+ * Temporary stand-in for native match function to be implemented in T30991246.
+ *
+ * @param string $haystack - The string to be searched
+ * @param Pattern $offset - The regular expression to match on
+ * @param int $offset - The offset within $haystack at which to start the search
+ *
+ * Returns null, or a tuple of
+ * first,
+ *   a Match representing the first match to occur in the haystack after the
+ *   given offset, which will contain
+ *    - the entire matching string, at key 0,
+ *    - the results of unnamed capture groups, at integer keys corresponding to
+ *        the groups' occurrence within the pattern, and
+ *    - the results of named capture groups, at keys that match their respective
+ *        names (and temporarily, also at integer keys like for unnamed capture groups);
+ * and second,
+ *   the integer offset at which this first match occurs in the haystack string.
+ *
+ * @return ?(Match, int) - Null, or the match and the offset at which it occurs
+ * in the haystack string.
+ */
 function match_base<T as Match>(
   string $haystack,
   Pattern $pattern,
   int $offset = 0,
 ): ?(T, int) {
-  invariant_violation('Not implemented yet');
+  $match = darray[];
+  $status =
+    @\preg_match($pattern, $haystack, &$match, \PREG_OFFSET_CAPTURE, $offset);
+  if ($status === 1) {
+    $match_out = darray[];
+    foreach ($match as $key => $value) {
+      $match_out[$key] = $value[0];
+    }
+    $offset_out = $match[0][1];
+    /* HH_FIXME[4110] Native function won't have this problem */
+    return tuple($match_out, $offset_out);
+  } else if ($status === 0) {
+    return null;
+  } else {
+    static $errors = dict[
+      \PREG_INTERNAL_ERROR => 'Internal error',
+      \PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit error',
+      \PREG_RECURSION_LIMIT_ERROR => 'Recursion limit error',
+      \PREG_BAD_UTF8_ERROR => 'Bad UTF8 error',
+      \PREG_BAD_UTF8_OFFSET_ERROR => 'Bad UTF8 offset error',
+    ];
+    throw new InvalidRegexException(
+Str\format( // @oss-enable
+      '%s: %s',
+      idx($errors, \preg_last_error(), 'Invalid pattern'),
+      $pattern,
+), // @oss-enable
+    );
+  }
 }
 
 function match<T as Match>(
