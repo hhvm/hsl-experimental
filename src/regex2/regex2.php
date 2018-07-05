@@ -30,7 +30,7 @@ function re(string $pattern_string) : Pattern {
  * Temporary stand-in for native match function to be implemented in T30991246.
  *
  * @param string $haystack - The string to be searched
- * @param Pattern $offset - The regular expression to match on
+ * @param Pattern $pattern - The regular expression to match on
  * @param int $offset - The offset within $haystack at which to start the search
  *
  * Returns null, or a tuple of
@@ -84,6 +84,19 @@ Str\format( // @oss-enable
   }
 }
 
+/**
+ * @param string $haystack - The string to be searched
+ * @param Pattern $pattern - The regular expression to match on
+ * @param int $offset - The offset within $haystack at which to start the search
+ *
+ * @return ?Match - Null, or a Match representing the first match to occur in the
+ *  haystack after the given offset, which will contain
+ *    - the entire matching string, at key 0,
+ *    - the results of unnamed capture groups, at integer keys corresponding to
+ *        the groups' occurrence within the pattern, and
+ *    - the results of named capture groups, at keys that match their respective
+ *        names (and temporarily, also at integer keys like for unnamed capture groups)
+ */
 function match<T as Match>(
   string $haystack,
   Pattern $pattern,
@@ -92,14 +105,34 @@ function match<T as Match>(
   return match_base($haystack, $pattern, $offset)[0] ?? null;
 }
 
+/**
+ * @param string $haystack - The string to be searched
+ * @param Pattern $pattern - The regular expression to match on
+ * @param int $offset - The offset within $haystack at which to start the search
+ *
+ * @return Generator<mixed, Match, void> - Generator for Matches in the order
+ * that they occur in $haystack after the $offset. (See match for specifics on
+ * Match.)
+ */
 function match_all<T as Match>(
   string $haystack,
   Pattern $pattern,
   int $offset = 0,
 ): \Generator<int, T, void> {
-  invariant_violation('Not implemented yet.');
+  while ($match = match_base($haystack, $pattern, $offset)) {
+    yield $match[0];
+    // start from end of last match
+    $offset = $match[1] + Str\length($match[0][0]);
+  }
 }
 
+/**
+ * @param string $haystack - The string to be searched
+ * @param Pattern $pattern - The regular expression to match on
+ * @param int $offset - The offset within $haystack at which to start the search
+ *
+ * @return bool - true if $haystack matches $pattern anywhere after $offset
+ */
 function matches<T as Match>(
   string $haystack,
   Pattern $pattern,

@@ -101,4 +101,55 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   public function testMatchesInvalid(): void {
     self::checkThrowsOnInvalid(($a, $b) ==> Regex2\matches($a, Regex2\re($b)));
   }
+
+  public static function provideMatchAllValid(): varray<mixed> {
+    return varray[
+      tuple('t1e2s3t', '/[a-z]/', 0, vec[
+        dict[0 => 't'],
+        dict[0 => 'e'],
+        dict[0 => 's'],
+        dict[0 => 't'],
+      ]),
+      tuple('t1e2s3t', '/[a-z](\d)?/', 0, vec[
+        dict[0 => 't1', 1 => '1'],
+        dict[0 => 'e2', 1 => '2'],
+        dict[0 => 's3', 1 => '3'],
+        dict[0 => 't'],
+      ]),
+      tuple('t1e2s3t', '/[a-z](?P<digit>\d)?/', 0, vec[
+        dict[0 => 't1', 'digit' => '1', 1 => '1'],
+        dict[0 => 'e2', 'digit' => '2', 1 => '2'],
+        dict[0 => 's3', 'digit' => '3', 1 => '3'],
+        dict[0 => 't'],
+      ]),
+      tuple('test', '/a/', 0, vec[]),
+      tuple('t1e2s3t', '/[a-z]/', 3, vec[
+        dict[0 => 's'],
+        dict[0 => 't'],
+      ]),
+    ];
+  }
+
+  public static function vecFromGenerator(
+    \Generator<int, Regex2\Match, void> $generator
+  ): vec<dict<arraykey, mixed>> {
+    return Vec\map($generator, $match ==> Shapes::toDict($match));
+  }
+
+  /** @dataProvider provideMatchAllValid */
+  public function testMatchAllValid(
+    string $haystack,
+    string $pattern_string,
+    int $offset,
+    vec<dict<arraykey, mixed>> $expected,
+  ): void {
+    expect(self::vecFromGenerator(
+      Regex2\match_all($haystack, Regex2\re($pattern_string), $offset)))
+      ->toBeSame($expected);
+  }
+
+  public function testMatchAllInvalid(): void {
+    self::checkThrowsOnInvalid(
+      ($a, $b) ==> self::vecFromGenerator(Regex2\match_all($a, Regex2\re($b))));
+  }
 }
