@@ -173,6 +173,34 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       ->toBeSame($expected);
   }
 
+  public static function provideReplaceWith(): varray<mixed> {
+    return varray[
+      tuple('abc', '#d#', $x ==> $x[0], 0, 'abc'),
+      tuple('abcd', '#d#', $x ==> 'xyz', 0, 'abcxyz'),
+      tuple('abcdcbabcdcbabcdcba', '#d#', $x ==> 'D', 0, 'abcDcbabcDcbabcDcba'),
+      tuple('hellodev42.prn3.facebook.com',
+        '/dev(\d+)\.prn3(?<domain>\.facebook\.com)?/',
+        $x ==> $x[1] . $x['domain'], 4,
+        'hello42.facebook.com'),
+      tuple('hellodev42.prn3.facebook.com',
+        '/dev(\d+)\.prn3(?<domain>\.facebook\.com)?/',
+        $x ==> $x[1] . $x['domain'], 6,
+        'hellodev42.prn3.facebook.com'),
+    ];
+  }
+
+  /** @dataProvider provideReplaceWith */
+  public function testReplaceWith(
+    string $haystack,
+    string $pattern_string,
+    (function(Regex2\Match): string) $replace_func,
+    int $offset,
+    string $expected,
+  ): void {
+    expect(Regex2\replace_with($haystack, Regex2\re($pattern_string), $replace_func, $offset))
+      ->toBeSame($expected);
+  }
+
   public static function provideSplit(): varray<mixed> {
     return varray[
       tuple('', '/x/', null, vec['']),

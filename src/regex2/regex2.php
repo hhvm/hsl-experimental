@@ -150,7 +150,7 @@ function matches<T as Match>(
 }
 
 /**
- * Returns the given string, but with any substrings matching a given regex pattern
+ * Returns the given string, but with any substring matching a given regex pattern
  * replaced by the replacement string. If an offset is given, replacements are made
  * only starting from that offset.
  *
@@ -182,13 +182,37 @@ function replace<T as Match>(
   return $result;
 }
 
+/**
+ * Returns the given string, but with any substring matching a given regex pattern
+ * replaced by the result of the replacement function applied to that match.
+ * If an offset is given, replacements are made only starting from that offset.
+ *
+ * @param string $haystack - The string to be searched
+ * @param Pattern $pattern - The regular expression to match on
+ * @param function(Match): string $replace_func - The function to modify matching substrings with
+ * @param int $offset (= 0) - The offset within $haystack at which to start the search
+ *
+ * @return string - $haystack with every matching substring replaced with $replace_func
+ * applied to that match
+ */
 function replace_with<T as Match>(
   string $haystack,
   Pattern $pattern,
   (function(T): string) $replace_func,
   int $offset = 0,
 ): string {
-  invariant_violation('Not implemented yet.');
+  $result = Str\slice($haystack, 0, 0);
+  $match_end = 0;
+  $match = match_base($haystack, $pattern, $offset);
+  while ($match) {
+    $match_begin = $match[1];
+    $result .= Str\slice($haystack, $match_end, $match_begin - $match_end);
+    $result .= $replace_func($match[0]);
+    $match_end = $match_begin + Str\length($match[0][0]);
+    $match = match_base($haystack, $pattern, $match_end);
+  }
+  $result .= Str\slice($haystack, $match_end);
+  return $result;
 }
 
 /**
