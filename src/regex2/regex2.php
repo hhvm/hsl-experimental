@@ -216,19 +216,21 @@ function replace_with<T as Match>(
 }
 
 /**
- * Splits a given string by a regular expression. If a limit is given, stops
- * splitting after that offset within the string.
+ * Splits a given string by a regular expression. If a limit is given, the returned
+ * vec will have at most that many elements.
  *
  * @param string $haystack - The string to be split
  * @param Pattern $delimiter - The regular expression to match and split on
- * @param int $limit (= null) - The offset within $haystack at which to stop the search,
- * if provided.
+ * @param int $limit (= null) - If specified, then the returned vec will
+ * have at most $limit elements. The last element of the vec will be whatever
+ * is left of the haystack string after the appropriate number of splits.
+ * $limit must be > 1
  *
- * @throws InvariantViolationException - If $limit <= 0.
- * @return vec<string> - Vector containing the substrings in $haystack delimited
- * by substrings matching $delimiter; anything after the offset $limit within
- * $haystack is appended to the vector as a final substring. If no substrings
- * of $haystack match $delimiter, a vector containing only $haystack is returned.
+ * @throws Invariant[Violation]Exception - If $limit <= 0
+ * @return vec<string> - vec containing (at most $limit, if $limit is given)
+ * substrings in $haystack, delimited by substrings matching $delimiter; whatever
+ * is left of $haystack after the limit is reached makes up the last substring in the vec.
+ * If no substrings of $haystack match $delimiter, a vec containing only $haystack is returned
  */
 function split<T as Match>(
   string $haystack,
@@ -237,14 +239,17 @@ function split<T as Match>(
 ): vec<string> {
   if ($limit === null) {
     $limit = \INF;
-  } else if ($limit <= 0) {
-    throw new \InvariantViolationException('Limit, if provided, must be > 0.');
   }
+  invariant(
+    $limit > 1,
+    'Expected limit greater than 1, got %d.',
+    $limit,
+  );
   $result = vec[];
   $match_end = 0;
   $count = 1;
   $match = match_base($haystack, $delimiter);
-  while ($match && $count <= $limit) {
+  while ($match && $count < $limit) {
     $captures = $match[0];
     $match_begin = $match[1];
     $result[] = Str\slice($haystack, $match_end, $match_begin - $match_end);

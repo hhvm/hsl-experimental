@@ -16,6 +16,7 @@ use namespace HH\Lib\{C, Experimental\Regex2, Str, Vec};
 
 use function Facebook\FBExpect\expect;
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
+use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
 final class Regex2Test extends PHPUnit_Framework_TestCase {
 
@@ -207,8 +208,8 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       tuple('hello world', '/x/', null, vec['hello world']),
       tuple('hello world', '/\s+/', null, vec['hello', 'world']),
       tuple('  hello world  ', '/\s+/', null, vec['', 'hello', 'world', '']),
-      tuple('  hello world  ', '/\s+/', 1, vec['', 'hello world  ']),
-      tuple('  hello world  ', '/\s+/', 2, vec['', 'hello', 'world  ']),
+      tuple('  hello world  ', '/\s+/', 2, vec['', 'hello world  ']),
+      tuple('  hello world  ', '/\s+/', 3, vec['', 'hello', 'world  ']),
     ];
   }
 
@@ -224,11 +225,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   }
 
   public function testSplitInvalidLimit(): void {
-    expect(() ==> Regex2\split('hello world', Regex2\re('/x/'), 0))
-      ->toThrow(
-        InvariantViolationException::class,
-        null,
-        'Limit, if provided, must be > 0.',
-      );
+    expect(() ==> Regex2\split('hello world', Regex2\re('/x/'), 1))
+      ->toThrow(\InvariantViolationException::class);
   }
 }
