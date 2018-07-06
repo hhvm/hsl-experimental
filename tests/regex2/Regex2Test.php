@@ -226,6 +226,6 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
 
   public function testSplitInvalidLimit(): void {
     expect(() ==> Regex2\split('hello world', Regex2\re('/x/'), 1))
-      ->toThrow(\InvariantViolationException::class);
+      ->toThrow(InvariantViolationException::class);
   }
 }
