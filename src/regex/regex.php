@@ -32,6 +32,7 @@ function match(
   int $offset = 0,
 ): ?dict<arraykey, string> {
   $captures = darray[];
+  /* HH_FIXME[2088] No refs in reactive code. */
   $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
   __verify(\is_int($return), $pattern);
   if ($return === 0) {
@@ -56,6 +57,7 @@ function is_match(
   int $offset = 0,
 ): bool {
   $captures = darray[];
+  /* HH_FIXME[2088] No refs in reactive code. */
   $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
   __verify(\is_int($return), $pattern);
   return $return !== 0;
@@ -103,6 +105,7 @@ function match_all(
   $return = @\preg_match_all(
     $pattern,
     $haystack,
+    /* HH_FIXME[2088] No refs in reactive code. */
     &$captures,
     \PREG_SET_ORDER,
     $offset,
