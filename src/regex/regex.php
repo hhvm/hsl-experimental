@@ -134,24 +134,6 @@ function split(
   return vec($return);
 }
 
-/**
- * Execute a regular expression quote. To be used to escape all special
- * characters that regex is using
- *
- * Replacement for preg_quote
- *
- * @example
- * Regex\quote('test[]')
- * -> 'test\[\]'
- */
-<<__Rx>>
-function quote(
-  string $input,
-  ?string $delimiter = null,
-): string {
-  return (string)\preg_quote($input, $delimiter);
-}
-
 /* Helper functions */
 
 const dict<int, string> ERRORS = dict[

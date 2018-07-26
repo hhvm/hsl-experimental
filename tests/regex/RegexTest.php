@@ -137,11 +137,4 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
     expect(Regex\replace('abcd', '#d#', 'e'))->toBeSame('abce');
     expect(Regex\replace('abcd6', '#d(\d)#', '\1'))->toBeSame('abc6');
   }
-
-  public function testQuote(): void {
-    expect(Regex\quote('abc'))->toBeSame('abc');
-    expect(Regex\quote('abc', 'a'))->toBeSame('\abc');
-    expect(Regex\quote('a/bc', '/'))->toBeSame('a\/bc');
-    expect(Regex\quote('a^b[c'))->toBeSame('a\^b\[c');
-  }
 }
