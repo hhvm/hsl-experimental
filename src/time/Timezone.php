@@ -116,6 +116,8 @@ abstract class Timezone {
    * overridden via `date_default_timezone_set()`.
    */
   final public static function System(): Timezone {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return self::fromName(\date_default_timezone_get());
   }
 

@@ -29,30 +29,44 @@ final class Path {
   }
 
   public function isDirectory(): bool {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return \is_dir($this->path);
   }
 
   public function isFile(): bool {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return \is_file($this->path);
   }
 
   public function isSymlink(): bool {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return \is_link($this->path);
   }
 
   public function exists(): bool {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return \file_exists($this->path);
   }
 
   public function getParent(): Path {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return new Path(\dirname($this->path));
   }
 
   public function getBaseName(): string {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     return \basename($this->path);
   }
 
   public function getExtension(): ?string {
+    /* HH_FIXME[2049] calling stdlib directly */
+    /* HH_FIXME[4107] calling stdlib directly */
     $extension = \pathinfo($this->path, \PATHINFO_EXTENSION);
     return $extension === '' ? null : $extension;
   }
