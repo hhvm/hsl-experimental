@@ -79,16 +79,6 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
       );
   }
 
-  public function testIsMatch(): void {
-    expect(Regex\is_match('a', '/abc(.?)e(.*)/'))->toBeFalse();
-    expect(Regex\is_match('abce', '/abc(.?)e(.*)/'))->toBeTrue();
-    expect(Regex\is_match('abcdef', '/abc(.?)e([fg])/'))->toBeTrue();
-    expect(Regex\is_match('abcdef', '/abc/', 1))->toBeFalse();
-    expect(Regex\is_match('abcdef', '/def/', 1))->toBeTrue();
-
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex\is_match($a, $b));
-  }
-
   public function testMatchAll(): void {
     expect(Regex\match_all('t1e2s3t', '/[a-z]/'))->toBeSame(vec[
       dict[0 => 't'],

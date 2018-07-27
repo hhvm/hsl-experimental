@@ -43,27 +43,6 @@ function match(
 }
 
 /**
- * Execute a regular expression match and returns true or false depending if the
- * pattern matched or not
- *
- * @example
- * Regex\is_match('test', '#(t.)s#')
- * -> true
- */
-<<__RxLocal>>
-function is_match(
-  string $haystack,
-  string $pattern,
-  int $offset = 0,
-): bool {
-  $captures = darray[];
-  /* HH_FIXME[2088] No refs in reactive code. */
-  $return = @\preg_match($pattern, $haystack, &$captures, 0, $offset);
-  __verify(\is_int($return), $pattern);
-  return $return !== 0;
-}
-
-/**
  * Execute a regular expression replacement. Replaces the pattern with
  * replacement
  *
