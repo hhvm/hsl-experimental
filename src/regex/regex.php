@@ -115,25 +115,6 @@ function match_all(
   return \HH\Lib\Vec\map($captures, <<__Rx>> $capture ==> dict($capture));
 }
 
-/**
- * Execute a regular expression split. Returns a vec with all the parts.
- *
- * Replacement for preg_split
- *
- * @example
- * Regex\split('test t3st', '#.s#')
- * -> vec['t', 't t', 't']
- */
-<<__RxLocal>>
-function split(
-  string $haystack,
-  string $pattern,
-): vec<string> {
-  $return = @\preg_split($pattern, $haystack);
-  __verify(\is_array($return), $pattern);
-  return vec($return);
-}
-
 /* Helper functions */
 
 const dict<int, string> ERRORS = dict[

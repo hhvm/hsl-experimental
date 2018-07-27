@@ -116,22 +116,6 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
     self::checkThrowsOnInvalid(($a, $b) ==> Regex\match_all($a, $b));
   }
 
-  public function testSplit(): void {
-    expect(Regex\split('', '/x/'))->toBeSame(vec['']);
-
-    expect(Regex\split('hello world', '/x/'))->toBeSame(vec['hello world']);
-
-    expect(Regex\split('hello world', '/\s+/'))->toBeSame(
-      vec['hello', 'world'],
-    );
-
-    expect(Regex\split('  hello world  ', '/\s+/'))->toBeSame(
-      vec['', 'hello', 'world', ''],
-    );
-
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex\split($a, $b));
-  }
-
   public function testReplace(): void {
     expect(Regex\replace('abc', '#d#', ''))->toBeSame('abc');
     expect(Regex\replace('abcd', '#d#', 'e'))->toBeSame('abce');
