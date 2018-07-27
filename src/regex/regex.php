@@ -43,28 +43,6 @@ function match(
 }
 
 /**
- * Execute a regular expression replacement. Replaces the pattern with
- * replacement
- *
- * Replacement for preg_replace
- *
- * @example
- * Regex\replace('test', '#t.s#', 'abc')
- * -> 'abct'
- */
-<<__RxLocal>>
-function replace(
-  string $haystack,
-  string $pattern,
-  string $replacement,
-  int $limit = -1,
-): string {
-  $return = @\preg_replace($pattern, $replacement, $haystack, $limit);
-  __verify(\is_string($return), $pattern);
-  return $return;
-}
-
-/**
  * Execute a regular expression match and returns all matches or empty vec if
  * there is no matches
  *

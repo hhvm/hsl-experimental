@@ -105,10 +105,4 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
     ]);
     self::checkThrowsOnInvalid(($a, $b) ==> Regex\match_all($a, $b));
   }
-
-  public function testReplace(): void {
-    expect(Regex\replace('abc', '#d#', ''))->toBeSame('abc');
-    expect(Regex\replace('abcd', '#d#', 'e'))->toBeSame('abce');
-    expect(Regex\replace('abcd6', '#d(\d)#', '\1'))->toBeSame('abc6');
-  }
 }
