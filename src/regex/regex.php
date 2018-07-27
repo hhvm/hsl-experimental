@@ -49,11 +49,11 @@ function match(
  * Replacement for preg_match_all
  *
  * @example
- * Regex\match_all('test t3st', '#(t.)s#')
+ * Regex\match_all_DEPRECATED('test t3st', '#(t.)s#')
  * -> vec[dict[0 => 'tes', 1 => 'te'], dict[0 => 't3s', 1 => 't3']]
  */
 <<__RxLocal>>
-function match_all(
+function match_all_DEPRECATED(
   string $haystack,
   string $pattern,
   int $offset = 0,

@@ -80,29 +80,29 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testMatchAll(): void {
-    expect(Regex\match_all('t1e2s3t', '/[a-z]/'))->toBeSame(vec[
+    expect(Regex\match_all_DEPRECATED('t1e2s3t', '/[a-z]/'))->toBeSame(vec[
       dict[0 => 't'],
         dict[0 => 'e'],
         dict[0 => 's'],
         dict[0 => 't'],
     ]);
-    expect(Regex\match_all('t1e2s3t', '/[a-z](\d)?/'))->toBeSame(vec[
+    expect(Regex\match_all_DEPRECATED('t1e2s3t', '/[a-z](\d)?/'))->toBeSame(vec[
       dict[0 => 't1', 1 => '1'],
         dict[0 => 'e2', 1 => '2'],
         dict[0 => 's3', 1 => '3'],
         dict[0 => 't'],
     ]);
-    expect(Regex\match_all('t1e2s3t', '/[a-z](?P<digit>\d)?/'))->toBeSame(vec[
+    expect(Regex\match_all_DEPRECATED('t1e2s3t', '/[a-z](?P<digit>\d)?/'))->toBeSame(vec[
       dict[0 => 't1', 'digit' => '1', 1 => '1'],
         dict[0 => 'e2', 'digit' => '2', 1 => '2'],
         dict[0 => 's3', 'digit' => '3', 1 => '3'],
         dict[0 => 't'],
     ]);
-    expect(Regex\match_all('test', '/a/'))->toBeSame(vec[]);
-    expect(Regex\match_all('t1e2s3t', '/[a-z]/', 3))->toBeSame(vec[
+    expect(Regex\match_all_DEPRECATED('test', '/a/'))->toBeSame(vec[]);
+    expect(Regex\match_all_DEPRECATED('t1e2s3t', '/[a-z]/', 3))->toBeSame(vec[
       dict[0 => 's'],
         dict[0 => 't'],
     ]);
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex\match_all($a, $b));
+    self::checkThrowsOnInvalid(($a, $b) ==> Regex\match_all_DEPRECATED($a, $b));
   }
 }
