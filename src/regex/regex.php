@@ -22,11 +22,11 @@ use type HH\InvariantException as InvalidRegexException; // @oss-enable
  * Replacement for preg_match
  *
  * @example
- * Regex\match('test', '#(t.)s#')
+ * Regex\match_DEPRECATED('test', '#(t.)s#')
  * -> dict[0 => 'tes', 1 => 'te']
  */
 <<__RxLocal>>
-function match(
+function match_DEPRECATED(
   string $haystack,
   string $pattern,
   int $offset = 0,

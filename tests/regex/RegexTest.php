@@ -31,10 +31,10 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testMatch(): void {
-    $captures = Regex\match('a', '/abc(.?)e(.*)/');
+    $captures = Regex\match_DEPRECATED('a', '/abc(.?)e(.*)/');
     expect($captures)->toBeNull();
 
-    $captures = Regex\match('abce', '/abc(.?)e(.*)/');
+    $captures = Regex\match_DEPRECATED('abce', '/abc(.?)e(.*)/');
     expect($captures)->toNotBeNull();
     invariant($captures !== null, 'For Hack');
     expect(C\count($captures))->toBeSame(3);
@@ -42,7 +42,7 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
     expect($captures[1])->toBeSame('');
     expect($captures[2])->toBeSame('');
 
-    $captures = Regex\match('abcdef', '/abc(.?)e([fg])/');
+    $captures = Regex\match_DEPRECATED('abcdef', '/abc(.?)e([fg])/');
     expect($captures)->toNotBeNull();
     invariant($captures !== null, 'For Hack');
     expect(C\count($captures))->toBeSame(3);
@@ -50,7 +50,7 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
     expect($captures[1])->toBeSame('d');
     expect($captures[2])->toBeSame('f');
 
-    $captures = Regex\match('abcdef', '/abc(?P<name>def)/');
+    $captures = Regex\match_DEPRECATED('abcdef', '/abc(?P<name>def)/');
     expect($captures)->toNotBeNull();
     invariant($captures !== null, 'For Hack');
     expect(C\count($captures))->toBeSame(3);
@@ -58,20 +58,20 @@ final class RegexTest extends PHPUnit_Framework_TestCase {
     expect($captures[1])->toBeSame('def');
     expect($captures['name'])->toBeSame('def');
 
-    $captures = Regex\match('abcdef', '/abc/', 1);
+    $captures = Regex\match_DEPRECATED('abcdef', '/abc/', 1);
     expect($captures)->toBeNull();
 
-    $captures = Regex\match('abcdef', '/def/', 1);
+    $captures = Regex\match_DEPRECATED('abcdef', '/def/', 1);
     expect($captures)->toNotBeNull();
     invariant($captures !== null, 'For Hack');
     expect(C\count($captures))->toBeSame(1);
     expect($captures[0])->toBeSame('def');
 
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex\match($a, $b));
+    self::checkThrowsOnInvalid(($a, $b) ==> Regex\match_DEPRECATED($a, $b));
   }
 
   public function testRecursion(): void {
-    expect(() ==> Regex\match(Str\repeat('a', 10000).'b', '/a*a*a*a*a$/'))
+    expect(() ==> Regex\match_DEPRECATED(Str\repeat('a', 10000).'b', '/a*a*a*a*a$/'))
       ->toThrow(
         InvalidRegexException::class,
         'Backtrack limit error',
