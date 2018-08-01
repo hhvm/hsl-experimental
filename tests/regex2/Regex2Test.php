@@ -15,7 +15,6 @@
 use namespace HH\Lib\{C, Experimental\Regex2, Str, Vec};
 
 use function Facebook\FBExpect\expect;
-use type HH\InvariantException as InvalidRegexException; // @oss-enable
 use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
 final class Regex2Test extends PHPUnit_Framework_TestCase {
@@ -25,7 +24,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   ): void {
     expect(() ==> $fn('foo', Regex2\re('I am not a regular expression')))
       ->toThrow(
-        InvalidRegexException::class,
+        Regex2\Exception::class,
         null,
         'Invalid regex should throw an exception',
       );
@@ -79,7 +78,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   public function testRecursion(): void {
     expect(() ==> Regex2\match(Str\repeat('a', 10000).'b', Regex2\re('/a*a*a*a*a$/')))
       ->toThrow(
-        InvalidRegexException::class,
+        Regex2\Exception::class,
         'Backtrack limit error',
         'Should reach backtrack limit',
       );

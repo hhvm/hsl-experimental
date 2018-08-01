@@ -12,8 +12,7 @@ namespace HH\Lib\Experimental\Regex2;
 
 use namespace HH\Lib\Str;
 
-use type HH\InvariantException as InvalidRegexException; // @oss-enable
-// @oss-disable: use type \InvalidRegexException;
+final class Exception extends \Exception {}
 
 // TODO(T19708752): Lift restriction and make Pattern generic with constrained type parameter
 // TODO(T19708752): Tag appropriate functions as reactive once we've gotten rid of preg_match
@@ -73,12 +72,12 @@ function match_base<T as Match>(
       \PREG_BAD_UTF8_ERROR => 'Bad UTF8 error',
       \PREG_BAD_UTF8_OFFSET_ERROR => 'Bad UTF8 offset error',
     ];
-    throw new InvalidRegexException(
-Str\format( // @oss-enable
-      '%s: %s',
-      idx($errors, \preg_last_error(), 'Invalid pattern'),
-      $pattern,
-), // @oss-enable
+    throw new Exception(
+      Str\format(
+        '%s: %s',
+        idx($errors, \preg_last_error(), 'Invalid pattern'),
+        $pattern,
+      ),
     );
   }
 }
