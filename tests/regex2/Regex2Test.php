@@ -19,7 +19,7 @@ use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
 final class Regex2Test extends PHPUnit_Framework_TestCase {
 
-  public static function checkThrowsOnInvalid<T>(
+  public static function checkThrowsOnInvalidRegex<T>(
     (function (string, Regex2\Pattern): T) $fn,
   ): void {
     expect(() ==> $fn('foo', Regex2\re('I am not a regular expression')))
@@ -30,13 +30,40 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       );
   }
 
-  public function testThrowsOnInvalid(): void {
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\match($a, Regex2\re($b)));
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\matches($a, Regex2\re($b)));
-    self::checkThrowsOnInvalid(
+  public function testThrowsOnInvalidRegex(): void {
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\match($a, Regex2\re($b)));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\matches($a, Regex2\re($b)));
+    self::checkThrowsOnInvalidRegex(
       ($a, $b) ==> self::vecFromGenerator(Regex2\match_all($a, Regex2\re($b))));
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\replace($a, Regex2\re($b), $a));
-    self::checkThrowsOnInvalid(($a, $b) ==> Regex2\split($a, Regex2\re($b)));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\replace($a, Regex2\re($b), $a));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\split($a, Regex2\re($b)));
+  }
+
+  public static function checkThrowsOnInvalidOffset<T>(
+    (function (string, Regex2\Pattern, int): T) $fn,
+  ): void {
+    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), 5))->notToThrow();
+    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), -5))->notToThrow();
+    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), 6))->
+      toThrow(
+        InvariantViolationException::class,
+        null,
+        'Invalid offset should throw an exception',
+      );
+    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), -6))->
+      toThrow(
+        InvariantViolationException::class,
+        null,
+        'Invalid offset should throw an exception',
+      );
+  }
+
+  public function testThrowsOnInvalidOffset(): void {
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\match($a, Regex2\re($b), $i));
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\matches($a, Regex2\re($b), $i));
+    self::checkThrowsOnInvalidOffset(
+      ($a, $b, $i) ==> self::vecFromGenerator(Regex2\match_all($a, Regex2\re($b), $i)));
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\replace($a, Regex2\re($b), $a, $i));
   }
 
   public function testMatch(): void {
@@ -151,13 +178,14 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       ->toBeSame($expected);
   }
 
-// TODO(T19708752): Add backreferencing test case after implementing, e.g.
-// expect(Regex2\replace('abcd6', Regex2\re('#d(\d)#'), '\1'))->toBeSame('abc6');
   public static function provideReplace(): varray<mixed> {
     return varray[
       tuple('abc', '#d#', '', 0, 'abc'),
       tuple('abcd', '#d#', 'e', 0, 'abce'),
       tuple('abcdcbabcdcbabcdcba', '#d#', 'D', 4, 'abcdcbabcDcbabcDcba'),
+      tuple('abcdcbabcdcbabcdcba', '#d#', 'D', 19, 'abcdcbabcdcbabcdcba'),
+      tuple('abcdcbabcdcbabcdcba', '#d#', 'D', -19, 'abcDcbabcDcbabcDcba'),
+      tuple('abcd6', '#d(\d)#', '\1', 0, 'abc6'),
     ];
   }
 

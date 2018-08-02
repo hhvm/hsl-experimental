@@ -12,7 +12,24 @@ namespace HH\Lib\Experimental\Regex2;
 
 use namespace HH\Lib\Str;
 
-final class Exception extends \Exception {}
+final class Exception extends \Exception {
+  public function __construct(Pattern $pattern): void {
+    static $errors = dict[
+      \PREG_INTERNAL_ERROR => 'Internal error',
+      \PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit error',
+      \PREG_RECURSION_LIMIT_ERROR => 'Recursion limit error',
+      \PREG_BAD_UTF8_ERROR => 'Bad UTF8 error',
+      \PREG_BAD_UTF8_OFFSET_ERROR => 'Bad UTF8 offset error',
+    ];
+    parent::__construct(
+      Str\format(
+        "%s: %s",
+        idx($errors, \preg_last_error(), 'Invalid pattern'),
+        $pattern,
+      ),
+    );
+  }
+}
 
 // TODO(T19708752): Lift restriction and make Pattern generic with constrained type parameter
 // TODO(T19708752): Tag appropriate functions as reactive once we've gotten rid of preg_match
@@ -43,6 +60,7 @@ function re(string $pattern_string) : Pattern {
  * and second,
  *   the integer offset at which this first match occurs in the haystack string.
  *
+ * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
  * @return ?(Match, int) - Null, or the match and the offset at which it occurs
  * in the haystack string.
  */
@@ -51,6 +69,7 @@ function match_base<T as Match>(
   Pattern $pattern,
   int $offset = 0,
 ): ?(T, int) {
+  $offset = \HH\Lib\_Private\validate_offset($offset, Str\length($haystack));
   $match = darray[];
   $status =
     @\preg_match($pattern, $haystack, &$match, \PREG_OFFSET_CAPTURE, $offset);
@@ -65,20 +84,7 @@ function match_base<T as Match>(
   } else if ($status === 0) {
     return null;
   } else {
-    static $errors = dict[
-      \PREG_INTERNAL_ERROR => 'Internal error',
-      \PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit error',
-      \PREG_RECURSION_LIMIT_ERROR => 'Recursion limit error',
-      \PREG_BAD_UTF8_ERROR => 'Bad UTF8 error',
-      \PREG_BAD_UTF8_OFFSET_ERROR => 'Bad UTF8 offset error',
-    ];
-    throw new Exception(
-      Str\format(
-        '%s: %s',
-        idx($errors, \preg_last_error(), 'Invalid pattern'),
-        $pattern,
-      ),
-    );
+    throw new Exception($pattern);
   }
 }
 
@@ -90,6 +96,7 @@ function match_base<T as Match>(
  * @param Pattern $pattern - The regular expression to match on
  * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
+ * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
  * @return ?Match - Null, or a Match representing the first match to occur
  *  $haystack after $offset, which will contain
  *    - the entire matching string, at key 0,
@@ -114,6 +121,7 @@ function match<T as Match>(
  * @param Pattern $pattern - The regular expression to match on
  * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
+ * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
  * @return Generator<mixed, Match, void> - Generator for Matches in the order
  * that they occur in $haystack after the $offset. (See match for specifics on
  * Match.)
@@ -138,6 +146,7 @@ function match_all<T as Match>(
  * @param Pattern $pattern - The regular expression to match on
  * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
+ * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
  * @return bool - true if $haystack matches $pattern anywhere after $offset
  */
 function matches<T as Match>(
@@ -158,27 +167,29 @@ function matches<T as Match>(
  * @param string $replacement - The string to replace
  * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
+ * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
  * @return string - $haystack with all matching substrings replaced with $replacement
  */
-// TODO(T19708752): Implement backreferencing. May need native replace function.
 function replace<T as Match>(
   string $haystack,
   Pattern $pattern,
   string $replacement,
   int $offset = 0,
 ): string {
-  $result = Str\slice($haystack, 0, 0);
-  $match_end = 0;
-  $match = match_base($haystack, $pattern, $offset);
-  while ($match) {
-    $match_begin = $match[1];
-    $result .= Str\slice($haystack, $match_end, $match_begin - $match_end);
-    $result .= $replacement;
-    $match_end = $match_begin + Str\length($match[0][0]);
-    $match = match_base($haystack, $pattern, $match_end);
+  // replace is the only one of these functions that calls into a preg
+  // function other than preg_match. It needs to call into preg_replace
+  // to be able to handle backreferencing in the $replacement string.
+  // preg_replace does not support offsets, so we handle them ourselves,
+  // consistently with match_base.
+  $offset = \HH\Lib\_Private\validate_offset($offset, Str\length($haystack));
+  $haystack1 = Str\slice($haystack, 0, $offset);
+  $haystack2 = Str\slice($haystack, $offset);
+
+  $haystack3 = @\preg_replace($pattern, $replacement, $haystack2);
+  if ($haystack3 === null) {
+    throw new Exception($pattern);
   }
-  $result .= Str\slice($haystack, $match_end);
-  return $result;
+  return $haystack1.$haystack3;
 }
 
 /**
@@ -191,6 +202,7 @@ function replace<T as Match>(
  * @param function(Match): string $replace_func - The function to modify matching substrings with
  * @param int $offset (= 0) - The offset within $haystack at which to start the search
  *
+ * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
  * @return string - $haystack with every matching substring replaced with $replace_func
  * applied to that match
  */
