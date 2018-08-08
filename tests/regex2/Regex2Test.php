@@ -340,7 +340,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
       tuple('hello', "/(.?)/", $x ==> $x[1].'A', 0, 'hAeAlAlAoAA'), // unintuitive, but consistent with preg_replace_callback
       tuple('hello', "//", $x ==> $x[0].'A', 0, 'AhAeAlAlAoA'),
       tuple('@[12345:67890:janedoe]', "/@\[(\d*?):(\d*?):([^]]*?)\]/",
-        ($x ==> Str\repeat(' ', 4 + PHP\strlen($x[1]) + PHP\strlen($x[2])) . $x[3] . ' '),
+        ($x ==> Str\repeat(' ', 4 + Str\length($x[1]) + Str\length($x[2])) . $x[3] . ' '),
         0, '              janedoe '),
       tuple('ooooo', "/.*/", $x ==> 'a', 0, 'aa'),
     ];
