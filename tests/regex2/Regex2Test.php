@@ -42,15 +42,15 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   public static function checkThrowsOnInvalidOffset<T>(
     (function (string, Regex2\Pattern, int): T) $fn,
   ): void {
-    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), 5))->notToThrow();
-    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), -5))->notToThrow();
-    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), 6))->
+    expect(() ==> $fn('Hello', Regex2\re("/Hello/"), 5))->notToThrow();
+    expect(() ==> $fn('Hello', Regex2\re("/Hello/"), -5))->notToThrow();
+    expect(() ==> $fn('Hello', Regex2\re("/Hello/"), 6))->
       toThrow(
         InvariantViolationException::class,
         null,
         'Invalid offset should throw an exception',
       );
-    expect(() ==> $fn('Hello', Regex2\re('/Hello/'), -6))->
+    expect(() ==> $fn('Hello', Regex2\re("/Hello/"), -6))->
       toThrow(
         InvariantViolationException::class,
         null,
@@ -66,44 +66,75 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\replace($a, Regex2\re($b), $a, $i));
   }
 
-  public function testMatch(): void {
-    $captures = Regex2\match('a', Regex2\re('/abc(.?)e(.*)/'));
-    expect($captures)->toBeNull();
+  public static function provideMatch(): varray<mixed> {
+    return varray[
+      tuple('abce', "/abc(.?)e(.*)/", 0, darray[
+        0 => 'abce',
+        1 => '',
+        2 => '',
+      ]),
+      tuple('abcdef', "/abc(.?)e([fg])/", 0, darray[
+        0 => 'abcdef',
+        1 => 'd',
+        2 => 'f',
+      ]),
+      tuple('abcdef', "/abc(?P<name>def)/", 0, darray[
+        0 => 'abcdef',
+        'name' => 'def',
+        1 => 'def',
+      ]),
+      tuple('abcdef', "/def/", 1, darray[
+        0 => 'def',
+      ]),
+      tuple('hello', "/(.?)/", 0, darray[
+        0 => 'h',
+        1 => 'h',
+      ]),
+      tuple('hello', "//", 0, darray[
+        0 => '',
+      ]),
+      tuple('', "/(.?)/", 0, darray[
+        0 => '',
+        1 => '',
+      ]),
+      tuple('', "//", 0, darray[
+        0 => '',
+      ]),
+    ];
+  }
 
-    $captures = Regex2\match('abce', Regex2\re('/abc(.?)e(.*)/'));
+  /** @dataProvider provideMatch */
+  public function testMatch(
+    string $haystack,
+    string $pattern_string,
+    int $offset,
+    darray<arraykey, string> $expected,
+  ): void {
+    $captures = Regex2\match($haystack, Regex2\re($pattern_string));
     $captures = expect($captures)->toNotBeNull();
-    expect($captures)->toBeSame(darray[
-      0 => 'abce',
-      1 => '',
-      2 => '',
-    ]);
+    expect($captures)->toBeSame($expected);
+  }
 
-    $captures = Regex2\match('abcdef', Regex2\re('/abc(.?)e([fg])/'));
-    $captures = expect($captures)->toNotBeNull();
-    expect($captures)->toBeSame(darray[
-      0 => 'abcdef',
-      1 => 'd',
-      2 => 'f',
-    ]);
+  public static function provideMatchNull(): varray<mixed> {
+    return varray[
+      tuple('a', "/abc(.?)e(.*)/", 0),
+      tuple('abcdef', "/abc/", 1),
+      tuple('', "/abc(.?)e(.*)/", 0),
+    ];
+  }
 
-    $captures = Regex2\match('abcdef', Regex2\re('/abc(?P<name>def)/'));
-    $captures = expect($captures)->toNotBeNull();
-    expect($captures[0])->toBeSame('abcdef');
-    expect($captures['name'])->toBeSame('def');
-    expect($captures[1])->toBeSame('def');
-
-    $captures = Regex2\match('abcdef', Regex2\re('/abc/'), 1);
-    expect($captures)->toBeNull();
-
-    $captures = Regex2\match('abcdef', Regex2\re('/def/'), 1);
-    $captures = expect($captures)->toNotBeNull();
-    expect($captures)->toBeSame(darray[
-      0 => 'def',
-    ]);
+  /** @dataProvider provideMatchNull */
+  public function testMatchNull(
+    string $haystack,
+    string $pattern_string,
+    int $offset,
+  ): void {
+    expect(Regex2\match($haystack, Regex2\re($pattern_string), $offset))
+      ->toBeNull();
   }
 
   public function testRecursion(): void {
-    expect(() ==> Regex2\match(Str\repeat('a', 10000).'b', Regex2\re('/a*a*a*a*a$/')))
+    expect(() ==> Regex2\match(Str\repeat('a', 10000).'b', Regex2\re("/a*a*a*a*a$/")))
       ->toThrow(
         Regex2\Exception::class,
         'Backtrack limit error',
@@ -113,11 +144,15 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
 
   public static function provideMatches(): varray<mixed> {
     return varray[
-      tuple('a', '/abc(.?)e(.*)/', 0, false),
-      tuple('abce', '/abc(.?)e(.*)/', 0, true),
-      tuple('abcdef', '/abc(.?)e([fg])/', 0, true),
-      tuple('abcdef', '/abc/', 1, false),
-      tuple('abcdef', '/def/', 1, true),
+      tuple('a', "/abc(.?)e(.*)/", 0, false),
+      tuple('', "/abc(.?)e(.*)/", 0, false),
+      tuple('abce', "/abc(.?)e(.*)/", 0, true),
+      tuple('abcdef', "/abc(.?)e([fg])/", 0, true),
+      tuple('abcdef', "/abc/", 1, false),
+      tuple('abcdef', "/def/", 1, true),
+      tuple('Things that are equal in PHP', "/php/i", 2, true),
+      tuple('is the web scripting', "/\\bweb\\b/i", 0, true),
+      tuple('is the interwebz scripting', "/\\bweb\\b/i", 0, false),
     ];
   }
 
@@ -134,28 +169,79 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
 
   public static function provideMatchAll(): varray<mixed> {
     return varray[
-      tuple('t1e2s3t', '/[a-z]/', 0, vec[
+      tuple('t1e2s3t', "/[a-z]/", 0, vec[
         dict[0 => 't'],
         dict[0 => 'e'],
         dict[0 => 's'],
         dict[0 => 't'],
       ]),
-      tuple('t1e2s3t', '/[a-z](\d)?/', 0, vec[
+      tuple('t1e2s3t', "/[a-z](\d)?/", 0, vec[
         dict[0 => 't1', 1 => '1'],
         dict[0 => 'e2', 1 => '2'],
         dict[0 => 's3', 1 => '3'],
         dict[0 => 't'],
       ]),
-      tuple('t1e2s3t', '/[a-z](?P<digit>\d)?/', 0, vec[
+      tuple('t1e2s3t', "/[a-z](?P<digit>\d)?/", 0, vec[
         dict[0 => 't1', 'digit' => '1', 1 => '1'],
         dict[0 => 'e2', 'digit' => '2', 1 => '2'],
         dict[0 => 's3', 'digit' => '3', 1 => '3'],
         dict[0 => 't'],
       ]),
-      tuple('test', '/a/', 0, vec[]),
-      tuple('t1e2s3t', '/[a-z]/', 3, vec[
+      tuple('test', "/a/", 0, vec[]),
+      tuple('t1e2s3t', "/[a-z]/", 3, vec[
         dict[0 => 's'],
         dict[0 => 't'],
+      ]),
+      tuple('', "//", 0, vec[
+        dict[0 => ''],
+      ]),
+      tuple('', "/(.?)/", 0, vec[
+        dict[0 => '', 1 => ''],
+      ]),
+      tuple('hello', "//", 0, vec[
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+      ]),
+      tuple('hello', "/.?/", 0, vec[
+        dict[0 => 'h'],
+        dict[0 => 'e'],
+        dict[0 => 'l'],
+        dict[0 => 'l'],
+        dict[0 => 'o'],
+        dict[0 => ''],
+      ]),
+      tuple('hello', "//", 2, vec[
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+      ]),
+      tuple('hello', "/.?/", 2, vec[
+        dict[0 => 'l'],
+        dict[0 => 'l'],
+        dict[0 => 'o'],
+        dict[0 => ''],
+      ]),
+      tuple("<b>bold text</b><a href=howdy.html>click me</a>", "/(<([\\w]+)[^>]*>)(.*)(<\\/\\2>)/",
+        0, vec[
+          dict[
+            0 => "<b>bold text</b>",
+            1 => "<b>",
+            2 => "b",
+            3 => "bold text",
+            4 => "</b>",
+          ],
+          dict[
+            0 => "<a href=howdy.html>click me</a>",
+            1 => "<a href=howdy.html>",
+            2 => "a",
+            3 => "click me",
+            4 => "</a>",
+          ],
       ]),
     ];
   }
@@ -180,12 +266,46 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
 
   public static function provideReplace(): varray<mixed> {
     return varray[
-      tuple('abc', '#d#', '', 0, 'abc'),
-      tuple('abcd', '#d#', 'e', 0, 'abce'),
-      tuple('abcdcbabcdcbabcdcba', '#d#', 'D', 4, 'abcdcbabcDcbabcDcba'),
-      tuple('abcdcbabcdcbabcdcba', '#d#', 'D', 19, 'abcdcbabcdcbabcdcba'),
-      tuple('abcdcbabcdcbabcdcba', '#d#', 'D', -19, 'abcDcbabcDcbabcDcba'),
-      tuple('abcd6', '#d(\d)#', '\1', 0, 'abc6'),
+      tuple('abc', "#d#", '', 0, 'abc'),
+      tuple('abcd', "#d#", 'e', 0, 'abce'),
+      tuple('abcdcbabcdcbabcdcba', "#d#", 'D', 4, 'abcdcbabcDcbabcDcba'),
+      tuple('abcdcbabcdcbabcdcba', "#d#", 'D', 19, 'abcdcbabcdcbabcdcba'),
+      tuple('abcdcbabcdcbabcdcba', "#d#", 'D', -19, 'abcDcbabcDcbabcDcba'),
+      tuple('abcdefghi', "#\D#", 'Z', -3, 'abcdefZZZ'),
+      tuple('abcd6', "#d(\d)#", '\1', 0, 'abc6'),
+      tuple('', "/(.?)/", 'A', 0, 'A'),
+      tuple('', "//", 'A', 0, 'A'),
+      tuple('hello', "/(.?)/", 'A', 0, 'AAAAAA'),
+      tuple('hello', "//", 'A', 0, 'AhAeAlAlAoA'),
+      tuple('hello', "//", 'A', 2, 'heAlAlAoA'),
+      tuple('hello', "//", 'A', -3, 'heAlAlAoA'),
+      tuple(
+        'April 15, 2003',
+        "/(\\w+) (\\d+), (\\d+)/i",
+        '\${1}1,\$3',
+        0,
+        '${1}1,$3',
+      ),
+      tuple(
+        'April 15, 2003',
+        "/(\\w+) (\\d+), (\\d+)/i",
+        "\${1}1,\$3",
+        0,
+        'April1,2003',
+      ),
+      tuple(
+        Regex2\replace(
+          "{startDate} = 1999-5-27",
+          Regex2\re("/(19|20)(\\d{2})-(\\d{1,2})-(\\d{1,2})/"),
+          "\\3/\\4/\\1\\2",
+          0,
+        ),
+        "/^\\s*{(\\w+)}\\s*=/",
+        "$\\1 =",
+        0,
+        "\$startDate = 5/27/1999",
+      ),
+      tuple('ooooo', "/.*/", 'a', 0, 'aa'),
     ];
   }
 
@@ -203,17 +323,26 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
 
   public static function provideReplaceWith(): varray<mixed> {
     return varray[
-      tuple('abc', '#d#', $x ==> $x[0], 0, 'abc'),
-      tuple('abcd', '#d#', $x ==> 'xyz', 0, 'abcxyz'),
-      tuple('abcdcbabcdcbabcdcba', '#d#', $x ==> 'D', 0, 'abcDcbabcDcbabcDcba'),
+      tuple('abc', "#d#", $x ==> $x[0], 0, 'abc'),
+      tuple('abcd', "#d#", $x ==> 'xyz', 0, 'abcxyz'),
+      tuple('abcdcbabcdcbabcdcba', "#d#", $x ==> 'D', 0, 'abcDcbabcDcbabcDcba'),
       tuple('hellodev42.prn3.facebook.com',
-        '/dev(\d+)\.prn3(?<domain>\.facebook\.com)?/',
+        "/dev(\d+)\.prn3(?<domain>\.facebook\.com)?/",
         $x ==> $x[1] . $x['domain'], 4,
         'hello42.facebook.com'),
       tuple('hellodev42.prn3.facebook.com',
-        '/dev(\d+)\.prn3(?<domain>\.facebook\.com)?/',
+        "/dev(\d+)\.prn3(?<domain>\.facebook\.com)?/",
         $x ==> $x[1] . $x['domain'], 6,
         'hellodev42.prn3.facebook.com'),
+      tuple('<table ><table >', '@<table(\s+.*?)?>@s', $x ==> $x[1], 8, '<table > '),
+      tuple('', "/(.?)/", $x ==> $x[1].'A', 0, 'A'),
+      tuple('', "//", $x ==> $x[0].'A', 0, 'A'),
+      tuple('hello', "/(.?)/", $x ==> $x[1].'A', 0, 'hAeAlAlAoAA'), // unintuitive, but consistent with preg_replace_callback
+      tuple('hello', "//", $x ==> $x[0].'A', 0, 'AhAeAlAlAoA'),
+      tuple('@[12345:67890:janedoe]', "/@\[(\d*?):(\d*?):([^]]*?)\]/",
+        ($x ==> Str\repeat(' ', 4 + PHP\strlen($x[1]) + PHP\strlen($x[2])) . $x[3] . ' '),
+        0, '              janedoe '),
+      tuple('ooooo', "/.*/", $x ==> 'a', 0, 'aa'),
     ];
   }
 
@@ -231,12 +360,19 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
 
   public static function provideSplit(): varray<mixed> {
     return varray[
-      tuple('', '/x/', null, vec['']),
-      tuple('hello world', '/x/', null, vec['hello world']),
-      tuple('hello world', '/\s+/', null, vec['hello', 'world']),
-      tuple('  hello world  ', '/\s+/', null, vec['', 'hello', 'world', '']),
-      tuple('  hello world  ', '/\s+/', 2, vec['', 'hello world  ']),
-      tuple('  hello world  ', '/\s+/', 3, vec['', 'hello', 'world  ']),
+      tuple('', "/x/", null, vec['']),
+      tuple('hello world', "/x/", null, vec['hello world']),
+      tuple('hello world', "/x/", 2, vec['hello world']),
+      tuple('hello world', "/\s+/", null, vec['hello', 'world']),
+      tuple('  hello world  ', "/\s+/", null, vec['', 'hello', 'world', '']),
+      tuple('  hello world  ', "/\s+/", 2, vec['', 'hello world  ']),
+      tuple('  hello world  ', "/\s+/", 3, vec['', 'hello', 'world  ']),
+      tuple('', "/(.?)/", null, vec['', '']),
+      tuple('', "//", null, vec['', '']),
+      tuple("string", "/(.?)/", null, vec['', '', '', '', '', '', '', '']),
+      tuple("string", "//", null, vec['', 's', 't', 'r', 'i', 'n', 'g', '']),
+      tuple("string", "/(.?)/", 3, vec['', '', 'ring']),
+      tuple("string", "//", 3, vec['', 's', 'tring']),
     ];
   }
 
@@ -252,7 +388,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   }
 
   public function testSplitInvalidLimit(): void {
-    expect(() ==> Regex2\split('hello world', Regex2\re('/x/'), 1))
+    expect(() ==> Regex2\split('hello world', Regex2\re("/x/"), 1))
       ->toThrow(InvariantViolationException::class);
   }
 }

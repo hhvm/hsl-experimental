@@ -131,10 +131,20 @@ function match_all<T as Match>(
   Pattern $pattern,
   int $offset = 0,
 ): \Generator<int, T, void> {
+  $haystack_length = Str\length($haystack);
   while ($match = match_base($haystack, $pattern, $offset)) {
-    yield $match[0];
-    // start from end of last match
-    $offset = $match[1] + Str\length($match[0][0]);
+    $captures = $match[0];
+    yield $captures;
+    $match_begin = $match[1];
+    $match_length = Str\length($captures[0]);
+    if ($match_length === 0) {
+      $offset = $match_begin + 1;
+      if ($offset > $haystack_length) {
+        break;
+      }
+    } else {
+      $offset = $match_begin + $match_length;
+    }
   }
 }
 
@@ -212,15 +222,28 @@ function replace_with<T as Match>(
   (function(T): string) $replace_func,
   int $offset = 0,
 ): string {
+  $haystack_length = Str\length($haystack);
   $result = Str\slice($haystack, 0, 0);
   $match_end = 0;
-  $match = match_base($haystack, $pattern, $offset);
-  while ($match) {
+  while ($match = match_base($haystack, $pattern, $offset)) {
+    $captures = $match[0];
     $match_begin = $match[1];
+    // Copy anything between the previous match and this one
     $result .= Str\slice($haystack, $match_end, $match_begin - $match_end);
-    $result .= $replace_func($match[0]);
-    $match_end = $match_begin + Str\length($match[0][0]);
-    $match = match_base($haystack, $pattern, $match_end);
+    $result .= $replace_func($captures);
+    $match_length = Str\length($captures[0]);
+    $match_end = $match_begin + $match_length;
+    if ($match_length === 0) {
+      // To get the next match (and avoid looping forever), need to skip forward
+      // before searching again
+      // Note that `$offset` is for searching and `$match_end` is for copying
+      $offset = $match_begin + 1;
+      if ($offset > $haystack_length) {
+        break;
+      }
+    } else {
+      $offset = $match_end;
+    }
   }
   $result .= Str\slice($haystack, $match_end);
   return $result;
@@ -256,19 +279,30 @@ function split<T as Match>(
     'Expected limit greater than 1, got %d.',
     $limit,
   );
+  $haystack_length = Str\length($haystack);
   $result = vec[];
+  $offset = 0;
   $match_end = 0;
   $count = 1;
-  $match = match_base($haystack, $delimiter);
-  while ($match && $count < $limit) {
+  while (($match = match_base($haystack, $delimiter, $offset)) && $count < $limit) {
     $captures = $match[0];
     $match_begin = $match[1];
+    // Copy anything between the previous match and this one
     $result[] = Str\slice($haystack, $match_end, $match_begin - $match_end);
-    $match_end = $match_begin + Str\length($captures[0]);
-    if ($count !== $limit) {
-      $match = match_base($haystack, $delimiter, $match_end);
+    $match_length = Str\length($captures[0]);
+    $match_end = $match_begin + $match_length;
+    if ($match_length === 0) {
+      // To get the next match (and avoid looping forever), need to skip forward
+      // before searching again
+      // Note that `$offset` is for searching and `$match_end` is for copying
+      $offset = $match_begin + 1;
+      if ($offset > $haystack_length) {
+        break;
+      }
+    } else {
+      $offset = $match_end;
     }
-    $count += 1;
+    $count++;
   }
   $result[] = Str\slice($haystack, $match_end);
   return $result;
