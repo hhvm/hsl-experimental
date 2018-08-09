@@ -11,9 +11,10 @@
 namespace HH\Lib\Experimental\Regex2;
 
 use namespace HH\Lib\Str;
+use type HH\Lib\Regex\{Match, Pattern};
 
 final class Exception extends \Exception {
-  public function __construct(Pattern $pattern): void {
+  public function __construct<T>(Pattern<T> $pattern): void {
     static $errors = dict[
       \PREG_INTERNAL_ERROR => 'Internal error',
       \PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit error',
@@ -25,48 +26,34 @@ final class Exception extends \Exception {
       Str\format(
         "%s: %s",
         idx($errors, \preg_last_error(), 'Invalid pattern'),
+        /* HH_FIXME[4110] Until we have a to_string() function */
         $pattern,
       ),
     );
   }
 }
 
-// TODO(T19708752): Lift restriction and make Pattern generic with constrained type parameter
 // TODO(T19708752): Tag appropriate functions as reactive once we've gotten rid of preg_match
-newtype Match as shape(...) = shape(...);
-newtype Pattern as string = string;
-
-/* Mock `re`-prefixed strings */
-function re(string $pattern_string) : Pattern {
-  return $pattern_string;
-}
 
 /**
  * Temporary stand-in for native match function to be implemented in T30991246.
+ * Returns the first match found in `$haystack` given the regex pattern `$pattern`
+ * and an optional offset at which to start the search.
  *
- * @param string $haystack - The string to be searched
- * @param Pattern $pattern - The regular expression to match on
- * @param int $offset (= 0) - The offset within $haystack at which to start the search
- *
+ * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`
  * Returns null, or a tuple of
  * first,
- *   a Match representing the first match to occur in the haystack after the
- *   given offset, which will contain
- *    - the entire matching string, at key 0,
- *    - the results of unnamed capture groups, at integer keys corresponding to
- *        the groups' occurrence within the pattern, and
- *    - the results of named capture groups, at keys that match their respective
- *        names (and temporarily, also at integer keys like for unnamed capture groups);
+ *   a Match containing
+ *     - the entire matching string, at key 0,
+ *     - the results of unnamed capture groups, at integer keys corresponding to
+ *         the groups' occurrence within the pattern, and
+ *     - the results of named capture groups, at string keys matching their respective names,
  * and second,
  *   the integer offset at which this first match occurs in the haystack string.
- *
- * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
- * @return ?(Match, int) - Null, or the match and the offset at which it occurs
- * in the haystack string.
  */
 function match_base<T as Match>(
   string $haystack,
-  Pattern $pattern,
+  Pattern<T> $pattern,
   int $offset = 0,
 ): ?(T, int) {
   $offset = \HH\Lib\_Private\validate_offset($offset, Str\length($haystack));
@@ -89,46 +76,33 @@ function match_base<T as Match>(
 }
 
 /**
- * Returns the first match found in a string given a regex pattern, and optionally,
- * an offset at which to start searching.
+ * Returns the first match found in `$haystack` given the regex pattern `$pattern`
+ * and an optional offset at which to start the search.
  *
- * @param string $haystack - The string to be searched
- * @param Pattern $pattern - The regular expression to match on
- * @param int $offset (= 0) - The offset within $haystack at which to start the search
- *
- * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
- * @return ?Match - Null, or a Match representing the first match to occur
- *  $haystack after $offset, which will contain
+ * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`.
+ * Returns null if there is no match, or a Match containing
  *    - the entire matching string, at key 0,
  *    - the results of unnamed capture groups, at integer keys corresponding to
  *        the groups' occurrence within the pattern, and
- *    - the results of named capture groups, at keys that match their respective
- *        names (and temporarily, also at integer keys like for unnamed capture groups)
+ *    - the results of named capture groups, at string keys matching their respective names.
  */
 function match<T as Match>(
   string $haystack,
-  Pattern $pattern,
+  Pattern<T> $pattern,
   int $offset = 0,
 ): ?T {
   return match_base($haystack, $pattern, $offset)[0] ?? null;
 }
 
 /**
- * Returns all matches in a string given a regex pattern, and optionally,
- * an offset at which to start searching.
+ * Returns all matches found in `$haystack` given the regex pattern `$pattern`
+ * and an optional offset at which to start the search.
  *
- * @param string $haystack - The string to be searched
- * @param Pattern $pattern - The regular expression to match on
- * @param int $offset (= 0) - The offset within $haystack at which to start the search
- *
- * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
- * @return Generator<mixed, Match, void> - Generator for Matches in the order
- * that they occur in $haystack after the $offset. (See match for specifics on
- * Match.)
+ * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`.
  */
 function match_all<T as Match>(
   string $haystack,
-  Pattern $pattern,
+  Pattern<T> $pattern,
   int $offset = 0,
 ): \Generator<int, T, void> {
   $haystack_length = Str\length($haystack);
@@ -136,6 +110,8 @@ function match_all<T as Match>(
     $captures = $match[0];
     yield $captures;
     $match_begin = $match[1];
+    /* HH_FIXME[4108] Until we can define Match to have field 0 */
+    /* HH_FIXME[4110] Until we can define Match to have field 0 */
     $match_length = Str\length($captures[0]);
     if ($match_length === 0) {
       $offset = $match_begin + 1;
@@ -149,46 +125,35 @@ function match_all<T as Match>(
 }
 
 /**
- * Returns whether a match exists in a string given a regex pattern, and optionally,
- * an offset at which to start searching.
+ * Returns whether a match exists in `$haystack` given the regex pattern `$pattern`
+ * and an optional offset at which to start the search.
  *
- * @param string $haystack - The string to be searched
- * @param Pattern $pattern - The regular expression to match on
- * @param int $offset (= 0) - The offset within $haystack at which to start the search
- *
- * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
- * @return bool - true if $haystack matches $pattern anywhere after $offset
+ * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`.
  */
 function matches<T as Match>(
   string $haystack,
-  Pattern $pattern,
+  Pattern<T> $pattern,
   int $offset = 0,
 ): bool {
   return match_base($haystack, $pattern, $offset) !== null;
 }
 
 /**
- * Returns the given string, but with any substring matching a given regex pattern
- * replaced by the replacement string. If an offset is given, replacements are made
- * only starting from that offset.
+ * Returns `$haystack` with any substring matching `$pattern`
+ * replaced by `$replacement`. If `$offset` is given, replacements are made
+ * only starting from `$offset`.
  *
- * @param string $haystack - The string to be searched
- * @param Pattern $pattern - The regular expression to match on
- * @param string $replacement - The string to replace
- * @param int $offset (= 0) - The offset within $haystack at which to start the search
- *
- * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
- * @return string - $haystack with all matching substrings replaced with $replacement
+ * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`.
  */
 function replace<T as Match>(
   string $haystack,
-  Pattern $pattern,
+  Pattern<T> $pattern,
   string $replacement,
   int $offset = 0,
 ): string {
   // replace is the only one of these functions that calls into a preg
   // function other than preg_match. It needs to call into preg_replace
-  // to be able to handle backreferencing in the $replacement string.
+  // to be able to handle backreferencing in the `$replacement` string.
   // preg_replace does not support offsets, so we handle them ourselves,
   // consistently with match_base.
   $offset = \HH\Lib\_Private\validate_offset($offset, Str\length($haystack));
@@ -203,22 +168,15 @@ function replace<T as Match>(
 }
 
 /**
- * Returns the given string, but with any substring matching a given regex pattern
- * replaced by the result of the replacement function applied to that match.
- * If an offset is given, replacements are made only starting from that offset.
+ * Returns `$haystack` with any substring matching `$pattern`
+ * replaced by the result of `$replace_func` applied to that match.
+ * If `$offset` is given, replacements are made only starting from `$offset`.
  *
- * @param string $haystack - The string to be searched
- * @param Pattern $pattern - The regular expression to match on
- * @param function(Match): string $replace_func - The function to modify matching substrings with
- * @param int $offset (= 0) - The offset within $haystack at which to start the search
- *
- * @throws Invariant[Violation]Exception - If $offset is not within plus/minus the length of $haystack
- * @return string - $haystack with every matching substring replaced with $replace_func
- * applied to that match
+ * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`.
  */
 function replace_with<T as Match>(
   string $haystack,
-  Pattern $pattern,
+  Pattern<T> $pattern,
   (function(T): string) $replace_func,
   int $offset = 0,
 ): string {
@@ -231,6 +189,8 @@ function replace_with<T as Match>(
     // Copy anything between the previous match and this one
     $result .= Str\slice($haystack, $match_end, $match_begin - $match_end);
     $result .= $replace_func($captures);
+    /* HH_FIXME[4108] Until we can define Match to have field 0 */
+    /* HH_FIXME[4110] Until we can define Match to have field 0 */
     $match_length = Str\length($captures[0]);
     $match_end = $match_begin + $match_length;
     if ($match_length === 0) {
@@ -250,25 +210,17 @@ function replace_with<T as Match>(
 }
 
 /**
- * Splits a given string by a regular expression. If a limit is given, the returned
- * vec will have at most that many elements.
+ * Splits `$haystack` into chunks by its substrings that match with `$pattern`.
+ * If `$limit` is given, the returned vec will have at most that many elements.
+ * The last element of the vec will be whatever is left of the haystack string
+ * after the appropriate number of splits.
+ * If no substrings of `$haystack` match `$delimiter`, a vec containing only `$haystack` will be returned.
  *
- * @param string $haystack - The string to be split
- * @param Pattern $delimiter - The regular expression to match and split on
- * @param int $limit (= null) - If specified, then the returned vec will
- * have at most $limit elements. The last element of the vec will be whatever
- * is left of the haystack string after the appropriate number of splits.
- * $limit must be > 1
- *
- * @throws Invariant[Violation]Exception - If $limit <= 0
- * @return vec<string> - vec containing (at most $limit, if $limit is given)
- * substrings in $haystack, delimited by substrings matching $delimiter; whatever
- * is left of $haystack after the limit is reached makes up the last substring in the vec.
- * If no substrings of $haystack match $delimiter, a vec containing only $haystack is returned
+ * Throws Invariant[Violation]Exception if `$limit` < 2.
  */
 function split<T as Match>(
   string $haystack,
-  Pattern $delimiter,
+  Pattern<T> $delimiter,
   ?int $limit = null,
 ): vec<string> {
   if ($limit === null) {
@@ -284,11 +236,14 @@ function split<T as Match>(
   $offset = 0;
   $match_end = 0;
   $count = 1;
-  while (($match = match_base($haystack, $delimiter, $offset)) && $count < $limit) {
+  $match = match_base($haystack, $delimiter, $offset);
+  while ($match && $count < $limit) {
     $captures = $match[0];
     $match_begin = $match[1];
     // Copy anything between the previous match and this one
     $result[] = Str\slice($haystack, $match_end, $match_begin - $match_end);
+    /* HH_FIXME[4108] Until we can define Match to have field 0 */
+    /* HH_FIXME[4110] Until we can define Match to have field 0 */
     $match_length = Str\length($captures[0]);
     $match_end = $match_begin + $match_length;
     if ($match_length === 0) {
@@ -303,6 +258,7 @@ function split<T as Match>(
       $offset = $match_end;
     }
     $count++;
+    $match = match_base($haystack, $delimiter, $offset);
   }
   $result[] = Str\slice($haystack, $match_end);
   return $result;
