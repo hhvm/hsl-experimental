@@ -22,6 +22,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
   public static function checkThrowsOnInvalidRegex<T>(
     (function (string, Regex\Pattern<shape(...)>): T) $fn,
   ): void {
+    /* HH_FIXME[4275] Hack release */
     expect(() ==> $fn('foo', re"I am not a regular expression"))
       ->toThrow(
         Regex2\Exception::class,
