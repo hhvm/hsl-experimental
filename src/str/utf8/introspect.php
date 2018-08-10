@@ -8,10 +8,10 @@
  *
  */
 
-namespace HH\Lib\Str\Utf8;
+namespace HH\Lib\Experimental\Str\Utf8;
 
 use namespace HH\Lib\_Private;
-use type HH\Lib\Str\Encoding;
+use type HH\Lib\Experimental\Str\Encoding;
 
 /**
  * Returns the length of the given string.
@@ -58,7 +58,7 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
  * of the string. If the offset is out-of-bounds, a ViolationException will be
  * thrown.
  *
- * - To simply check if the haystack contains the needle, see `Str\contains()`.
+ * - To simply check if the haystack contains the needle, see `Str\contains_ci()`.
  * - To get the case-sensitive position, see `Str\Utf8\search()`.
  * - To get the last position of the needle, see `Str\Utf8\search_last()`.
  *
@@ -106,7 +106,7 @@ function search_last(string $haystack, string $needle, int $offset = 0): ?int {
  * Determine whether a string of unknown encoding is valid UTF-8
  */
 <<__RxLocal>>
-function is_valid(string $string): bool {
+function is_utf8(string $string): bool {
   return \mb_detect_encoding($string, Encoding::UTF8) === Encoding::UTF8;
 }
 

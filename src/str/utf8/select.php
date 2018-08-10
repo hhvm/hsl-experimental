@@ -8,10 +8,10 @@
  *
  */
 
-namespace HH\Lib\Str\Utf8;
+namespace HH\Lib\Experimental\Str\Utf8;
 
 use namespace HH\Lib\_Private;
-use type HH\Lib\Str\Encoding;
+use type HH\Lib\Experimental\Str\Encoding;
 
 /**
  * Returns a substring of length `$length` of the given string starting at the
@@ -21,7 +21,7 @@ use type HH\Lib\Str\Encoding;
  * string. If the length is zero, the empty string will be returned. If the
  * offset is out-of-bounds, a ViolationException will be thrown.
  *
- * Previously known as `mb_substr` in PHP.
+ * Previously known in PHP as `mb_substr`.
  */
 <<__RxLocal>>
 function slice(string $string, int $offset, ?int $length = null): string {
@@ -44,7 +44,7 @@ function slice(string $string, int $offset, ?int $length = null): string {
  * If the slice would take place in the middle of a multi-byte character,
  * the slice is performed starting from the first byte of that character.
  *
- * Previously known as `mb_strcut` in PHP.
+ * Previously known in PHP as `mb_strcut`.
  */
 <<__RxLocal>>
 function slice_bytes(string $string, int $offset, ?int $length = null): string {

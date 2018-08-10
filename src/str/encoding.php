@@ -1,6 +1,6 @@
 <?hh // strict
 /*
- *  Copyright (c) 2004_present, Facebook, Inc.
+ *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
  *
  *  This source code is licensed under the MIT license found in the
@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Str;
+namespace HH\Lib\Experimental\Str;
 
 enum Encoding: string {
   ASCII = 'ASCII';

@@ -8,10 +8,10 @@
  *
  */
 
-namespace HH\Lib\Str\Utf8;
+namespace HH\Lib\Experimental\Str\Utf8;
 
 use namespace HH\Lib\_Private;
-use type HH\Lib\Str\Encoding;
+use type HH\Lib\Experimental\Str\Encoding;
 
 /**
  * Returns the string with all alphabetic characters converted to uppercase.
