@@ -75,3 +75,26 @@ function convert_kana(string $string, string $options): string {
   return \mb_convert_kana($string, $options, Encoding::UTF8);
 }
 
+/**
+ * Return the string with a slice specified by the offset/length replaced by the
+ * given replacement string.
+ *
+ * If the length is omitted or exceeds the upper bound of the string, the
+ * remainder of the string will be replaced. If the length is zero, the
+ * replacement will be inserted at the offset.
+ */
+<<__RxLocal>>
+function splice(
+  string $string,
+  string $replacement,
+  int $offset,
+  ?int $length = null,
+): string {
+  invariant($length === null || $length >= 0, 'Expected non-negative length.');
+  $offset = _Private\validate_offset($offset, length($string));
+  if ($length === null) {
+    return slice($string, 0, $offset).$replacement;
+  }
+  return
+    slice($string, 0, $offset).$replacement.slice($string, $offset + $length);
+}
