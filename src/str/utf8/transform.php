@@ -91,8 +91,9 @@ function splice(
   ?int $length = null,
 ): string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
-  $offset = _Private\validate_offset($offset, length($string));
-  if ($length === null) {
+  $total_length = length($string);
+  $offset = _Private\validate_offset($offset, $total_length);
+  if ($length === null || ($offset + $length) >= $total_length) {
     return slice($string, 0, $offset).$replacement;
   }
   return

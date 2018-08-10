@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\Str\Utf8;
 
 use namespace HH\Lib\_Private;
+use namespace HH\Lib\Str;
 use type HH\Lib\Experimental\Str\Encoding;
 
 /**
@@ -27,13 +28,7 @@ use type HH\Lib\Experimental\Str\Encoding;
 function slice(string $string, int $offset, ?int $length = null): string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $offset = _Private\validate_offset($offset, length($string));
-  $result = $length === null
-    ? \mb_substr($string, $offset, Encoding::UTF8)
-    : \mb_substr($string, $offset, $length, Encoding::UTF8);
-  if ($result === false) {
-    return '';
-  }
-  return $result;
+  return \mb_substr($string, $offset, $length, Encoding::UTF8);
 }
 
 /**
@@ -49,13 +44,7 @@ function slice(string $string, int $offset, ?int $length = null): string {
 <<__RxLocal>>
 function slice_bytes(string $string, int $offset, ?int $length = null): string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
-  $offset = _Private\validate_offset($offset, length($string));
-  $result = $length === null
-    ? \mb_strcut($string, $offset, Encoding::UTF8)
-    : \mb_strcut($string, $offset, $length, Encoding::UTF8);
-  if ($result === false) {
-    return '';
-  }
-  return $result;
+  $offset = _Private\validate_offset($offset, Str\length($string));
+  return \mb_strcut($string, $offset, $length, Encoding::UTF8);
 }
 

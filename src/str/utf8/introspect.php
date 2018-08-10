@@ -107,6 +107,6 @@ function search_last(string $haystack, string $needle, int $offset = 0): ?int {
  */
 <<__RxLocal>>
 function is_utf8(string $string): bool {
-  return \mb_detect_encoding($string, Encoding::UTF8) === Encoding::UTF8;
+  return \mb_check_encoding($string, Encoding::UTF8);
 }
 
