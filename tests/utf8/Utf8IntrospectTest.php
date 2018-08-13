@@ -26,10 +26,7 @@ final class Utf8IntrospectTest extends PHPUnit_Framework_TestCase {
   }
 
   /** @dataProvider provideLength */
-  public function testLength(
-    string $string,
-    int $expected,
-  ): void {
+  public function testLength(string $string, int $expected): void {
     expect(Utf8\length($string))->toBeSame($expected);
   }
 
@@ -135,11 +132,9 @@ final class Utf8IntrospectTest extends PHPUnit_Framework_TestCase {
   }
 
   /** @dataProvider provideIsUtf8 */
-  public function testIsUtf8(
-    string $string,
-    bool $expected
-  ): void {
+  public function testIsUtf8(string $string, bool $expected): void {
     expect(Utf8\is_utf8($string))->toBeSame($expected);
   }
 
 }
+

@@ -34,7 +34,6 @@ function length(string $string): int {
  *
  * - To simply check if the haystack contains the needle, see `Str\contains()`.
  * - To get the case-insensitive position, see `Str\Grapheme\search_ci()`.
- * - To get the last position of the needle, see `Str\Grapheme\search_last()`.
  *
  * Previously known in PHP as `grapheme_strpos`.
  */
@@ -59,7 +58,6 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
  *
  * - To simply check if the haystack contains the needle, see `Str\contains_ci()`.
  * - To get the case-sensitive position, see `Str\Grapheme\search()`.
- * - To get the last position of the needle, see `Str\Grapheme\search_last()`.
  *
  * Previously known in PHP as `grapheme_stripos`.
  */
@@ -72,3 +70,4 @@ function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
   }
   return $position;
 }
+

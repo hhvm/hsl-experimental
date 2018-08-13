@@ -22,16 +22,13 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
       tuple('مرحبا عالم', 10),
       tuple('héllö wôrld', 11),
       tuple('こんにちは世界', 7),
-	  tuple('👨‍👨‍👧‍👧', 1),
-	  tuple('각', 1),
+      tuple('👨‍👨‍👧‍👧', 1),
+      tuple('각', 1),
     ];
   }
 
   /** @dataProvider provideLength */
-  public function testLength(
-    string $string,
-    int $expected,
-  ): void {
+  public function testLength(string $string, int $expected): void {
     expect(Grapheme\length($string))->toBeSame($expected);
   }
 
@@ -44,7 +41,12 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
       tuple('foo', 'o', 3, null),
       tuple('héllö wôrld', 'ow', 0, null),
       tuple('héllö wôrld', 'wôrld', -3, null),
-	  tuple('🤷‍a👨‍👨‍👧‍👧‍‍‍', '👨‍👨‍👧‍👧‍‍‍', 0, 2),
+      tuple(
+        '🤷‍a👨‍👨‍👧‍👧‍‍‍',
+        '👨‍👨‍👧‍👧‍‍‍',
+        0,
+        2,
+      ),
     ];
   }
 
@@ -68,7 +70,12 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
       tuple('héllö wôrld', 'ow', 0, null),
       tuple('héllö wôrld', 'Wôrld', -3, null),
       tuple('héllö wôrld', 'WÔRLD', -5, 6),
-	  tuple('a👨‍👨‍👧‍👧', '👨‍👨‍👧‍👧‍‍‍', 0, 1),
+      tuple(
+        'a👨‍👨‍👧‍👧',
+        '👨‍👨‍👧‍👧‍‍‍',
+        0,
+        1,
+      ),
     ];
   }
 
@@ -79,7 +86,9 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Grapheme\search_ci($haystack, $needle, $offset))->toBeSame($expected);
+    expect(Grapheme\search_ci($haystack, $needle, $offset))->toBeSame(
+      $expected,
+    );
   }
 
   public function testPositionExceptions(): void {
@@ -94,3 +103,4 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
       ->toThrow(InvariantException::class);
   }
 }
+

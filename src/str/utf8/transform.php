@@ -99,3 +99,4 @@ function splice(
   return
     slice($string, 0, $offset).$replacement.slice($string, $offset + $length);
 }
+

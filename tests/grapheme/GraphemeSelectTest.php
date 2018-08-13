@@ -8,14 +8,14 @@
  *
  */
 
-use namespace HH\Lib\Experimental\Str\Utf8;
+use namespace HH\Lib\Experimental\Str\Grapheme;
 use function Facebook\FBExpect\expect;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 /**
  * @emails oncall+hack
  */
-final class Utf8SelectTest extends PHPUnit_Framework_TestCase {
+final class GraphemeSelectTest extends PHPUnit_Framework_TestCase {
 
   public static function provideSlice(): varray<mixed> {
     return varray[
@@ -27,6 +27,7 @@ final class Utf8SelectTest extends PHPUnit_Framework_TestCase {
       tuple('héllö wôrld', -5, null, 'wôrld'),
       tuple('héllö wôrld', -5, 100, 'wôrld'),
       tuple('héllö wôrld', -5, 3, 'wôr'),
+	  tuple('a👨‍👨‍👧‍👧 foo', 1, null, '👨‍👨‍👧‍👧 foo'),
     ];
   }
 
@@ -37,39 +38,33 @@ final class Utf8SelectTest extends PHPUnit_Framework_TestCase {
     ?int $length,
     string $expected,
   ): void {
-    expect(Utf8\slice($string, $offset, $length))->toBeSame($expected);
+    expect(Grapheme\slice($string, $offset, $length))->toBeSame($expected);
   }
 
   public function testSliceExceptions(): void {
-    expect(() ==> Utf8\slice('héllö', 0, -1))
+    expect(() ==> Grapheme\slice('héllö', 0, -1))
       ->toThrow(InvariantException::class);
-    expect(() ==> Utf8\slice('héllö', 10))
+    expect(() ==> Grapheme\slice('héllö', 10))
       ->toThrow(InvariantException::class);
-    expect(() ==> Utf8\slice('héllö', -6))
+    expect(() ==> Grapheme\slice('héllö', -6))
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideSliceBytes(): varray<mixed> {
+  public static function provideExtract(): varray<mixed> {
     return varray[
-      tuple('héllö wôrld', 3, 3, 'll'),
-      tuple('héllö wôrld', 3, null, 'llö wôrld'),
-      tuple('héllö wôrld', 3, 0, ''),
-      tuple('fôo', 4, null, ''),
-      tuple('fôo', 4, 12, ''),
-      tuple('héllö wôrld', -5, null, 'ôrld'),
-      tuple('héllö wôrld', -5, 100, 'ôrld'),
-      tuple('héllö wôrld', -5, 3, 'ôr'),
+      tuple('héllö wôrld', 1, 0, tuple('h', 1)),
+	  tuple('héllö wôrld', 1, 1, tuple('é', 3)),
+	  tuple('héllö wôrld', 3, 3, tuple('llö', 7)),
     ];
   }
 
-  /** @dataProvider provideSliceBytes */
-  public function testSliceBytes(
+  /** @dataProvider provideExtract */
+  public function testExtract(
     string $string,
     int $offset,
-    ?int $length,
-    string $expected,
+    int $next,
+    (string, int) $expected,
   ): void {
-    expect(Utf8\slice_bytes($string, $offset, $length))->toBeSame($expected);
+    expect(Grapheme\extract($string, $offset, $next))->toBeSame($expected);
   }
 }
-

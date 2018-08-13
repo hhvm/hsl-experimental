@@ -26,7 +26,11 @@ use namespace HH\Lib\_Private;
 function slice(string $string, int $offset, ?int $length = null): string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $offset = _Private\validate_offset($offset, length($string));
-  return \grapheme_substr($string, $offset, $length);
+  $result = \grapheme_substr($string, $offset, $length);
+  if ($result === false) {
+    return '';
+  }
+  return $result;
 }
 
 /**
@@ -37,13 +41,22 @@ function slice(string $string, int $offset, ?int $length = null): string {
  * $start position (in bytes).
  *
  * Returns a tuple containing the extracted grapheme(s) and the next byte position to use
- * for subsequent calls.
+ * for subsequent calls. If the end of the string is reached, null will be returned.
  *
  * Previously known in PHP as `grapheme_extract`.
  */
-<<__RxLocal>>
-function extract(string $string, int $size, int $start = null): (string, int) {
+function extract(string $string, int $size, int $start = 0): (?string, int) {
   $next = 0;
-  $result = \grapheme_extract($string, $size, /* $type: count graphemes */ 0, $start, &$next);
+  $result = \grapheme_extract(
+    $string,
+    $size,
+    0, /* $type: count graphemes */
+    $start,
+    &$next,
+  );
+  if ($result === false) {
+    $result = null;
+  }
   return tuple($result, $next);
 }
+
