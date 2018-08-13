@@ -44,7 +44,7 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
       tuple('foo', 'o', 3, null),
       tuple('héllö wôrld', 'ow', 0, null),
       tuple('héllö wôrld', 'wôrld', -3, null),
-	  tuple('a👨‍👨‍👧‍👧', '👨‍👨‍👧‍👧‍‍‍‍', 0, 1),
+	  tuple('🤷‍a👨‍👨‍👧‍👧‍‍‍', '👨‍👨‍👧‍👧‍‍‍', 0, 2),
     ];
   }
 
@@ -68,7 +68,7 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
       tuple('héllö wôrld', 'ow', 0, null),
       tuple('héllö wôrld', 'Wôrld', -3, null),
       tuple('héllö wôrld', 'WÔRLD', -5, 6),
-	  tuple('a👨‍👨‍👧‍👧', '👨‍👨‍👧‍👧‍‍‍‍', 0, 1),
+	  tuple('a👨‍👨‍👧‍👧', '👨‍👨‍👧‍👧‍‍‍', 0, 1),
     ];
   }
 
@@ -82,32 +82,6 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
     expect(Grapheme\search_ci($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideSearchLast(): varray<mixed> {
-    return varray[
-      tuple('foofoofoo', 'foo', 0, 6),
-      tuple('foofoofoo', 'bar', 0, null),
-      tuple('foobarbar', 'foo', 3, null),
-      tuple('foofoofoo', 'Foo', 0, null),
-      tuple('foo', 'o', 3, null),
-      tuple('foofoofoo', 'foo', -3, 6),
-      tuple('foofoofoo', 'foo', -4, 3),
-      tuple('héllö wôrld', 'wôrld', -3, 6),
-      tuple('héllö wôrld', 'wôrld', -5, 6),
-      tuple('héllö wôrld', 'wôrld', -6, null),
-	  tuple('a👨‍👨‍👧‍👧👨‍👨‍👧‍👧‍‍', '👨‍👨‍👧‍👧‍‍‍‍', 0, 2),
-    ];
-  }
-
-  /** @dataProvider provideSearchLast */
-  public function testSearchLast(
-    string $haystack,
-    string $needle,
-    int $offset,
-    ?int $expected,
-  ): void {
-    expect(Grapheme\search_last($haystack, $needle, $offset))->toBeSame($expected);
-  }
-
   public function testPositionExceptions(): void {
     expect(() ==> Grapheme\search('foo', 'f', 5))
       ->toThrow(InvariantException::class);
@@ -117,11 +91,6 @@ final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
     expect(() ==> Grapheme\search_ci('foo', 'f', 5))
       ->toThrow(InvariantException::class);
     expect(() ==> Grapheme\search_ci('héllö wôrld', 'wôrld', -16))
-      ->toThrow(InvariantException::class);
-
-    expect(() ==> Grapheme\search_last('foo', 'f', 5))
-      ->toThrow(InvariantException::class);
-    expect(() ==> Grapheme\search_last('héllö wôrld', 'wôrld', -16))
       ->toThrow(InvariantException::class);
   }
 }

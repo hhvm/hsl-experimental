@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\Str\Grapheme;
 
 use namespace HH\Lib\_Private;
+use namespace HH\Lib\Str;
 
 /**
  * Returns the length of the given string in grapheme units.
@@ -66,34 +67,6 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
 function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   $position = \grapheme_stripos($haystack, $needle, $offset);
-  if ($position === false) {
-    return null;
-  }
-  return $position;
-}
-
-/**
- * Returns the last position of the "needle" string in the "haystack" string,
- * or null if it isn't found.
- *
- * An optional offset determines where in the haystack (from the beginning) the
- * search begins. If the offset is negative, the search will begin that many
- * characters from the end of the string and go backwards. If the offset is
- * out-of-bounds, a ViolationException will be thrown.
- *
- * - To simply check if the haystack contains the needle, see `Str\contains()`.
- * - To get the first position of the needle, see `Str\Grapheme\search()`.
- *
- * Previously known in PHP as `grapheme_strrpos`.
- */
-<<__RxLocal>>
-function search_last(string $haystack, string $needle, int $offset = 0): ?int {
-  $haystack_length = length($haystack);
-  invariant(
-    $offset >= -$haystack_length && $offset <= $haystack_length,
-    'Offset is out-of-bounds.',
-  );
-  $position = \grapheme_strrpos($haystack, $needle, $offset);
   if ($position === false) {
     return null;
   }
