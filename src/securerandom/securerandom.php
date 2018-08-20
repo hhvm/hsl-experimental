@@ -53,10 +53,7 @@ function int(
     $min,
     $max,
   );
-  /* HH_FIXME[4128] */
-  /* HH_FIXME[2049] calling stdlib directly */
-  /* HH_FIXME[4107] calling stdlib directly */
-  return \random_int($min, $max);
+  return _Private\Native\random_int($min, $max);
 }
 
 /**
