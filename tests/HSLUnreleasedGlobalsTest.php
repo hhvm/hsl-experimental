@@ -37,7 +37,7 @@ final class HSLUnreleasedGlobalsTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider providesIsHackArray */
+  <<DataProvider('providesIsHackArray')>>
   public function testIsHackArray(
     mixed $candidate,
     bool $expected,
@@ -67,7 +67,7 @@ final class HSLUnreleasedGlobalsTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider providesIsAnyArray */
+  <<DataProvider('providesIsAnyArray')>>
   public function testIsAnyArray(
     mixed $val,
     bool $expected,

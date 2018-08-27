@@ -41,7 +41,7 @@ final class PathTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideTestGetBaseName */
+  <<DataProvider('provideTestGetBaseName')>>
   public function testGetBaseName(string $path, string $name): void {
     $path = new IO\Path($path);
     expect($path->getBaseName())->toBeSame($name);
@@ -61,7 +61,7 @@ final class PathTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideTestGetParent */
+  <<DataProvider('provideTestGetParent')>>
   public function testGetParent(string $path, string $parent): void {
     expect(
       (new IO\Path($path))->getParent()->toString(),
@@ -82,7 +82,7 @@ final class PathTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideTestWithExtension */
+  <<DataProvider('provideTestWithExtension')>>
   public function testWithExtension(string $path, string $extension, string $expected): void {
     expect(
       (new IO\Path($path))->withExtension($extension)->toString(),
@@ -100,7 +100,7 @@ final class PathTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideTestGetParts */
+  <<DataProvider('provideTestGetParts')>>
   public function testGetParts(string $path, vec<string> $parts): void {
     expect((new IO\Path($path))->getParts())->toBeSame($parts);
   }

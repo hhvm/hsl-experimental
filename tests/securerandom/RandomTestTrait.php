@@ -38,7 +38,7 @@ trait RandomTestTrait {
    * Test that `bool` returns true at the correct rate. This test calls `bool`
    * multiple times and checks that the result is in the expected range.
    */
-  /** @dataProvider provideTestBoolRate */
+  <<DataProvider('provideTestBoolRate')>>
   public function testBoolRate(int $rate): void {
     $iterations = 10000;
     $mean = 0.0;
@@ -110,7 +110,7 @@ trait RandomTestTrait {
    *
    * This also ensures `int` is producing values in the correct range.
    */
-  /** @dataProvider provideTestIntRange */
+  <<DataProvider('provideTestIntRange')>>
   public function testIntRange(int $min, int $max): void {
     $iterations = 1000;
     $midpoint = Math\mean(vec[$min, $max]) ?? 0.0;
@@ -140,7 +140,7 @@ trait RandomTestTrait {
     ];
   }
 
-  /** @dataProvider provideTestIntException */
+  <<DataProvider('provideTestIntException')>>
   public function testIntException(int $min, int $max): void {
     expect(() ==> $this->getRandomInt($min, $max))
       ->toThrow(InvariantException::class);
@@ -157,7 +157,7 @@ trait RandomTestTrait {
   /**
    * Ensures that `string` returns strings of the correct length.
    */
-  /** @dataProvider provideAlphabets */
+  <<DataProvider('provideAlphabets')>>
   public function testStringLength(string $alphabet): void {
     $reps = 15;
     for ($length = 1; $length <= $reps; $length++) {
@@ -171,7 +171,7 @@ trait RandomTestTrait {
    * Ensures that `string` returns strings containing the correct
    * characters.
    */
-  /** @dataProvider provideAlphabets */
+  <<DataProvider('provideAlphabets')>>
   public function testStringCharacters(string $alphabet): void {
     $length = 100;
     $valid_chars = keyset(Str\chunk($alphabet));
@@ -184,7 +184,7 @@ trait RandomTestTrait {
    * Ensures that `string` returns all possible characters in all
    * possible positions.
    */
-  /** @dataProvider provideAlphabets */
+  <<DataProvider('provideAlphabets')>>
   public function testStringPositions(string $alphabet): void {
     $reps = 1000;
     $length = Str\length($alphabet);

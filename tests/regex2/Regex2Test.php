@@ -105,7 +105,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideMatch */
+  <<DataProvider('provideMatch')>>
   public function testMatch(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
@@ -125,7 +125,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideMatchNull */
+  <<DataProvider('provideMatchNull')>>
   public function testMatchNull(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
@@ -158,7 +158,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideMatches */
+  <<DataProvider('provideMatches')>>
   public function testMatches(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
@@ -255,7 +255,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     return Vec\map($generator, $match ==> Shapes::toDict($match));
   }
 
-  /** @dataProvider provideMatchAll */
+  <<DataProvider('provideMatchAll')>>
   public function testMatchAll(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
@@ -314,7 +314,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideReplace */
+  <<DataProvider('provideReplace')>>
   public function testReplace(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
@@ -353,7 +353,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideReplaceWith */
+  <<DataProvider('provideReplaceWith')>>
   public function testReplaceWith(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
@@ -384,7 +384,7 @@ final class Regex2Test extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /** @dataProvider provideSplit */
+  <<DataProvider('provideSplit')>>
   public function testSplit(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
