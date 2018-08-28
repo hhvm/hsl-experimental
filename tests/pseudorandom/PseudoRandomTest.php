@@ -14,8 +14,9 @@
 
 use namespace HH\Lib\PseudoRandom;
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\HackTestCase; // @oss-enable
 
-final class PseudoRandomTest extends PHPUnit_Framework_TestCase {
+final class PseudoRandomTest extends HackTestCase {
   use RandomTestTrait;
 
   public function getRandomBool(int $rate): bool {

@@ -3,12 +3,11 @@
   "description": "The Hack Standard Library - Experimental Additions",
   "license": "MIT",
   "require-dev": {
-    "91carriage/phpunit-hhi": "^5.7",
-    "phpunit/phpunit": "^5.7",
+    "hhvm/hacktest": "^0.2",
     "facebook/fbexpect": "^1.0"
   },
   "require": {
-    "hhvm": "^3.23.2",
+    "hhvm": "^3.28.0",
     "hhvm/hhvm-autoload": "^1.4",
     "hhvm/hsl": "dev-master"
   }

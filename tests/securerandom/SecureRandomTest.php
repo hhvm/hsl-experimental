@@ -13,8 +13,9 @@
  */
 
 use namespace HH\Lib\SecureRandom;
+use type Facebook\HackTest\HackTestCase; // @oss-enable
 
-final class SecureRandomTest extends PHPUnit_Framework_TestCase {
+final class SecureRandomTest extends HackTestCase {
   use RandomTestTrait;
 
   public function getRandomBool(int $rate): bool {
