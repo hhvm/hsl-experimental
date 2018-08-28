@@ -15,9 +15,10 @@
 use namespace HH\Lib\{C, Experimental\Regex2, Regex, Str, Vec};
 
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\HackTestCase; // @oss-enable
 use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
-final class Regex2Test extends PHPUnit_Framework_TestCase {
+final class Regex2Test extends HackTestCase {
 
   public static function checkThrowsOnInvalidRegex<T>(
     (function (string, Regex\Pattern<shape(...)>): T) $fn,

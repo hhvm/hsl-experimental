@@ -9,11 +9,12 @@
  */
 
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\HackTestCase; // @oss-enable
 
 /**
  * @emails oncall+hack
  */
-final class HSLUnreleasedGlobalsTest extends PHPUnit_Framework_TestCase {
+final class HSLUnreleasedGlobalsTest extends HackTestCase {
 
   public static function providesIsHackArray(): varray<mixed> {
     return varray[
