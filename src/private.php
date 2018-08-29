@@ -12,9 +12,9 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\{Math, Str};
 
-<<__Rx, __OnlyRxIfArgs>>
+<<__Rx, __AtMostRxAsArgs>>
 function random_string(
-  <<__OnlyRxIfRxFunc>>
+  <<__AtMostRxAsFunc>>
   (function (int): string) $random_bytes,
   int $length,
   ?string $alphabet = null,
