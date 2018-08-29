@@ -11,10 +11,11 @@
 use namespace HH\Lib\{C, Dict, Math, Str, Vec, _Private};
 
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\HackTestCase; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 trait RandomTestTrait {
-  require extends PHPUnit_Framework_TestCase;
+  require extends HackTestCase;
 
   public abstract function getRandomBool(int $rate): bool;
   public abstract function getRandomFloat(): float;
