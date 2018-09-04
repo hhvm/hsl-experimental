@@ -13,7 +13,7 @@
  */
 <<__Rx>>
 function is_hack_array(mixed $val): bool {
-  return is_dict($val) || is_vec($val) || is_keyset($val);
+  return $val is dict<_, _> || $val is vec<_> || $val is keyset<_>;
 }
 
 /**
