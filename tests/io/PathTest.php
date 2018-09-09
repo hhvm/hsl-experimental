@@ -8,9 +8,6 @@
  *
  */
 
-/**
- * @emails oncall+hack
- */
 
 use namespace HH\Lib\Experimental\IO;
 
@@ -18,6 +15,7 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
 
+<<Oncalls('hack')>>
 final class PathTest extends HackTestCase {
   public function testAbsolute(): void {
     $relative_path = new IO\Path('foo/bar/baz');
