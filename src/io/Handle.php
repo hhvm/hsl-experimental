@@ -8,33 +8,23 @@
  *
  */
 
+namespace HH\Lib\Experimental\IO;
 
-namespace HH\Lib\Experimental\IO {
-  newtype Handle<-T> = resource;
-}
+use namespace HH\Lib\Experimental\Filesystem;
 
-namespace HH\Lib\_Private {
-  use namespace HH\Lib\Experimental\{Filesystem, IO};
-
-  function io_handle_from_resource<T as Filesystem\FileBase>(
-    classname<T> $_type,
-    resource $resource,
-  ): IO\Handle<T> {
-    // get_resource_type undeclared if PHP stdlib deregistered
-    /* HH_IGNORE_ERROR[4107] */
-    /* HH_IGNORE_ERROR[2049] */
-    $resource_type = \get_resource_type($resource);
-    invariant(
-      $resource_type === 'stream',
-      '"%s" is not a file-like resource',
-      $resource_type,
-    );
-    return $resource;
-  }
-
-  function resource_from_io_handle<T>(
-    IO\Handle<T> $handle,
-  ): resource {
-    return $handle;
-  }
+/** An interface for IO handles.
+ *
+ * Order of operations is guaranteed; this means that the blocking operations
+ * are generally hidden `\HH\Asio\join()` wrappers around the async functions.
+ */
+<<__Sealed(
+  Filesystem\FileHandle::class,
+  UserspaceHandle::class,
+  ReadHandle::class,
+  WriteHandle::class,
+)>>
+interface Handle {
+  public function isEndOfFile(): bool;
+  public function closeAsync(): Awaitable<void>;
+  public function closeBlocking(): void;
 }
