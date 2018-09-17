@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
-enum FileReadWriteMode : string as string {
+enum FileReadWriteMode: string {
   /**
    * Open for reading and writing; otherwise it has the same behavior as READ.
    */

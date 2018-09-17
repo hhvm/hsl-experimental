@@ -10,15 +10,15 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
-enum FileWriteMode : string {
-	/**
-	 * Open the file for writing only; place the file pointer at the beginning of
-	 * the file.
-	 *
-	 * If the file exits, it is not truncated (as with `TRUNCATE`), and the call
-	 * suceeds (unlike `EXCLUSIVE_CREATE`).
-	 */
-	OPEN_OR_CREATE = 'c';
+enum FileWriteMode: string {
+  /**
+   * Open the file for writing only; place the file pointer at the beginning of
+   * the file.
+   *
+   * If the file exits, it is not truncated (as with `TRUNCATE`), and the call
+   * suceeds (unlike `EXCLUSIVE_CREATE`).
+   */
+  OPEN_OR_CREATE = 'c';
 
   /**
    * Open for writing only; place the file pointer at the beginning of the
