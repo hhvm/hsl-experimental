@@ -10,5 +10,5 @@
 
 namespace HH\Lib\Experimental\IO;
 
-abstract class UserspaceHandle implements Handle {
+interface UserspaceHandle extends Handle {
 }
