@@ -45,7 +45,7 @@ function slice(string $string, int $offset, ?int $length = null): string {
  *
  * Previously known in PHP as `grapheme_extract`.
  */
-function extract(string $string, int $size, int $start = 0): (?string, int) {
+function extract(string $string, int $size, int $start = 0): ?(string, int) {
   $next = 0;
   $result = \grapheme_extract(
     $string,
@@ -55,7 +55,7 @@ function extract(string $string, int $size, int $start = 0): (?string, int) {
     &$next,
   );
   if ($result === false) {
-    $result = null;
+    return null;
   }
   return tuple($result, $next);
 }
