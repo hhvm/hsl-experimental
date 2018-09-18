@@ -15,7 +15,7 @@ use function Facebook\FBExpect\expect;
 /**
  * @emails oncall+hack
  */
-final class Utf8SelectTest extends PHPUnit_Framework_TestCase {
+final class Utf8SelectTest extends \Facebook\HackTest\HackTestCase {
 
   public static function provideSlice(): varray<mixed> {
     return varray[

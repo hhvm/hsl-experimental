@@ -15,7 +15,7 @@ use function Facebook\FBExpect\expect;
 /**
  * @emails oncall+hack
  */
-final class GraphemeSelectTest extends PHPUnit_Framework_TestCase {
+final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
 
   public static function provideSlice(): varray<mixed> {
     return varray[

@@ -12,7 +12,7 @@ use namespace HH\Lib\Experimental\Str\Utf8;
 use function Facebook\FBExpect\expect;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class Utf8IntrospectTest extends PHPUnit_Framework_TestCase {
+final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
 
   public static function provideLength(): varray<mixed> {
     return varray[

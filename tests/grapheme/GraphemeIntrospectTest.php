@@ -12,7 +12,7 @@ use namespace HH\Lib\Experimental\Str\Grapheme;
 use function Facebook\FBExpect\expect;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class GraphemeIntrospectTest extends PHPUnit_Framework_TestCase {
+final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
 
   public static function provideLength(): varray<mixed> {
     return varray[

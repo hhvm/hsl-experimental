@@ -13,7 +13,7 @@ use function Facebook\FBExpect\expect;
 use type HH\Lib\Experimental\Str\Encoding;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class Utf8TransformTest extends PHPUnit_Framework_TestCase {
+final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
 
   public static function provideLowercase(): varray<mixed> {
     return varray[
