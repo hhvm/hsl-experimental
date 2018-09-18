@@ -95,7 +95,8 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
 
   /** @dataProvider provideConvertKana */
   public function testConvertKana(string $string, string $expected): void {
-    expect(Utf8\convert_kana($string, 'kva'))->toBeSame($expected);
+    expect(Utf8\convert_kana($string, shape('k' => true, 'a' => true)))
+      ->toBeSame($expected);
   }
 
   public static function provideEncoding(): varray<mixed> {
@@ -131,4 +132,3 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
   }
 
 }
-

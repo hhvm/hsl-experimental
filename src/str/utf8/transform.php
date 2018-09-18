@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Str\Utf8;
 
-use namespace HH\Lib\_Private;
+use namespace HH\Lib\{_Private, Keyset, Str, Dict};
 use type HH\Lib\Experimental\Str\Encoding;
 
 /**
@@ -45,34 +45,89 @@ function to_encoding(string $string, Encoding $encoding): string {
   return \mb_convert_encoding($string, $encoding, Encoding::UTF8);
 }
 
+type TConvertKanaOption = shape(
+  /**
+   * Convert "zen-kaku" alphabets to "han-kaku"
+   */
+  ?'r' => bool,
+  /**
+   * Convert "han-kaku" alphabets to "zen-kaku"
+   */
+  ?'R' => bool,
+  /**
+   * Convert "zen-kaku" numbers to "han-kaku"
+   */
+  ?'n' => bool,
+  /**
+   * Convert "han-kaku" numbers to "zen-kaku"
+   */
+  ?'N' => bool,
+  /**
+   * Convert "zen-kaku" alphabets and numbers to "han-kaku"
+   */
+  ?'a' => bool,
+  /**
+   * Convert "han-kaku" alphabets and numbers to "zen-kaku" (Characters
+   * included in "a", "A" options are U+0021 - U+007E excluding U+0022,
+   * U+0027, U+005C, U+007E)
+   */
+  ?'A' => bool,
+  /**
+   * Convert "zen-kaku" space to "han-kaku" (U+3000 -> U+0020)
+   */
+  ?'s' => bool,
+  /**
+   * Convert "han-kaku" space to "zen-kaku" (U+0020 -> U+3000)
+   */
+  ?'S' => bool,
+  /**
+   * Convert "zen-kaku kata-kana" to "han-kaku kata-kana"
+   */
+  ?'k' => bool,
+  /**
+   * Convert "han-kaku kata-kana" to "zen-kaku kata-kana"
+   */
+  ?'K' => bool,
+  /**
+   * Convert "zen-kaku hira-gana" to "han-kaku kata-kana"
+   */
+  ?'h' => bool,
+  /**
+   * Convert "han-kaku kata-kana" to "zen-kaku hira-gana"
+   */
+  ?'H' => bool,
+  /**
+   * Convert "zen-kaku kata-kana" to "zen-kaku hira-gana"
+   */
+  ?'c' => bool,
+  /**
+   * Convert "zen-kaku hira-gana" to "zen-kaku kata-kana"
+   */
+  ?'C' => bool,
+  /**
+   * Collapse voiced sound notation and convert them into a character.
+   * Use with "K", "H"
+   */
+  ?'V' => bool,
+);
+
 /**
  * Performs a "han-kaku" - "zen-kaku" conversion for string str. This function
  *   is only useful for Japanese.
  *
- *   Applicable Conversion Options
- *   Option Meaning
- *   r      Convert "zen-kaku" alphabets to "han-kaku"
- *   R      Convert "han-kaku" alphabets to "zen-kaku"
- *   n      Convert "zen-kaku" numbers to "han-kaku"
- *   N      Convert "han-kaku" numbers to "zen-kaku"
- *   a      Convert "zen-kaku" alphabets and numbers to "han-kaku"
- *   A      Convert "han-kaku" alphabets and numbers to "zen-kaku" (Characters
- *          included in "a", "A" options are U+0021 - U+007E excluding U+0022,
- *          U+0027, U+005C, U+007E)
- *   s      Convert "zen-kaku" space to "han-kaku" (U+3000 -> U+0020)
- *   S      Convert "han-kaku" space to "zen-kaku" (U+0020 -> U+3000)
- *   k      Convert "zen-kaku kata-kana" to "han-kaku kata-kana"
- *   K      Convert "han-kaku kata-kana" to "zen-kaku kata-kana"
- *   h      Convert "zen-kaku hira-gana" to "han-kaku kata-kana"
- *   H      Convert "han-kaku kata-kana" to "zen-kaku hira-gana"
- *   c      Convert "zen-kaku kata-kana" to "zen-kaku hira-gana"
- *   C      Convert "zen-kaku hira-gana" to "zen-kaku kata-kana"
- *   V      Collapse voiced sound notation and convert them into a character.
- *          Use with "K","H"
+ * See TConvertKanaOption for the list of options
  */
 <<__RxLocal>>
-function convert_kana(string $string, string $options): string {
-  return \mb_convert_kana($string, $options, Encoding::UTF8);
+function convert_kana(string $string, TConvertKanaOption $options): string {
+  // the native implementation wants a string containing all the options
+  // order does not matter
+  // take only true elements from the shape and join them
+  $option_string = Shapes::toDict($options)
+    |> Dict\filter($$)
+    |> Keyset\keys($$)
+    |> Str\join($$, '');
+
+  return \mb_convert_kana($string, $option_string, Encoding::UTF8);
 }
 
 /**
@@ -99,4 +154,3 @@ function splice(
   return
     slice($string, 0, $offset).$replacement.slice($string, $offset + $length);
 }
-
