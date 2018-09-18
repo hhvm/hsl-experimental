@@ -14,8 +14,8 @@ use function Facebook\FBExpect\expect;
 
 final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
 
-  public static function provideLength(): varray<mixed> {
-    return varray[
+  public static function provideLength(): vec<(string, int)> {
+    return vec[
       tuple('', 0),
       tuple('0', 1),
       tuple('hello', 5),
@@ -32,8 +32,8 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
     expect(Grapheme\length($string))->toBeSame($expected);
   }
 
-  public static function provideSearch(): varray<mixed> {
-    return varray[
+  public static function provideSearch(): vec<(string, string, int, ?int)> {
+    return vec[
       tuple('', 'foo', 0, null),
       tuple('foöBar', 'öB', 0, 2),
       tuple('foöBar', 'öB', 3, null),
@@ -60,8 +60,8 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
     expect(Grapheme\search($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideSearchCI(): varray<mixed> {
-    return varray[
+  public static function provideSearchCI(): vec<(string, string, int, ?int)> {
+    return vec[
       tuple('', 'foo', 0, null),
       tuple('foöBar', 'öb', 0, 2),
       tuple('foöBar', 'öb', 3, null),

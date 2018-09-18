@@ -17,8 +17,8 @@ use function Facebook\FBExpect\expect;
  */
 final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
 
-  public static function provideSlice(): varray<mixed> {
-    return varray[
+  public static function provideSlice(): vec<(string, int, ?int, string)> {
+    return vec[
       tuple('héllö wôrld', 3, 3, 'lö '),
       tuple('héllö wôrld', 3, null, 'lö wôrld'),
       tuple('héllö wôrld', 3, 0, ''),
@@ -27,7 +27,12 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
       tuple('héllö wôrld', -5, null, 'wôrld'),
       tuple('héllö wôrld', -5, 100, 'wôrld'),
       tuple('héllö wôrld', -5, 3, 'wôr'),
-	  tuple('a👨‍👨‍👧‍👧 foo', 1, null, '👨‍👨‍👧‍👧 foo'),
+      tuple(
+        'a👨‍👨‍👧‍👧 foo',
+        1,
+        null,
+        '👨‍👨‍👧‍👧 foo',
+      ),
     ];
   }
 
@@ -50,11 +55,12 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideExtract(): varray<mixed> {
-    return varray[
+  public static function provideExtract(
+  ): vec<(string, int, int, (string, int))> {
+    return vec[
       tuple('héllö wôrld', 1, 0, tuple('h', 1)),
-	  tuple('héllö wôrld', 1, 1, tuple('é', 3)),
-	  tuple('héllö wôrld', 3, 3, tuple('llö', 7)),
+      tuple('héllö wôrld', 1, 1, tuple('é', 3)),
+      tuple('héllö wôrld', 3, 3, tuple('llö', 7)),
     ];
   }
 
@@ -68,3 +74,4 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
     expect(Grapheme\extract($string, $offset, $next))->toBeSame($expected);
   }
 }
+

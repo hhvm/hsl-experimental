@@ -17,8 +17,8 @@ use function Facebook\FBExpect\expect;
  */
 final class Utf8SelectTest extends \Facebook\HackTest\HackTestCase {
 
-  public static function provideSlice(): varray<mixed> {
-    return varray[
+  public static function provideSlice(): vec<(string, int, ?int, string)> {
+    return vec[
       tuple('héllö wôrld', 3, 3, 'lö '),
       tuple('héllö wôrld', 3, null, 'lö wôrld'),
       tuple('héllö wôrld', 3, 0, ''),
@@ -49,8 +49,8 @@ final class Utf8SelectTest extends \Facebook\HackTest\HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideSliceBytes(): varray<mixed> {
-    return varray[
+  public static function provideSliceBytes(): vec<(string, int, ?int, string)> {
+    return vec[
       tuple('héllö wôrld', 3, 3, 'll'),
       tuple('héllö wôrld', 3, null, 'llö wôrld'),
       tuple('héllö wôrld', 3, 0, ''),

@@ -14,8 +14,8 @@ use function Facebook\FBExpect\expect;
 
 final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
 
-  public static function provideLength(): varray<mixed> {
-    return varray[
+  public static function provideLength(): vec<(string, int)> {
+    return vec[
       tuple('', 0),
       tuple('0', 1),
       tuple('hello', 5),
@@ -30,8 +30,8 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     expect(Utf8\length($string))->toBeSame($expected);
   }
 
-  public static function provideSearch(): varray<mixed> {
-    return varray[
+  public static function provideSearch(): vec<(string, string, int, ?int)> {
+    return vec[
       tuple('', 'foo', 0, null),
       tuple('foöBar', 'öB', 0, 2),
       tuple('foöBar', 'öB', 3, null),
@@ -53,8 +53,8 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     expect(Utf8\search($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideSearchCI(): varray<mixed> {
-    return varray[
+  public static function provideSearchCI(): vec<(string, string, int, ?int)> {
+    return vec[
       tuple('', 'foo', 0, null),
       tuple('foöBar', 'öb', 0, 2),
       tuple('foöBar', 'öb', 3, null),
@@ -76,8 +76,8 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     expect(Utf8\search_ci($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideSearchLast(): varray<mixed> {
-    return varray[
+  public static function provideSearchLast(): vec<(string, string, int, ?int)> {
+    return vec[
       tuple('foofoofoo', 'foo', 0, 6),
       tuple('foofoofoo', 'bar', 0, null),
       tuple('foobarbar', 'foo', 3, null),
@@ -118,8 +118,8 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideIsUtf8(): varray<mixed> {
-    return varray[
+  public static function provideIsUtf8(): vec<(string, bool)> {
+    return vec[
       tuple('', true),
       tuple('foo', true),
       tuple('مرحبا عالم', true),

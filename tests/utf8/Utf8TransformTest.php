@@ -15,8 +15,8 @@ use type HH\Lib\Experimental\Str\Encoding;
 
 final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
 
-  public static function provideLowercase(): varray<mixed> {
-    return varray[
+  public static function provideLowercase(): vec<(string, string)> {
+    return vec[
       tuple('', ''),
       tuple('hello world', 'hello world'),
       tuple('Hello World', 'hello world'),
@@ -30,8 +30,8 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     expect(Utf8\lowercase($string))->toBeSame($expected);
   }
 
-  public static function provideUppercase(): varray<mixed> {
-    return varray[
+  public static function provideUppercase(): vec<(string, string)> {
+    return vec[
       tuple('', ''),
       tuple('hello world', 'HELLO WORLD'),
       tuple('Hello World', 'HELLO WORLD'),
@@ -45,8 +45,9 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     expect(Utf8\uppercase($string))->toBeSame($expected);
   }
 
-  public static function provideSplice(): varray<mixed> {
-    return varray[
+  public static function provideSplice(
+  ): vec<(string, string, int, ?int, string)> {
+    return vec[
       tuple('', '', 0, null, ''),
       tuple('héllö wôrld', 'darkness', 6, null, 'héllö darkness'),
       tuple('héllö wôrld', ' crüel ', 5, 1, 'héllö crüel wôrld'),
@@ -132,3 +133,4 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
   }
 
 }
+
