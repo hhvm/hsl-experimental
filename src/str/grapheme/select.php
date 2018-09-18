@@ -37,8 +37,8 @@ function slice(string $string, int $offset, ?int $length = null): string {
  * Function to extract a sequence of default grapheme clusters from a text buffer,
  * which must be encoded in UTF-8.
  *
- * The $size determines the number of graphemes to extract, starting at the
- * $start position (in bytes).
+ * `$size` determines the number of graphemes to extract, starting at the
+ * `$start` position (in bytes).
  *
  * Returns a tuple containing the extracted grapheme(s) and the next byte position to use
  * for subsequent calls. If the end of the string is reached, null will be returned.
