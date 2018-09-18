@@ -22,7 +22,6 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
       tuple('مرحبا عالم', 10),
       tuple('héllö wôrld', 11),
       tuple('こんにちは世界', 7),
-      tuple('👨‍👨‍👧‍👧', 1),
       tuple('각', 1),
     ];
   }
