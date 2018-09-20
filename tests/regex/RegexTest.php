@@ -9,14 +9,14 @@
  */
 
 
-use namespace HH\Lib\{C, Experimental\Regex2, Regex, Str, Vec};
+use namespace HH\Lib\{C, Experimental\Regex, Str, Vec};
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase; // @oss-enable
 use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
 <<Oncalls('hack')>>
-final class Regex2Test extends HackTestCase {
+final class RegexTest extends HackTestCase {
 
   public static function checkThrowsOnInvalidRegex<T>(
     (function (string, Regex\Pattern<shape(...)>): T) $fn,
@@ -24,19 +24,19 @@ final class Regex2Test extends HackTestCase {
     /* HH_FIXME[4275] Hack release */
     expect(() ==> $fn('foo', re"I am not a regular expression"))
       ->toThrow(
-        Regex2\Exception::class,
+        Regex\Exception::class,
         null,
         'Invalid regex should throw an exception',
       );
   }
 
   public function testThrowsOnInvalidRegex(): void {
-    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\match($a, $b));
-    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\matches($a, $b));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\match($a, $b));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\matches($a, $b));
     self::checkThrowsOnInvalidRegex(
-      ($a, $b) ==> self::vecFromGenerator(Regex2\match_all($a, $b)));
-    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\replace($a, $b, $a));
-    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex2\split($a, $b));
+      ($a, $b) ==> self::vecFromGenerator(Regex\match_all($a, $b)));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\replace($a, $b, $a));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\split($a, $b));
   }
 
   public static function checkThrowsOnInvalidOffset<T>(
@@ -59,11 +59,11 @@ final class Regex2Test extends HackTestCase {
   }
 
   public function testThrowsOnInvalidOffset(): void {
-    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\match($a, $b, $i));
-    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\matches($a, $b, $i));
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\match($a, $b, $i));
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\matches($a, $b, $i));
     self::checkThrowsOnInvalidOffset(
-      ($a, $b, $i) ==> self::vecFromGenerator(Regex2\match_all($a, $b, $i)));
-    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex2\replace($a, $b, $a, $i));
+      ($a, $b, $i) ==> self::vecFromGenerator(Regex\match_all($a, $b, $i)));
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\replace($a, $b, $a, $i));
   }
 
   public static function provideMatch(): varray<(string, Regex\Pattern<shape(...)>, int, darray<arraykey, string>)> {
@@ -111,7 +111,7 @@ final class Regex2Test extends HackTestCase {
     int $offset,
     darray<arraykey, string> $expected,
   ): void {
-    $captures = Regex2\match($haystack, $pattern);
+    $captures = Regex\match($haystack, $pattern);
     $captures = expect($captures)->toNotBeNull();
     expect($captures)->toBeSame($expected);
   }
@@ -130,14 +130,14 @@ final class Regex2Test extends HackTestCase {
     Regex\Pattern<shape(...)> $pattern,
     int $offset,
   ): void {
-    expect(Regex2\match($haystack, $pattern, $offset))
+    expect(Regex\match($haystack, $pattern, $offset))
       ->toBeNull();
   }
 
   public function testRecursion(): void {
-    expect(() ==> Regex2\match(Str\repeat('a', 10000).'b', re"/a*a*a*a*a$/"))
+    expect(() ==> Regex\match(Str\repeat('a', 10000).'b', re"/a*a*a*a*a$/"))
       ->toThrow(
-        Regex2\Exception::class,
+        Regex\Exception::class,
         'Backtrack limit error',
         'Should reach backtrack limit',
       );
@@ -164,7 +164,7 @@ final class Regex2Test extends HackTestCase {
     int $offset,
     bool $expected,
   ): void {
-    expect(Regex2\matches($haystack, $pattern, $offset))
+    expect(Regex\matches($haystack, $pattern, $offset))
       ->toBeSame($expected);
   }
 
@@ -262,7 +262,7 @@ final class Regex2Test extends HackTestCase {
     vec<dict<arraykey, string>> $expected,
   ): void {
     expect(self::vecFromGenerator(
-      Regex2\match_all($haystack, $pattern, $offset)))
+      Regex\match_all($haystack, $pattern, $offset)))
       ->toBeSame($expected);
   }
 
@@ -297,7 +297,7 @@ final class Regex2Test extends HackTestCase {
         'April1,2003',
       ),
       tuple(
-        Regex2\replace(
+        Regex\replace(
           "{startDate} = 1999-5-27",
           re"/(19|20)(\\d{2})-(\\d{1,2})-(\\d{1,2})/",
           "\\3/\\4/\\1\\2",
@@ -321,7 +321,7 @@ final class Regex2Test extends HackTestCase {
     int $offset,
     string $expected,
   ): void {
-    expect(Regex2\replace($haystack, $pattern, $replacement, $offset))
+    expect(Regex\replace($haystack, $pattern, $replacement, $offset))
       ->toBeSame($expected);
   }
 
@@ -360,7 +360,7 @@ final class Regex2Test extends HackTestCase {
     int $offset,
     string $expected,
   ): void {
-    expect(Regex2\replace_with($haystack, $pattern, $replace_func, $offset))
+    expect(Regex\replace_with($haystack, $pattern, $replace_func, $offset))
       ->toBeSame($expected);
   }
 
@@ -390,12 +390,12 @@ final class Regex2Test extends HackTestCase {
     ?int $limit,
     vec<string> $expected,
   ): void {
-    expect(Regex2\split($haystack, $pattern, $limit))
+    expect(Regex\split($haystack, $pattern, $limit))
       ->toBeSame($expected);
   }
 
   public function testSplitInvalidLimit(): void {
-    expect(() ==> Regex2\split('hello world', re"/x/", 1))
+    expect(() ==> Regex\split('hello world', re"/x/", 1))
       ->toThrow(InvariantViolationException::class);
   }
 }
