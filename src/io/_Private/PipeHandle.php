@@ -16,7 +16,8 @@ final class PipeHandle extends NativeHandle {
   public static function createPair(): (IO\ReadHandle, IO\WriteHandle) {
     /* HH_IGNORE_ERROR[2049] intentionally not in HHI */
     /* HH_IGNORE_ERROR[4107] intentionally not in HHI */
-    list($r, $w) = Native\pipe() as (resource, resource);
+    $handles = Native\pipe() as (resource, resource);
+    list($r, $w) = $handles; // https://github.com/facebook/hhvm/issues/8324
     return tuple(new self($r), new self($w));
   }
 }
