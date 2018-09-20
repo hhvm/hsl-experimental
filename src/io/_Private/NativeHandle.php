@@ -12,7 +12,7 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\{Experimental\IO, Str};
 
-<<__Sealed(FileHandle::class, StdioHandle::class)>>
+<<__Sealed(FileHandle::class, PipeHandle::class, StdioHandle::class)>>
 abstract class NativeHandle implements IO\ReadWriteHandle {
   protected function __construct(private resource $impl) {
     \stream_set_blocking($impl, false);
