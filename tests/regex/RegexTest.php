@@ -86,21 +86,20 @@ final class RegexTest extends HackTestCase {
       tuple('abcdef', re"/def/", 1, darray[
         0 => 'def',
       ]),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('hello', re"/(.?)/", 0, darray[
-      //   0 => 'h',
-      //   1 => 'h',
-      // ]),
-      // tuple('hello', re"//", 0, darray[
-      //   0 => '',
-      // ]),
-      // tuple('', re"/(.?)/", 0, darray[
-      //   0 => '',
-      //   1 => '',
-      // ]),
-      // tuple('', re"//", 0, darray[
-      //   0 => '',
-      // ]),
+      tuple('hello', re"/(.?)/", 0, darray[
+        0 => 'h',
+        1 => 'h',
+      ]),
+      tuple('hello', re"//", 0, darray[
+        0 => '',
+      ]),
+      tuple('', re"/(.?)/", 0, darray[
+        0 => '',
+        1 => '',
+      ]),
+      tuple('', re"//", 0, darray[
+        0 => '',
+      ]),
     ];
   }
 
@@ -193,41 +192,40 @@ final class RegexTest extends HackTestCase {
         dict[0 => 's'],
         dict[0 => 't'],
       ]),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('', re"//", 0, vec[
-      //   dict[0 => ''],
-      // ]),
-      // tuple('', re"/(.?)/", 0, vec[
-      //   dict[0 => '', 1 => ''],
-      // ]),
-      // tuple('hello', re"//", 0, vec[
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      // ]),
-      // tuple('hello', re"/.?/", 0, vec[
-      //   dict[0 => 'h'],
-      //   dict[0 => 'e'],
-      //   dict[0 => 'l'],
-      //   dict[0 => 'l'],
-      //   dict[0 => 'o'],
-      //   dict[0 => ''],
-      // ]),
-      // tuple('hello', re"//", 2, vec[
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      //   dict[0 => ''],
-      // ]),
-      // tuple('hello', re"/.?/", 2, vec[
-      //   dict[0 => 'l'],
-      //   dict[0 => 'l'],
-      //   dict[0 => 'o'],
-      //   dict[0 => ''],
-      // ]),
+      tuple('', re"//", 0, vec[
+        dict[0 => ''],
+      ]),
+      tuple('', re"/(.?)/", 0, vec[
+        dict[0 => '', 1 => ''],
+      ]),
+      tuple('hello', re"//", 0, vec[
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+      ]),
+      tuple('hello', re"/.?/", 0, vec[
+        dict[0 => 'h'],
+        dict[0 => 'e'],
+        dict[0 => 'l'],
+        dict[0 => 'l'],
+        dict[0 => 'o'],
+        dict[0 => ''],
+      ]),
+      tuple('hello', re"//", 2, vec[
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+        dict[0 => ''],
+      ]),
+      tuple('hello', re"/.?/", 2, vec[
+        dict[0 => 'l'],
+        dict[0 => 'l'],
+        dict[0 => 'o'],
+        dict[0 => ''],
+      ]),
       tuple("<b>bold text</b><a href=howdy.html>click me</a>", re"/(<([\\w]+)[^>]*>)(.*)(<\\/\\2>)/",
         0, vec[
           dict[
@@ -275,13 +273,12 @@ final class RegexTest extends HackTestCase {
       tuple('abcdcbabcdcbabcdcba', re"#d#", 'D', -19, 'abcDcbabcDcbabcDcba'),
       tuple('abcdefghi', re"#\D#", 'Z', -3, 'abcdefZZZ'),
       tuple('abcd6', re"#d(\d)#", '\1', 0, 'abc6'),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('', re"/(.?)/", 'A', 0, 'A'),
-      // tuple('', re"//", 'A', 0, 'A'),
-      // tuple('hello', re"/(.?)/", 'A', 0, 'AAAAAA'),
-      // tuple('hello', re"//", 'A', 0, 'AhAeAlAlAoA'),
-      // tuple('hello', re"//", 'A', 2, 'heAlAlAoA'),
-      // tuple('hello', re"//", 'A', -3, 'heAlAlAoA'),
+      tuple('', re"/(.?)/", 'A', 0, 'A'),
+      tuple('', re"//", 'A', 0, 'A'),
+      tuple('hello', re"/(.?)/", 'A', 0, 'AAAAAA'),
+      tuple('hello', re"//", 'A', 0, 'AhAeAlAlAoA'),
+      tuple('hello', re"//", 'A', 2, 'heAlAlAoA'),
+      tuple('hello', re"//", 'A', -3, 'heAlAlAoA'),
       tuple(
         'April 15, 2003',
         re"/(\\w+) (\\d+), (\\d+)/i",
@@ -308,8 +305,7 @@ final class RegexTest extends HackTestCase {
         0,
         "\$startDate = 5/27/1999",
       ),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('ooooo', re"/.*/", 'a', 0, 'aa'),
+      tuple('ooooo', re"/.*/", 'a', 0, 'aa'),
     ];
   }
 
@@ -339,16 +335,14 @@ final class RegexTest extends HackTestCase {
         $x ==> $x[1] . $x['domain'], 6,
         'hellodev42.prn3.facebook.com'),
       tuple('<table ><table >', re"@<table(\s+.*?)?>@s", $x ==> $x[1], 8, '<table > '),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('', re"/(.?)/", $x ==> $x[1].'A', 0, 'A'),
-      // tuple('', re"//", $x ==> $x[0].'A', 0, 'A'),
-      // tuple('hello', re"/(.?)/", $x ==> $x[1].'A', 0, 'hAeAlAlAoAA'), // unintuitive, but consistent with preg_replace_callback
-      // tuple('hello', re"//", $x ==> $x[0].'A', 0, 'AhAeAlAlAoA'),
+      tuple('', re"/(.?)/", $x ==> $x[1].'A', 0, 'A'),
+      tuple('', re"//", $x ==> $x[0].'A', 0, 'A'),
+      tuple('hello', re"/(.?)/", $x ==> $x[1].'A', 0, 'hAeAlAlAoAA'), // unintuitive, but consistent with preg_replace_callback
+      tuple('hello', re"//", $x ==> $x[0].'A', 0, 'AhAeAlAlAoA'),
       tuple('@[12345:67890:janedoe]', re"/@\[(\d*?):(\d*?):([^]]*?)\]/",
         ($x ==> Str\repeat(' ', 4 + Str\length($x[1]) + Str\length($x[2])) . $x[3] . ' '),
         0, '              janedoe '),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('ooooo', re"/.*/", $x ==> 'a', 0, 'aa'),
+      tuple('ooooo', re"/.*/", $x ==> 'a', 0, 'aa'),
     ];
   }
 
@@ -373,13 +367,12 @@ final class RegexTest extends HackTestCase {
       tuple('  hello world  ', re"/\s+/", null, vec['', 'hello', 'world', '']),
       tuple('  hello world  ', re"/\s+/", 2, vec['', 'hello world  ']),
       tuple('  hello world  ', re"/\s+/", 3, vec['', 'hello', 'world  ']),
-      // TODO(T30675218): Uncomment and test once no longer a parser error
-      // tuple('', re"/(.?)/", null, vec['', '']),
-      // tuple('', re"//", null, vec['', '']),
-      // tuple("string", re"/(.?)/", null, vec['', '', '', '', '', '', '', '']),
-      // tuple("string", re"//", null, vec['', 's', 't', 'r', 'i', 'n', 'g', '']),
-      // tuple("string", re"/(.?)/", 3, vec['', '', 'ring']),
-      // tuple("string", re"//", 3, vec['', 's', 'tring']),
+      tuple('', re"/(.?)/", null, vec['', '']),
+      tuple('', re"//", null, vec['', '']),
+      tuple("string", re"/(.?)/", null, vec['', '', '', '', '', '', '', '']),
+      tuple("string", re"//", null, vec['', 's', 't', 'r', 'i', 'n', 'g', '']),
+      tuple("string", re"/(.?)/", 3, vec['', '', 'ring']),
+      tuple("string", re"//", 3, vec['', 's', 'tring']),
     ];
   }
 
