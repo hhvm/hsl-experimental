@@ -77,7 +77,7 @@ final class PipeTest extends HackTestCase {
   }
 
   public async function testInteractionAsync(): Awaitable<void> {
-    // client-server
+    // Emulate a client-server environment
     list($cr, $sw) = IO\pipe();
     list($sr, $cw) = IO\pipe();
 
@@ -90,7 +90,7 @@ final class PipeTest extends HackTestCase {
         $response = await $cr->readLineAsync();
         expect($response)->toBeSame("Bar\n");
       },
-      async {
+      async { // server
         $request = await $sr->readLineAsync();
         expect($request)->toBeSame("Herp\n");
         await $sw->writeAsync("Derp\n");
