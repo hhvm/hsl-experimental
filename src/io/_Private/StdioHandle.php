@@ -18,10 +18,12 @@ final class StdioHandle extends NativeHandle {
     return new self(\STDERR);
   }
 
+  <<__Memoize>>
   public static function stdout(): IO\WriteHandle {
     return new self(\STDOUT);
   }
 
+  <<__Memoize>>
   public static function stdin(): IO\ReadHandle{
     return new self(\STDIN);
   }
