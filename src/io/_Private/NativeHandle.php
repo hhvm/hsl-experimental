@@ -55,8 +55,14 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
     return $this->queuedAsync(async () ==> {
       $data = '';
       while (($max_bytes === null || $max_bytes > 0) && !$this->isEndOfFile()) {
-        $data .= $this->rawReadBlocking($max_bytes);
-        await \stream_await($this->impl, \STREAM_AWAIT_READ);
+        $chunk = $this->rawReadBlocking($max_bytes);
+        $data .= $chunk;
+        if ($max_bytes !== null) {
+          $max_bytes -= Str\length($chunk);
+        }
+        if ($max_bytes === null || $max_bytes > 0) {
+          await \stream_await($this->impl, \STREAM_AWAIT_READ);
+        }
       }
       return $data;
     });
@@ -79,7 +85,7 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
         // The placeholder value for 'default' is not documented
         $impl = () ==> \fgets($this->impl);
       } else {
-        // If you specify $len, you get $len - 1 bytes
+        // ... but if you specify a value, it returns 1 less.
         $impl = () ==> \fgets($this->impl, $max_bytes + 1);
       }
       $data = $impl();
