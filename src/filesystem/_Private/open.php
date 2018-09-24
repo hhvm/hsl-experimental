@@ -13,9 +13,14 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\Filesystem;
 
 function fopen(string $path, string $mode): FileHandle {
-  $f = \fopen($path, 'r');
+  // fopen indicates errors by returning false and raising a warning; log
+  // the warning and convert to an exception
+  using $errors = new PHPErrorLogger(/* suppress = */ true);
+  $f = \fopen($path, $mode);
   if ($f === false) {
-    throw new Filesystem\FileOpenException();
+    throw new Filesystem\FileOpenException(
+      'Failed to open file: '.$errors->getLastErrorx()['message'],
+    );
   }
   return new FileHandle($path, $f);
 }

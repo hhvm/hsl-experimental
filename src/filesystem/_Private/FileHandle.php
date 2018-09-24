@@ -16,22 +16,28 @@ final class FileHandle
   extends NativeHandle
   implements Filesystem\FileReadWriteHandle {
 
-  public function __construct(private string $filename, resource $impl) {
+  public function __construct(private string $filename, private resource $impl) {
     parent::__construct($impl);
   }
 
-  /**
-   * Get the name of this file.
-   */
   <<__Memoize>>
   final public function getPath(): Filesystem\Path {
     return new Filesystem\Path($this->filename);
   }
 
-  /**
-   * Get the size of the file.
-   */
   final public function getSize(): int {
     return \filesize($this->filename);
+  }
+
+  final public function seekRaw(int $offset): void {
+    \fseek($this->impl, $offset);
+  }
+
+  final public async function seekAsync(int $offset): Awaitable<void> {
+    await $this->queuedAsync(async () ==> $this->seekRaw($offset));
+  }
+
+  final public function seekBlocking(int $offset): void {
+    \HH\Asio\join($this->seekAsync($offset));
   }
 }

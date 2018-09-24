@@ -19,7 +19,7 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
   }
 
   private ?Awaitable<mixed> $lastOperation;
-  private function queuedAsync<T>(
+  protected function queuedAsync<T>(
     (function(): Awaitable<T>) $next,
   ): Awaitable<T> {
     $last = $this->lastOperation;
@@ -61,7 +61,10 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
           $max_bytes -= Str\length($chunk);
         }
         if ($max_bytes === null || $max_bytes > 0) {
-          await \stream_await($this->impl, \STREAM_AWAIT_READ);
+          await \stream_await(
+            $this->impl,
+            \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR,
+          );
         }
       }
       return $data;
@@ -90,7 +93,10 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
       }
       $data = $impl();
       while ($data === false && !$this->isEndOfFile()) {
-        await \stream_await($this->impl, \STREAM_AWAIT_READ);
+        await \stream_await(
+          $this->impl,
+          \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR,
+        );
         $data = $impl();
       }
       return $data === false ? '' : $data;
@@ -126,7 +132,7 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
 
   final public function flushAsync(): Awaitable<void> {
     return $this->queuedAsync(async () ==> {
-      \fflush($this->impl);
+      @\fflush($this->impl);
     });
   }
 
@@ -140,7 +146,7 @@ abstract class NativeHandle implements IO\ReadWriteHandle {
 
   final public async function closeAsync(): Awaitable<void> {
     await $this->flushAsync();
-    \fclose($this->impl);
+    @\fclose($this->impl);
   }
 
   final public function closeBlocking(): void {

@@ -23,6 +23,25 @@ interface FileHandle extends IO\Handle {
    * Get the size of the file.
    */
   public function getSize(): int;
+
+  /**
+   * Move to a specific offset within a file.
+   *
+   * Offset is relative to the start of the file - so, the beginning of the
+   * file is always offset 0.
+   *
+   * Any other pending operations (such as writes) will complete first.
+   */
+  public function seekAsync(int $offset): Awaitable<void>;
+
+  /**
+   * Blocking form of `seekAsync`, which should be preferred.
+   */
+  public function seekBlocking(int $offset): void;
+
+  /** Blocking form of `seekAsync` which does not wait for any other pending
+   * operations to finish. */
+  public function seekRaw(int $offset): void;
 }
 
 <<__Sealed(FileReadWriteHandle::class)>>
