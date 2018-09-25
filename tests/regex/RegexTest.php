@@ -31,10 +31,10 @@ final class RegexTest extends HackTestCase {
   }
 
   public function testThrowsOnInvalidRegex(): void {
-    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\match($a, $b));
+    self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\first_match($a, $b));
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\matches($a, $b));
     self::checkThrowsOnInvalidRegex(
-      ($a, $b) ==> Regex\match_all($a, $b));
+      ($a, $b) ==> Regex\every_match($a, $b));
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\replace($a, $b, $a));
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\split($a, $b));
   }
@@ -59,14 +59,14 @@ final class RegexTest extends HackTestCase {
   }
 
   public function testThrowsOnInvalidOffset(): void {
-    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\match($a, $b, $i));
+    self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\first_match($a, $b, $i));
     self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\matches($a, $b, $i));
     self::checkThrowsOnInvalidOffset(
-      ($a, $b, $i) ==> Regex\match_all($a, $b, $i));
+      ($a, $b, $i) ==> Regex\every_match($a, $b, $i));
     self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\replace($a, $b, $a, $i));
   }
 
-  public static function provideMatch(): varray<(string, Regex\Pattern<shape(...)>, int, darray<arraykey, string>)> {
+  public static function provideFirstMatch(): varray<(string, Regex\Pattern<shape(...)>, int, darray<arraykey, string>)> {
     return varray[
       tuple('abce', re"/abc(.?)e(.*)/", 0, darray[
         0 => 'abce',
@@ -103,19 +103,19 @@ final class RegexTest extends HackTestCase {
     ];
   }
 
-  <<DataProvider('provideMatch')>>
-  public function testMatch(
+  <<DataProvider('provideFirstMatch')>>
+  public function testFirstMatch(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
     int $offset,
     darray<arraykey, string> $expected,
   ): void {
-    $captures = Regex\match($haystack, $pattern);
+    $captures = Regex\first_match($haystack, $pattern);
     $captures = expect($captures)->toNotBeNull();
     expect($captures)->toBeSame($expected);
   }
 
-  public static function provideMatchNull(): varray<(string, Regex\Pattern<shape(...)>, int)> {
+  public static function provideFirstMatchNull(): varray<(string, Regex\Pattern<shape(...)>, int)> {
     return varray[
       tuple('a', re"/abc(.?)e(.*)/", 0),
       tuple('abcdef', re"/abc/", 1),
@@ -123,18 +123,18 @@ final class RegexTest extends HackTestCase {
     ];
   }
 
-  <<DataProvider('provideMatchNull')>>
-  public function testMatchNull(
+  <<DataProvider('provideFirstMatchNull')>>
+  public function testFirstMatchNull(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
     int $offset,
   ): void {
-    expect(Regex\match($haystack, $pattern, $offset))
+    expect(Regex\first_match($haystack, $pattern, $offset))
       ->toBeNull();
   }
 
   public function testRecursion(): void {
-    expect(() ==> Regex\match(Str\repeat('a', 10000).'b', re"/a*a*a*a*a$/"))
+    expect(() ==> Regex\first_match(Str\repeat('a', 10000).'b', re"/a*a*a*a*a$/"))
       ->toThrow(
         Regex\Exception::class,
         'Backtrack limit error',
@@ -167,7 +167,7 @@ final class RegexTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideMatchAll(
+  public static function provideEveryMatch(
   ): varray<(string, Regex\Pattern<shape(...)>, int, vec<darray<arraykey, string>>)> {
     return varray[
       tuple('t1e2s3t', re"/[a-z]/", 0, vec[
@@ -247,14 +247,14 @@ final class RegexTest extends HackTestCase {
     ];
   }
 
-  <<DataProvider('provideMatchAll')>>
-  public function testMatchAll(
+  <<DataProvider('provideEveryMatch')>>
+  public function testEveryMatch(
     string $haystack,
     Regex\Pattern<shape(...)> $pattern,
     int $offset,
     vec<dict<arraykey, string>> $expected,
   ): void {
-    expect(Regex\match_all($haystack, $pattern, $offset))
+    expect(Regex\every_match($haystack, $pattern, $offset))
       ->toBeSame($expected);
   }
 

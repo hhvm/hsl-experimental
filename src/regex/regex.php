@@ -23,7 +23,7 @@ use namespace HH\Lib\{_Private, Str};
  *        the groups' occurrence within the pattern, and
  *    - the results of named capture groups, at string keys matching their respective names.
  */
-function match<T as Match>(
+function first_match<T as Match>(
   string $haystack,
   Pattern<T> $pattern,
   int $offset = 0,
@@ -37,7 +37,7 @@ function match<T as Match>(
  *
  * Throws Invariant[Violation]Exception if `$offset` is not within plus/minus the length of `$haystack`.
  */
-function match_all<T as Match>(
+function every_match<T as Match>(
   string $haystack,
   Pattern<T> $pattern,
   int $offset = 0,
