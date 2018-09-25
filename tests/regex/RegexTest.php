@@ -34,7 +34,7 @@ final class RegexTest extends HackTestCase {
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\match($a, $b));
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\matches($a, $b));
     self::checkThrowsOnInvalidRegex(
-      ($a, $b) ==> self::vecFromGenerator(Regex\match_all($a, $b)));
+      ($a, $b) ==> Regex\match_all($a, $b));
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\replace($a, $b, $a));
     self::checkThrowsOnInvalidRegex(($a, $b) ==> Regex\split($a, $b));
   }
@@ -62,7 +62,7 @@ final class RegexTest extends HackTestCase {
     self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\match($a, $b, $i));
     self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\matches($a, $b, $i));
     self::checkThrowsOnInvalidOffset(
-      ($a, $b, $i) ==> self::vecFromGenerator(Regex\match_all($a, $b, $i)));
+      ($a, $b, $i) ==> Regex\match_all($a, $b, $i));
     self::checkThrowsOnInvalidOffset(($a, $b, $i) ==> Regex\replace($a, $b, $a, $i));
   }
 
@@ -167,75 +167,76 @@ final class RegexTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideMatchAll(): varray<(string, Regex\Pattern<shape(...)>, int, vec<dict<arraykey, string>>)> {
+  public static function provideMatchAll(
+  ): varray<(string, Regex\Pattern<shape(...)>, int, vec<darray<arraykey, string>>)> {
     return varray[
       tuple('t1e2s3t', re"/[a-z]/", 0, vec[
-        dict[0 => 't'],
-        dict[0 => 'e'],
-        dict[0 => 's'],
-        dict[0 => 't'],
+        darray[0 => 't'],
+        darray[0 => 'e'],
+        darray[0 => 's'],
+        darray[0 => 't'],
       ]),
       tuple('t1e2s3t', re"/[a-z](\d)?/", 0, vec[
-        dict[0 => 't1', 1 => '1'],
-        dict[0 => 'e2', 1 => '2'],
-        dict[0 => 's3', 1 => '3'],
-        dict[0 => 't'],
+        darray[0 => 't1', 1 => '1'],
+        darray[0 => 'e2', 1 => '2'],
+        darray[0 => 's3', 1 => '3'],
+        darray[0 => 't'],
       ]),
       tuple('t1e2s3t', re"/[a-z](?P<digit>\d)?/", 0, vec[
-        dict[0 => 't1', 'digit' => '1', 1 => '1'],
-        dict[0 => 'e2', 'digit' => '2', 1 => '2'],
-        dict[0 => 's3', 'digit' => '3', 1 => '3'],
-        dict[0 => 't'],
+        darray[0 => 't1', 'digit' => '1', 1 => '1'],
+        darray[0 => 'e2', 'digit' => '2', 1 => '2'],
+        darray[0 => 's3', 'digit' => '3', 1 => '3'],
+        darray[0 => 't'],
       ]),
       tuple('test', re"/a/", 0, vec[]),
       tuple('t1e2s3t', re"/[a-z]/", 3, vec[
-        dict[0 => 's'],
-        dict[0 => 't'],
+        darray[0 => 's'],
+        darray[0 => 't'],
       ]),
       tuple('', re"//", 0, vec[
-        dict[0 => ''],
+        darray[0 => ''],
       ]),
       tuple('', re"/(.?)/", 0, vec[
-        dict[0 => '', 1 => ''],
+        darray[0 => '', 1 => ''],
       ]),
       tuple('hello', re"//", 0, vec[
-        dict[0 => ''],
-        dict[0 => ''],
-        dict[0 => ''],
-        dict[0 => ''],
-        dict[0 => ''],
-        dict[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
       ]),
       tuple('hello', re"/.?/", 0, vec[
-        dict[0 => 'h'],
-        dict[0 => 'e'],
-        dict[0 => 'l'],
-        dict[0 => 'l'],
-        dict[0 => 'o'],
-        dict[0 => ''],
+        darray[0 => 'h'],
+        darray[0 => 'e'],
+        darray[0 => 'l'],
+        darray[0 => 'l'],
+        darray[0 => 'o'],
+        darray[0 => ''],
       ]),
       tuple('hello', re"//", 2, vec[
-        dict[0 => ''],
-        dict[0 => ''],
-        dict[0 => ''],
-        dict[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
+        darray[0 => ''],
       ]),
       tuple('hello', re"/.?/", 2, vec[
-        dict[0 => 'l'],
-        dict[0 => 'l'],
-        dict[0 => 'o'],
-        dict[0 => ''],
+        darray[0 => 'l'],
+        darray[0 => 'l'],
+        darray[0 => 'o'],
+        darray[0 => ''],
       ]),
       tuple("<b>bold text</b><a href=howdy.html>click me</a>", re"/(<([\\w]+)[^>]*>)(.*)(<\\/\\2>)/",
         0, vec[
-          dict[
+          darray[
             0 => "<b>bold text</b>",
             1 => "<b>",
             2 => "b",
             3 => "bold text",
             4 => "</b>",
           ],
-          dict[
+          darray[
             0 => "<a href=howdy.html>click me</a>",
             1 => "<a href=howdy.html>",
             2 => "a",
@@ -246,12 +247,6 @@ final class RegexTest extends HackTestCase {
     ];
   }
 
-  public static function vecFromGenerator(
-    \Generator<int, Regex\Match, void> $generator
-  ): vec<dict<arraykey, mixed>> {
-    return Vec\map($generator, $match ==> Shapes::toDict($match));
-  }
-
   <<DataProvider('provideMatchAll')>>
   public function testMatchAll(
     string $haystack,
@@ -259,8 +254,7 @@ final class RegexTest extends HackTestCase {
     int $offset,
     vec<dict<arraykey, string>> $expected,
   ): void {
-    expect(self::vecFromGenerator(
-      Regex\match_all($haystack, $pattern, $offset)))
+    expect(Regex\match_all($haystack, $pattern, $offset))
       ->toBeSame($expected);
   }
 

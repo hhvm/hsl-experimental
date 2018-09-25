@@ -41,11 +41,12 @@ function match_all<T as Match>(
   string $haystack,
   Pattern<T> $pattern,
   int $offset = 0,
-): \Generator<int, T, void> {
+): vec<T> {
   $haystack_length = Str\length($haystack);
+  $result = vec[];
   while ($match = _Private\regex_match($haystack, $pattern, $offset)) {
     $captures = $match[0];
-    yield $captures;
+    $result[] = $captures;
     $match_begin = $match[1];
     /* HH_FIXME[4108] Until we can define Match to have field 0 */
     /* HH_FIXME[4110] Until we can define Match to have field 0 */
@@ -59,6 +60,7 @@ function match_all<T as Match>(
       $offset = $match_begin + $match_length;
     }
   }
+  return $result;
 }
 
 /**
