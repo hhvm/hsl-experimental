@@ -9,7 +9,7 @@
  */
 
 
-use namespace HH\Lib\{C, Experimental\Regex, Str, Vec};
+use namespace HH\Lib\{C, Regex, Str, Vec};
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase; // @oss-enable

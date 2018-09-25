@@ -8,14 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\Regex;
+namespace HH\Lib\Regex;
 
 use namespace HH\Lib\Str;
-
-// We need to define them in this namespace rather than `use type` as
-// otherwise callers also need to do `use type` while this is in Experimental\
-type Match = \HH\Lib\Regex\Match;
-type Pattern<+T as Match> = \HH\Lib\Regex\Pattern<T>;
 
 final class Exception extends \Exception {
   public function __construct<T>(Pattern<T> $pattern): void {
