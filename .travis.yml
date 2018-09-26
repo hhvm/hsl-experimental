@@ -1,6 +1,6 @@
 language: php
 php:
- - hhvm-nightly
+ - hhvm
 script:
  - ./.travis.sh
 notifications:
