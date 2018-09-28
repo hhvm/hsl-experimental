@@ -9,10 +9,10 @@
  */
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase; // @oss-enable
+use type Facebook\HackTest\HackTest; // @oss-enable
 
 <<Oncalls('hack')>>
-final class HSLUnreleasedGlobalsTest extends HackTestCase {
+final class HSLUnreleasedGlobalsTest extends HackTest {
 
   public static function providesIsHackArray(): varray<mixed> {
     return varray[

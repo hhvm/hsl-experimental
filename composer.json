@@ -3,8 +3,8 @@
   "description": "The Hack Standard Library - Experimental Additions",
   "license": "MIT",
   "require-dev": {
-    "hhvm/hacktest": "^0.2",
-    "facebook/fbexpect": "^1.0"
+    "hhvm/hacktest": "^1.0",
+    "facebook/fbexpect": "^2.0"
   },
   "require": {
     "hhvm": "^3.28.0",
