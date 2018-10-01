@@ -15,11 +15,3 @@
 function is_hack_array(mixed $val): bool {
   return $val is dict<_, _> || $val is vec<_> || $val is keyset<_>;
 }
-
-/**
- * Returns whether the input is either a PHP array or Hack array.
- */
-<<__Rx>>
-function is_any_array(mixed $val): bool {
-  return is_array($val) || is_hack_array($val);
-}

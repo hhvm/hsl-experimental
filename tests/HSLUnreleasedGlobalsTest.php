@@ -44,34 +44,4 @@ final class HSLUnreleasedGlobalsTest extends HackTest {
   ): void {
     expect(is_hack_array($candidate))->toBeSame($expected);
   }
-
-  public static function providesIsAnyArray(): varray<mixed> {
-    return varray[
-      tuple(null, false),
-      tuple(true, false),
-      tuple(false, false),
-      tuple(42, false),
-      tuple('foo', false),
-      tuple(varray[], true),
-      tuple(varray['foo'], true),
-      tuple(Map {}, false),
-      tuple(Set {'foo'}, false),
-
-      tuple(dict[], true),
-      tuple(vec[], true),
-      tuple(keyset[], true),
-
-      tuple(dict['foo' => 'bar'], true),
-      tuple(vec[42], true),
-      tuple(keyset['foobar'], true),
-    ];
-  }
-
-  <<DataProvider('providesIsAnyArray')>>
-  public function testIsAnyArray(
-    mixed $val,
-    bool $expected,
-  ): void {
-    expect(is_any_array($val))->toBeSame($expected);
-  }
 }
