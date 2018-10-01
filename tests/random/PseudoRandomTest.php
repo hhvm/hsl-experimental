@@ -11,10 +11,11 @@
 
 use namespace HH\Lib\PseudoRandom;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase; // @oss-enable
+use type Facebook\HackTest\HackTest; // @oss-enable
+// @oss-disable: use type HackTestCase as HackTest;
 
 <<Oncalls('hack')>>
-final class PseudoRandomTest extends HackTestCase {
+final class PseudoRandomTest extends HackTest {
   use RandomTestTrait;
 
   public function getRandomBool(int $rate): bool {

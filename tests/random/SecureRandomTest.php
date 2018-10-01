@@ -10,10 +10,11 @@
 
 
 use namespace HH\Lib\SecureRandom;
-use type Facebook\HackTest\HackTestCase; // @oss-enable
+use type Facebook\HackTest\HackTest; // @oss-enable
+// @oss-disable: use type HackTestCase as HackTest;
 
 <<Oncalls('hack')>>
-final class SecureRandomTest extends HackTestCase {
+final class SecureRandomTest extends HackTest {
   use RandomTestTrait;
 
   public function getRandomBool(int $rate): bool {
