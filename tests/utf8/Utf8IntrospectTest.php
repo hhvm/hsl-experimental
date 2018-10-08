@@ -12,7 +12,7 @@ use namespace HH\Lib\Experimental\Str\Utf8;
 use function Facebook\FBExpect\expect;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
+final class Utf8IntrospectTest extends \Facebook\HackTest\HackTest {
 
   public static function provideLength(): vec<(string, int)> {
     return vec[
@@ -25,7 +25,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideLength */
+  <<DataProvider('provideLength')>>
   public function testLength(string $string, int $expected): void {
     expect(Utf8\length($string))->toBeSame($expected);
   }
@@ -43,7 +43,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSearch */
+  <<DataProvider('provideSearch')>>
   public function testSearch(
     string $haystack,
     string $needle,
@@ -66,7 +66,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSearchCI */
+  <<DataProvider('provideSearchCI')>>
   public function testSearchCI(
     string $haystack,
     string $needle,
@@ -91,7 +91,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSearchLast */
+  <<DataProvider('provideSearchLast')>>
   public function testSearchLast(
     string $haystack,
     string $needle,
@@ -131,7 +131,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideIsUtf8 */
+  <<DataProvider('provideIsUtf8')>>
   public function testIsUtf8(string $string, bool $expected): void {
     expect(Utf8\is_utf8($string))->toBeSame($expected);
   }

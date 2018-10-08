@@ -15,7 +15,7 @@ use function Facebook\FBExpect\expect;
 /**
  * @emails oncall+hack
  */
-final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
+final class GraphemeSelectTest extends \Facebook\HackTest\HackTest {
 
   public static function provideSlice(): vec<(string, int, ?int, string)> {
     return vec[
@@ -36,7 +36,7 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSlice */
+  <<DataProvider('provideSlice')>>
   public function testSlice(
     string $string,
     int $offset,
@@ -64,7 +64,7 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideExtract */
+  <<DataProvider('provideExtract')>>
   public function testExtract(
     string $string,
     int $offset,

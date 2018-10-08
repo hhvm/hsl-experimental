@@ -13,7 +13,7 @@ use function Facebook\FBExpect\expect;
 use type HH\Lib\Experimental\Str\Encoding;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
+final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
 
   public static function provideLowercase(): vec<(string, string)> {
     return vec[
@@ -25,7 +25,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideLowercase */
+  <<DataProvider('provideLowercase')>>
   public function testLowercase(string $string, string $expected): void {
     expect(Utf8\lowercase($string))->toBeSame($expected);
   }
@@ -40,7 +40,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideUppercase */
+  <<DataProvider('provideUppercase')>>
   public function testUppercase(string $string, string $expected): void {
     expect(Utf8\uppercase($string))->toBeSame($expected);
   }
@@ -59,7 +59,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSplice */
+  <<DataProvider('provideSplice')>>
   public function testSplice(
     string $string,
     string $replacement,
@@ -94,7 +94,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideConvertKana */
+  <<DataProvider('provideConvertKana')>>
   public function testConvertKana(string $string, string $expected): void {
     expect(Utf8\convert_kana($string, shape('k' => true, 'a' => true)))
       ->toBeSame($expected);
@@ -114,7 +114,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideEncoding */
+  <<DataProvider('provideEncoding')>>
   public function testFromEncoding(
     string $string,
     Encoding $encoding,
@@ -123,7 +123,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTestCase {
     expect(Utf8\from_encoding($string, $encoding))->toBeSame($expected);
   }
 
-  /** @dataProvider provideEncoding */
+  <<DataProvider('provideEncoding')>>
   public function testToEncoding(
     string $expected,
     Encoding $encoding,

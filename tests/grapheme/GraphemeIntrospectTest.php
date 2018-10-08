@@ -12,7 +12,7 @@ use namespace HH\Lib\Experimental\Str\Grapheme;
 use function Facebook\FBExpect\expect;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
+final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
 
   public static function provideLength(): vec<(string, int)> {
     return vec[
@@ -26,7 +26,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideLength */
+  <<DataProvider('provideLength')>>
   public function testLength(string $string, int $expected): void {
     expect(Grapheme\length($string))->toBeSame($expected);
   }
@@ -49,7 +49,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSearch */
+  <<DataProvider('provideSearch')>>
   public function testSearch(
     string $haystack,
     string $needle,
@@ -78,7 +78,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSearchCI */
+  <<DataProvider('provideSearchCI')>>
   public function testSearchCI(
     string $haystack,
     string $needle,

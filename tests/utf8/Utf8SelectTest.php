@@ -15,7 +15,7 @@ use function Facebook\FBExpect\expect;
 /**
  * @emails oncall+hack
  */
-final class Utf8SelectTest extends \Facebook\HackTest\HackTestCase {
+final class Utf8SelectTest extends \Facebook\HackTest\HackTest {
 
   public static function provideSlice(): vec<(string, int, ?int, string)> {
     return vec[
@@ -30,7 +30,7 @@ final class Utf8SelectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSlice */
+  <<DataProvider('provideSlice')>>
   public function testSlice(
     string $string,
     int $offset,
@@ -62,7 +62,7 @@ final class Utf8SelectTest extends \Facebook\HackTest\HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSliceBytes */
+  <<DataProvider('provideSliceBytes')>>
   public function testSliceBytes(
     string $string,
     int $offset,
