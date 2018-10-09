@@ -20,7 +20,12 @@ use namespace HH\Lib\Experimental\Filesystem;
  * All other methods will wait for any pending operations to complete, which
  * usually involves a hidden `\HH\Asio\join()`.
  */
-<<__Sealed(ReadWriteHandle::class, UserspaceHandle::class, Filesystem\FileWriteHandle::class)>>
+<<__Sealed(
+  ReadWriteHandle::class,
+  UserspaceHandle::class,
+  Filesystem\FileWriteHandle::class,
+  DisposableWriteHandle::class,
+)>>
 interface WriteHandle extends Handle {
 
   /** Possibly write some of the string.

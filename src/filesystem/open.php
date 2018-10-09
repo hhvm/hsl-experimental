@@ -10,22 +10,49 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
-use function HH\Lib\_Private\fopen;
+use namespace HH\Lib\_Private;
 
-function open_read_only(string $path): FileReadHandle {
-  return fopen($path, 'r');
+function open_read_only_non_disposable(string $path): FileReadHandle {
+  return _Private\fopen($path, 'r');
 }
 
-function open_write_only(
+function open_write_only_non_disposable(
   string $path,
   FileWriteMode $mode = FileWriteMode::OPEN_OR_CREATE,
 ): FileWriteHandle {
-  return fopen($path, $mode as string);
+  return _Private\fopen($path, $mode as string);
 }
 
-function open_read_write(
+function open_read_write_non_disposable(
   string $path,
   FileReadWriteMode $mode = FileReadWriteMode::OPEN_EXISTING,
 ): FileReadWriteHandle {
-  return fopen($path, $mode as string);
+  return _Private\fopen($path, $mode as string);
+}
+
+<<__ReturnDisposable>>
+function open_read_only(string $path): DisposableFileReadHandle {
+  return new _Private\DisposableFileHandle(
+    open_read_only_non_disposable($path) as _Private\FileHandle,
+  );
+}
+
+<<__ReturnDisposable>>
+function open_write_only(
+  string $path,
+  FileWriteMode $mode = FileWriteMode::OPEN_OR_CREATE,
+): DisposableFileWriteHandle {
+  return new _Private\DisposableFileHandle(
+    open_write_only_non_disposable($path, $mode) as _Private\FileHandle,
+  );
+}
+
+<<__ReturnDisposable>>
+function open_read_write(
+	string $path,
+	FileReadWriteMode $mode = FileReadWriteMode::OPEN_EXISTING,
+): DisposableFileReadWriteHandle {
+  return new _Private\DisposableFileHandle(
+    open_read_write_non_disposable($path, $mode) as _Private\FileHandle,
+  );
 }

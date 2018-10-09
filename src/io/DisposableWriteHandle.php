@@ -10,11 +10,8 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\_Private;
+use namespace HH\Lib\Experimental\Filesystem;
 
-/** Create a pair of handles, where writes to the `WriteHandle` can be
- * read from the `ReadHandle`.
- */
-function pipe_non_disposable(): (ReadHandle, WriteHandle) {
-  return _Private\PipeHandle::createPair();
+/* HH_FIXME[4194] non-disposable parent interface t34965102 */
+interface DisposableWriteHandle extends WriteHandle, \IAsyncDisposable {
 }

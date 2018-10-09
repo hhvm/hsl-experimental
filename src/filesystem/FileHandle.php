@@ -44,15 +44,35 @@ interface FileHandle extends IO\Handle {
   public function seekRaw(int $offset): void;
 }
 
-<<__Sealed(FileReadWriteHandle::class)>>
+<<__Sealed(FileReadWriteHandle::class, DisposableFileReadHandle::class)>>
 interface FileReadHandle extends FileHandle, IO\ReadHandle {
 }
 
-<<__Sealed(FileReadWriteHandle::class)>>
+<<__Sealed(FileReadWriteHandle::class, DisposableFileWriteHandle::class)>>
 interface FileWriteHandle extends FileHandle, IO\WriteHandle {
 }
 
-<<__Sealed(_Private\FileHandle::class)>>
+<<__Sealed(_Private\FileHandle::class, DisposableFileReadWriteHandle::class)>>
 interface FileReadWriteHandle
   extends FileReadHandle, FileWriteHandle, IO\ReadWriteHandle {
+}
+
+<<__Sealed(DisposableFileReadWriteHandle::class)>>
+interface DisposableFileReadHandle
+  /* HH_FIXME[4194] non-disposable parent interface t34965102 */
+  extends FileReadHandle, IO\DisposableReadHandle {
+}
+
+<<__Sealed(DisposableFileReadWriteHandle::class)>>
+interface DisposableFileWriteHandle
+  /* HH_FIXME[4194] non-disposable parent interface t34965102 */
+  extends FileWriteHandle, IO\DisposableWriteHandle {
+}
+
+interface DisposableFileReadWriteHandle
+  extends
+    /* HH_FIXME[4194] non-disposable parent interface t34965102 */
+    FileReadWriteHandle,
+    DisposableFileReadHandle,
+    DisposableFileWriteHandle {
 }

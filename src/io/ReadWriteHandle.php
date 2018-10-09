@@ -16,6 +16,7 @@ use namespace HH\Lib\{_Private, Experimental\Filesystem};
   _Private\NativeHandle::class,
   Filesystem\FileReadWriteHandle::class,
   UserspaceHandle::class,
+  DisposableReadWriteHandle::class,
 )>>
 interface ReadWriteHandle extends ReadHandle, WriteHandle {
 }

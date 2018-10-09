@@ -11,27 +11,28 @@
 use namespace HH\Lib\Experimental\Filesystem;
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
+use type Facebook\HackTest\HackTest; // @oss-enable
+// @oss-disable: use type HackTestCase as HackTest;
 
 <<Oncalls('hack')>>
-final class FileTest extends HackTestCase {
+final class FileTest extends HackTest{
   public async function testExclusiveOpen(): Awaitable<void> {
     $filename = \sys_get_temp_dir().'/'.\bin2hex(\random_bytes(16));
-    $f1 = Filesystem\open_write_only(
+    await using $f1 = Filesystem\open_write_only(
       $filename,
       Filesystem\FileWriteMode::MUST_CREATE,
     );
     await $f1->writeAsync('Hello, world!');
-    expect(() ==> {
-      $f2 = Filesystem\open_write_only(
+    expect(async () ==> {
+      await using $f2 = Filesystem\open_write_only(
         $filename,
         Filesystem\FileWriteMode::MUST_CREATE,
       );
     })->toThrow(Filesystem\FileOpenException::class);
     await $f1->closeAsync();
 
-    $f2 = Filesystem\open_read_only($filename);
+    await using $f2 = Filesystem\open_read_only($filename);
     $content = await $f2->readAsync();
     expect($content)->toBeSame('Hello, world!');
 
@@ -39,10 +40,9 @@ final class FileTest extends HackTestCase {
   }
 
   public async function testTemporaryFile(): Awaitable<void> {
-    await using ($tf = new Filesystem\TemporaryFile()) {
-      $f = $tf->getHandle();
-      $path = $f->getPath();
-      await $f->writeAsync('Hello, world');
+    await using ($tf = Filesystem\temporary_file()) {
+      $path = $tf->getPath();
+      await $tf->writeAsync('Hello, world');
       $content = \file_get_contents($path->toString());
       expect($content)->toBeSame('Hello, world');
     }
@@ -50,39 +50,39 @@ final class FileTest extends HackTestCase {
   }
 
   public async function testTruncate(): Awaitable<void> {
-    await using ($tf = new Filesystem\TemporaryFile());
-    $f = $tf->getHandle();
-    await $f->writeAsync('Hello, world');
-    await $f->seekAsync(0);
+    await using $tf = Filesystem\temporary_file();
+    await $tf->writeAsync('Hello, world');
+    await $tf->seekAsync(0);
 
-    $content = await $f->readAsync();
+    $content = await $tf->readAsync();
     expect($content)->toBeSame('Hello, world');
-    await $f->closeAsync();
+    await $tf->closeAsync();
 
-    $path = $f->getPath()->toString();
+    $path = $tf->getPath()->toString();
     expect(\file_get_contents($path))->toBeSame('Hello, world');
 
-    $f = Filesystem\open_write_only($path, Filesystem\FileWriteMode::TRUNCATE);
+    await using $f =
+      Filesystem\open_write_only($path, Filesystem\FileWriteMode::TRUNCATE);
     await $f->writeAsync('Foo bar');
     await $f->closeAsync();
 
     expect(\file_get_contents($path))->toBeSame('Foo bar');
   }
 
-	public async function testAppend(): Awaitable<void> {
-		await using ($tf = new Filesystem\TemporaryFile());
-		$f = $tf->getHandle();
-		await $f->writeAsync('Hello, world');
-		await $f->closeAsync();
+  public async function testAppend(): Awaitable<void> {
+    await using $tf = Filesystem\temporary_file();
+    await $tf->writeAsync('Hello, world');
+    await $tf->closeAsync();
 
-    $path = $f->getPath()->toString();
-    $f = Filesystem\open_write_only($path, Filesystem\FileWriteMode::APPEND);
+    $path = $tf->getPath()->toString();
+    await using $f =
+      Filesystem\open_write_only($path, Filesystem\FileWriteMode::APPEND);
     await $f->writeAsync("\nGoodbye, cruel world");
     await $f->closeAsync();
 
     expect(\file_get_contents($path))->toBeSame(
       "Hello, world\nGoodbye, cruel world",
     );
-	}
+  }
 
 }

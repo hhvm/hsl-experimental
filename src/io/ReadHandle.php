@@ -12,7 +12,12 @@ namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\Filesystem;
 
-<<__Sealed(ReadWriteHandle::class, UserspaceHandle::class, Filesystem\FileReadHandle::class)>>
+<<__Sealed(
+  ReadWriteHandle::class,
+  UserspaceHandle::class,
+  Filesystem\FileReadHandle::class,
+  DisposableReadHandle::class,
+)>>
 interface ReadHandle extends Handle {
   public function rawReadBlocking(?int $max_bytes = null): string;
 
