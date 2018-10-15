@@ -84,6 +84,10 @@ final class RegexTest extends HackTest {
         'name' => 'def',
         1 => 'def',
       ]),
+      tuple('foo', re"/foo(bar)?/", 0, darray[
+        0 => 'foo',
+        1 => '',
+      ]),
       tuple('abcdef', re"/def/", 1, darray[
         0 => 'def',
       ]),

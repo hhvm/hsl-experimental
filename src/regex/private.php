@@ -35,8 +35,15 @@ function regex_match<T as Regex\Match>(
 ): ?(T, int) {
   $offset = validate_offset($offset, Str\length($haystack));
   $match = darray[];
-  $status =
-    @\preg_match($pattern, $haystack, &$match, \PREG_OFFSET_CAPTURE, $offset);
+  $status = @\preg_match(
+    $pattern,
+    $haystack,
+    &$match,
+    /* HH_IGNORE_ERROR[2049] Private constant */
+    /* HH_IGNORE_ERROR[4106] Private constant */
+    \PREG_FB__PRIVATE__HSL_IMPL | \PREG_OFFSET_CAPTURE,
+    $offset,
+  );
   if ($status === 1) {
     $match_out = darray[];
     foreach ($match as $key => $value) {
