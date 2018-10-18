@@ -12,11 +12,11 @@
 use namespace HH\Lib\{C, Regex, Str, Vec};
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 // @oss-disable: use type HackTestCase as HackTest;
 use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class RegexTest extends HackTest {
 
   public static function checkThrowsOnInvalidRegex<T>(
