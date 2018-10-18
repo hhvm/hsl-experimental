@@ -10,6 +10,7 @@
 
 use namespace HH\Lib\Experimental\Str\Grapheme;
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 /**
@@ -74,4 +75,3 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTest {
     expect(Grapheme\extract($string, $offset, $next))->toBeSame($expected);
   }
 }
-

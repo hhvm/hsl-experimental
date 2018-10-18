@@ -9,6 +9,7 @@
  */
 
 use namespace HH\Lib\Experimental\Str\Utf8;
+use type Facebook\HackTest\DataProvider; // @oss-enable
 use function Facebook\FBExpect\expect;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
@@ -72,4 +73,3 @@ final class Utf8SelectTest extends \Facebook\HackTest\HackTest {
     expect(Utf8\slice_bytes($string, $offset, $length))->toBeSame($expected);
   }
 }
-
