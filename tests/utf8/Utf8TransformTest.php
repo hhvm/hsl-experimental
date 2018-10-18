@@ -11,6 +11,7 @@
 use namespace HH\Lib\Experimental\Str\Utf8;
 use function Facebook\FBExpect\expect;
 use type HH\Lib\Experimental\Str\Encoding;
+use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
@@ -133,4 +134,3 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
   }
 
 }
-

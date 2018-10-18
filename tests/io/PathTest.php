@@ -12,11 +12,11 @@
 use namespace HH\Lib\Experimental\IO;
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
 // @oss-disable: use type HackTestCase as HackTest;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class PathTest extends HackTest {
   public function testAbsolute(): void {
     $relative_path = new IO\Path('foo/bar/baz');

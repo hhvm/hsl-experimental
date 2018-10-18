@@ -10,6 +10,7 @@
 
 use namespace HH\Lib\Experimental\Str\Grapheme;
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
@@ -102,4 +103,3 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
       ->toThrow(InvariantException::class);
   }
 }
-
