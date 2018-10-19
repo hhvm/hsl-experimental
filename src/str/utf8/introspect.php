@@ -21,6 +21,8 @@ use type HH\Lib\Experimental\Str\Encoding;
  */
 <<__RxLocal>>
 function length(string $string): int {
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   return \mb_strlen($string, Encoding::UTF8);
 }
 
@@ -117,4 +119,3 @@ function is_utf8(string $string): bool {
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   return \mb_check_encoding($string, Encoding::UTF8);
 }
-
