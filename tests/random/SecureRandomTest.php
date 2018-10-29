@@ -11,7 +11,6 @@
 
 use namespace HH\Lib\SecureRandom;
 use type Facebook\HackTest\HackTest; // @oss-enable
-// @oss-disable: use type HackTestCase as HackTest;
 
 // @oss-disable: <<Oncalls('hack')>>
 final class SecureRandomTest extends HackTest {

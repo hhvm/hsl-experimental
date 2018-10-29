@@ -14,7 +14,6 @@ use namespace HH\Lib\Experimental\IO;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
-// @oss-disable: use type HackTestCase as HackTest;
 
 // @oss-disable: <<Oncalls('hack')>>
 final class PathTest extends HackTest {
