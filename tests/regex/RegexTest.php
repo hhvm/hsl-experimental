@@ -13,7 +13,6 @@ use namespace HH\Lib\{C, Regex, Str, Vec};
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
-// @oss-disable: use type HackTestCase as HackTest;
 use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
