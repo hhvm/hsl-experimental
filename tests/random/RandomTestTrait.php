@@ -12,7 +12,6 @@ use namespace HH\Lib\{C, Dict, Math, Str, Vec, _Private};
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
-// @oss-disable: use type HackTestCase as HackTest;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 trait RandomTestTrait {
