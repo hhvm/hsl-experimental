@@ -184,13 +184,13 @@ final class RegexTest extends HackTest {
         darray[0 => 't1', 1 => '1'],
         darray[0 => 'e2', 1 => '2'],
         darray[0 => 's3', 1 => '3'],
-        darray[0 => 't', 1 => ''],
+        darray[0 => 't'],
       ]),
       tuple('t1e2s3t', re"/[a-z](?P<digit>\d)?/", 0, vec[
         darray[0 => 't1', 'digit' => '1', 1 => '1'],
         darray[0 => 'e2', 'digit' => '2', 1 => '2'],
         darray[0 => 's3', 'digit' => '3', 1 => '3'],
-        darray[0 => 't', 'digit' => '', 1 => ''],
+        darray[0 => 't'],
       ]),
       tuple('test', re"/a/", 0, vec[]),
       tuple('t1e2s3t', re"/[a-z]/", 3, vec[
