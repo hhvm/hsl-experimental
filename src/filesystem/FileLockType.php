@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Filesystem;
 
-enum FileLockType : int as int {
+enum FileLockType: int as int {
   /**
    * Any number of processes may have a shared lock simultaneously. It is
    * commonly called a reader lock. The creation of a FileLock will block until

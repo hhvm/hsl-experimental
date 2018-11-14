@@ -23,11 +23,14 @@ use namespace HH\Lib\{_Private, Experimental\IO};
 final class FileLock implements \IDisposable {
   private resource $resource;
 
-  public function __construct<T as FileBase>(
-    IO\Handle<T> $handle,
+  public function __construct(
+    <<__AcceptDisposable>>FileHandle $handle,
     FileLockType $lock_type,
   ) {
-    $this->resource = _Private\resource_from_io_handle($handle);
+    $this->resource =
+      /* HH_IGNORE_ERROR[4179] doing dodgy things to disposables */
+      /* HH_IGNORE_ERROR[4188] doing dodgy things to disposables */
+      ($handle as _Private\FileHandle)->getImplementationDetail();
     if (!\flock($this->resource, $lock_type)) {
       throw new FileLockAcquisitionException();
     }
