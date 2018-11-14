@@ -12,17 +12,6 @@ namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\Filesystem;
 
-/** An interface for IO handles.
- *
- * Order of operations is guaranteed.
- */
-<<__Sealed(
-  Filesystem\FileHandle::class,
-  UserspaceHandle::class,
-  ReadHandle::class,
-  WriteHandle::class,
-)>>
-interface Handle {
-  public function isEndOfFile(): bool;
-  public function closeAsync(): Awaitable<void>;
+/* HH_FIXME[4194] non-disposable parent interface t34965102 */
+interface DisposableReadHandle extends ReadHandle, \IAsyncDisposable {
 }

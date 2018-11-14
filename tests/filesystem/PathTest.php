@@ -9,20 +9,21 @@
  */
 
 
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\Experimental\Filesystem;
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
+use type Facebook\HackTest\HackTest; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
+// @oss-disable: use type HackTest;
 
-// @oss-disable: <<Oncalls('hack')>>
+<<Oncalls('hack')>>
 final class PathTest extends HackTest {
   public function testAbsolute(): void {
-    $relative_path = new IO\Path('foo/bar/baz');
+    $relative_path = new Filesystem\Path('foo/bar/baz');
     expect($relative_path->isAbsolute())->toBeFalse();
     expect($relative_path->isRelative())->toBeTrue();
 
-    $absolute_path = new IO\Path('/foo/bar/baz');
+    $absolute_path = new Filesystem\Path('/foo/bar/baz');
     expect($absolute_path->isAbsolute())->toBeTrue();
     expect($absolute_path->isRelative())->toBeFalse();
   }
@@ -42,7 +43,7 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetBaseName')>>
   public function testGetBaseName(string $path, string $name): void {
-    $path = new IO\Path($path);
+    $path = new Filesystem\Path($path);
     expect($path->getBaseName())->toBeSame($name);
   }
 
@@ -62,9 +63,9 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParent')>>
   public function testGetParent(string $path, string $parent): void {
-    expect(
-      (new IO\Path($path))->getParent()->toString(),
-    )->toBeSame($parent);
+    expect((new Filesystem\Path($path))->getParent()->toString())->toBeSame(
+      $parent,
+    );
   }
 
   public static function provideTestWithExtension(
@@ -82,14 +83,16 @@ final class PathTest extends HackTest {
   }
 
   <<DataProvider('provideTestWithExtension')>>
-  public function testWithExtension(string $path, string $extension, string $expected): void {
-    expect(
-      (new IO\Path($path))->withExtension($extension)->toString(),
-    )->toBeSame($expected);
+  public function testWithExtension(
+    string $path,
+    string $extension,
+    string $expected,
+  ): void {
+    expect((new Filesystem\Path($path))->withExtension($extension)->toString())
+      ->toBeSame($expected);
   }
 
-  public static function provideTestGetParts(
-  ): varray<(string, vec<string>)> {
+  public static function provideTestGetParts(): varray<(string, vec<string>)> {
     return varray[
       tuple('/foo/bar', vec['foo', 'bar']),
       tuple('foo/bar/baz', vec['foo', 'bar', 'baz']),
@@ -101,6 +104,6 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParts')>>
   public function testGetParts(string $path, vec<string> $parts): void {
-    expect((new IO\Path($path))->getParts())->toBeSame($parts);
+    expect((new Filesystem\Path($path))->getParts())->toBeSame($parts);
   }
 }
