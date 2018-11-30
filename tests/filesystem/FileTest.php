@@ -16,7 +16,7 @@ use type HH\InvariantException as InvalidRegexException; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: use type HackTest;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class FileTest extends HackTest {
   public async function testExclusiveOpen(): Awaitable<void> {
     /* HH_IGNORE_ERROR[2049] PHP Stdlib */

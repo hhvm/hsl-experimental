@@ -20,7 +20,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
  *
  * This is basic coverage for all `NativeHandle`s
  */
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class PipeTest extends HackTest {
   public async function testWritesAreReadableAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe_non_disposable();

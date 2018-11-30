@@ -17,7 +17,7 @@ use type HH\InvariantException as InvalidRegexException; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use type HackTest;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class PathTest extends HackTest {
   public function testAbsolute(): void {
     $relative_path = new Filesystem\Path('foo/bar/baz');
