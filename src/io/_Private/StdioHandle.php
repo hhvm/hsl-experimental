@@ -14,17 +14,39 @@ use namespace HH\Lib\Experimental\IO;
 
 final class StdioHandle extends NativeHandle {
   <<__Memoize>>
-  public static function stderr(): IO\WriteHandle {
-    return new self(\STDERR);
+  public static function serverError(): IO\WriteHandle {
+    // while the documentation says to use the STDERR constant, that is
+    // conditionally defined
+    return new self(\fopen('php://stderr', 'w'));
   }
 
   <<__Memoize>>
-  public static function stdout(): IO\WriteHandle {
-    return new self(\STDOUT);
+  public static function serverOutput(): IO\WriteHandle {
+    return new self(\fopen('php://stdout', 'w'));
   }
 
   <<__Memoize>>
-  public static function stdin(): IO\ReadHandle {
-    return new self(\STDIN);
+  public static function serverInput(): IO\ReadHandle {
+    return new self(\fopen('php://stdin', 'r'));
+  }
+
+  <<__Memoize>>
+  public static function requestInput(): IO\ReadHandle {
+    return new self(\fopen('php://input', 'r'));
+  }
+
+  <<__Memoize>>
+  public static function requestOutput(): IO\WriteHandle{
+    return new self(\fopen('php://output', 'r'));
+  }
+
+  <<__Memoize>>
+  public static function requestError(): IO\WriteHandle {
+    if (\php_sapi_name() !== "cli") {
+      throw new IO\InvalidHandleException(
+        "requestError is not supported in the current execution mode"
+      );
+    }
+    return self::serverError();
   }
 }
