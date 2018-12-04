@@ -45,6 +45,8 @@ final class FileHandle
   }
 
   final private function seekRaw(int $offset): void {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \fseek($this->impl, $offset);
   }
 

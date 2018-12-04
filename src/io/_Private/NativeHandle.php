@@ -96,9 +96,13 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
 
     if ($max_bytes === null) {
       // The placeholder value for 'default' is not documented
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       $impl = () ==> \fgets($this->impl);
     } else {
       // ... but if you specify a value, it returns 1 less.
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       $impl = () ==> \fgets($this->impl, $max_bytes + 1);
     }
     $data = $impl();

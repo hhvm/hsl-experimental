@@ -38,6 +38,8 @@ function lowercase(string $string): string {
  */
 <<__RxLocal>>
 function from_encoding(string $string, Encoding $encoding): string {
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   return \mb_convert_encoding($string, Encoding::UTF8, $encoding);
 }
 
@@ -46,6 +48,8 @@ function from_encoding(string $string, Encoding $encoding): string {
  */
 <<__RxLocal>>
 function to_encoding(string $string, Encoding $encoding): string {
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   return \mb_convert_encoding($string, $encoding, Encoding::UTF8);
 }
 
