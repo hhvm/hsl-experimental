@@ -13,21 +13,6 @@ namespace HH\Lib\SecureRandom;
 use namespace HH\Lib\{_Private, Math, Str};
 
 /**
- * Returns a cryptographically secure random boolean (coinflip). Returns true
- * once in every `$rate` calls, on average. Always returns false if `$rate` is
- * 0.
- *
- * For pseudorandom booleans, see `PseudoRandom\bool`.
- */
-function bool(int $rate): bool {
-  invariant($rate >= 0, 'Expected non-negative rate, got %d.', $rate);
-  if ($rate === 0) {
-    return false;
-  }
-  return namespace\int(1, $rate) === 1;
-}
-
-/**
  * Returns a cryptographically secure random float in the range from 0.0 to 1.0,
  * inclusive.
  *

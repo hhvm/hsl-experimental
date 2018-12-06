@@ -16,10 +16,6 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 final class SecureRandomTest extends HackTest {
   use RandomTestTrait;
 
-  public function getRandomBool(int $rate): bool {
-    return SecureRandom\bool($rate);
-  }
-
   public function getRandomFloat(): float {
     return SecureRandom\float();
   }
