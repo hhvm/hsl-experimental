@@ -16,6 +16,8 @@ use namespace HH\Lib\{Experimental\IO, Str};
 abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
   private bool $isAwaitable = true;
   protected function __construct(private resource $impl) {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \stream_set_blocking($impl, false);
   }
 
@@ -41,6 +43,8 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
     if ($max_bytes === 0) {
       return '';
     }
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \stream_get_contents($this->impl, $max_bytes ?? -1);
     if ($result === false) {
       throw new IO\ReadException();
@@ -114,6 +118,8 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
   }
 
   final public function rawWriteBlocking(string $bytes): int {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \fwrite($this->impl, $bytes);
     if ($result === false) {
       throw new IO\WriteException();
@@ -144,11 +150,15 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
   }
 
   final public function isEndOfFile(): bool {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return \feof($this->impl);
   }
 
   final public async function closeAsync(): Awaitable<void> {
     await $this->flushAsync();
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     @\fclose($this->impl);
   }
 }

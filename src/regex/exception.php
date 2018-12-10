@@ -24,6 +24,8 @@ final class Exception extends \Exception {
     parent::__construct(
       Str\format(
         "%s: %s",
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
         idx($errors, \preg_last_error(), 'Invalid pattern'),
         /* HH_FIXME[4110] Until we have a to_string() function */
         $pattern,

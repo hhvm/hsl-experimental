@@ -17,26 +17,36 @@ final class StdioHandle extends NativeHandle {
   public static function serverError(): IO\WriteHandle {
     // while the documentation says to use the STDERR constant, that is
     // conditionally defined
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return new self(\fopen('php://stderr', 'w'));
   }
 
   <<__Memoize>>
   public static function serverOutput(): IO\WriteHandle {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return new self(\fopen('php://stdout', 'w'));
   }
 
   <<__Memoize>>
   public static function serverInput(): IO\ReadHandle {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return new self(\fopen('php://stdin', 'r'));
   }
 
   <<__Memoize>>
   public static function requestInput(): IO\ReadHandle {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return new self(\fopen('php://input', 'r'));
   }
 
   <<__Memoize>>
   public static function requestOutput(): IO\WriteHandle{
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return new self(\fopen('php://output', 'w'));
   }
 

@@ -35,6 +35,8 @@ function regex_match<T as Regex\Match>(
 ): ?(T, int) {
   $offset = validate_offset($offset, Str\length($haystack));
   $match = darray[];
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   $status = @\preg_match(
     $pattern,
     $haystack,

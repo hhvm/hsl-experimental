@@ -31,12 +31,16 @@ final class FileLock implements \IDisposable {
       /* HH_IGNORE_ERROR[4179] doing dodgy things to disposables */
       /* HH_IGNORE_ERROR[4188] doing dodgy things to disposables */
       ($handle as _Private\FileHandle)->getImplementationDetail();
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     if (!\flock($this->resource, $lock_type)) {
       throw new FileLockAcquisitionException();
     }
   }
 
   final public function __dispose(): void {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \flock($this->resource, \LOCK_UN);
   }
 }

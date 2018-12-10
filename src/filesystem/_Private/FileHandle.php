@@ -34,6 +34,8 @@ final class FileHandle
   }
 
   final public function getSize(): int {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return \filesize($this->filename);
   }
 

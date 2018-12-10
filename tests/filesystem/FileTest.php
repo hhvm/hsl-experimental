@@ -39,6 +39,8 @@ final class FileTest extends HackTest {
     $content = await $f2->readAsync();
     expect($content)->toBeSame('Hello, world!');
 
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     unlink($filename);
   }
 

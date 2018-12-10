@@ -16,6 +16,8 @@ function fopen(string $path, string $mode): FileHandle {
   // fopen indicates errors by returning false and raising a warning; log
   // the warning and convert to an exception
   using $errors = new PHPErrorLogger(/* suppress = */ true);
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   $f = \fopen($path, $mode);
   if ($f === false) {
     throw new Filesystem\FileOpenException(

@@ -73,6 +73,8 @@ abstract class Timezone {
     string $offset_string,
   ): OffsetTimezone {
     $matches = dict[];
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $did_match = \preg_match(
       '/^(?P<sign>[+-])?(?P<hours>\d{2})(:?(?P<minutes>\d{2}))?$/',
       $offset_string,
