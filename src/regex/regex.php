@@ -99,6 +99,8 @@ function replace<T as Match>(
   $haystack1 = Str\slice($haystack, 0, $offset);
   $haystack2 = Str\slice($haystack, $offset);
 
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   $haystack3 = @\preg_replace($pattern, $replacement, $haystack2);
   if ($haystack3 === null) {
     throw new Exception($pattern);
