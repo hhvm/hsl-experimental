@@ -34,7 +34,7 @@ final class DictCombineTest extends HackTest {
       ),
       tuple(
         vec[
-          darray['c' => 'chocolat']
+          darray['c' => 'chocolat'], 
           dict['a' => 'pear', 'b' => 'strawberry', 'c' => 'cherry'],
           Map {'a' => 'apple', 'b' => 'banana'},
         ],
@@ -46,7 +46,7 @@ final class DictCombineTest extends HackTest {
   <<DataProvider('provideTestUnion')>>
   public function testUnion<Tk as arraykey, Tv>(
     Container<KeyedTraversable<Tk, Tv>> $traversables,
-    dict<Tk, Tv> $exprected
+    dict<Tk, Tv> $expected
   ): void {
     expect(Dict\union(...$traversables))->toBeSame($expected); 
   }
