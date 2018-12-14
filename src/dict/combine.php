@@ -7,7 +7,7 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
-namespace HH\Eexperimental\Lib\Dict;
+namespace HH\Lib\Experimental\Dict;
 
 use namespace HH\Lib\C;
 
