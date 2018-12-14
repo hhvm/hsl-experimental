@@ -9,6 +9,6 @@
   "require": {
     "hhvm": "^3.30.0",
     "hhvm/hhvm-autoload": "^1.7",
-    "hhvm/hsl": "v3.30.x-dev|^3.30.0"
+    "hhvm/hsl": "^3.30.0"
   }
 }
