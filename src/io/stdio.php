@@ -45,7 +45,15 @@ function server_input(): ReadHandle {
  *
  * @see requestOutput
  */
+<<__Memoize>>
 function request_output(): WriteHandle {
+  // php://output has differing eof behavior for interactive stdin - we need
+  // the php://stdout for interactive usage (e.g. repls)
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  if (\php_sapi_name() === "cli") {
+    return server_output();
+  }
   return _Private\StdioHandle::requestOutput();
 }
 
@@ -66,6 +74,14 @@ function request_error(): WriteHandle {
  * In CLI mode, this is likely STDIN; for HTTP requests, it may contain the
  * POST data, if any.
  */
+<<__Memoize>>
 function request_input(): ReadHandle {
+  // php://input has differing eof behavior for interactive stdin - we need
+  // the php://stdin for interactive usage (e.g. repls)
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  if (\php_sapi_name() === "cli") {
+    return server_input();
+  }
   return _Private\StdioHandle::requestInput();
 }
