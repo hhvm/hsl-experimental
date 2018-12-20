@@ -49,7 +49,6 @@ function every_match<T as Match>(
     $result[] = $captures;
     $match_begin = $match[1];
     /* HH_FIXME[4108] Until we can define Match to have field 0 */
-    /* HH_FIXME[4110] Until we can define Match to have field 0 */
     $match_length = Str\length($captures[0]);
     if ($match_length === 0) {
       $offset = $match_begin + 1;
@@ -131,7 +130,6 @@ function replace_with<T as Match>(
     $result .= Str\slice($haystack, $match_end, $match_begin - $match_end);
     $result .= $replace_func($captures);
     /* HH_FIXME[4108] Until we can define Match to have field 0 */
-    /* HH_FIXME[4110] Until we can define Match to have field 0 */
     $match_length = Str\length($captures[0]);
     $match_end = $match_begin + $match_length;
     if ($match_length === 0) {
@@ -184,7 +182,6 @@ function split<T as Match>(
     // Copy anything between the previous match and this one
     $result[] = Str\slice($haystack, $match_end, $match_begin - $match_end);
     /* HH_FIXME[4108] Until we can define Match to have field 0 */
-    /* HH_FIXME[4110] Until we can define Match to have field 0 */
     $match_length = Str\length($captures[0]);
     $match_end = $match_begin + $match_length;
     if ($match_length === 0) {
