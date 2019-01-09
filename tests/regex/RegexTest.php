@@ -11,7 +11,7 @@
 
 use namespace HH\Lib\{C, Regex, Str, Vec};
 
-use function Facebook\FBExpect\expect;
+use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 use type HH\InvariantException as InvariantViolationException; // @oss-enable
 
