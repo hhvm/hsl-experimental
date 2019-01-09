@@ -11,7 +11,7 @@
 
 use namespace HH\Lib\Experimental\Filesystem;
 
-use function Facebook\FBExpect\expect;
+use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable

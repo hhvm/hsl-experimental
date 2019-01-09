@@ -12,7 +12,7 @@ use namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Tuple;
 
-use function Facebook\FBExpect\expect;
+use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: use type HackTest;
 

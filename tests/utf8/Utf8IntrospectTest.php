@@ -9,7 +9,7 @@
  */
 
 use namespace HH\Lib\Experimental\Str\Utf8;
-use function Facebook\FBExpect\expect;
+use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
