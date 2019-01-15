@@ -389,4 +389,22 @@ final class RegexTest extends HackTest {
     expect(() ==> Regex\split('hello world', re"/x/", 1))
       ->toThrow(InvariantViolationException::class);
   }
+
+  public static function provideToString(
+  ): vec<(Regex\Pattern<Regex\Match>, string)> {
+    return vec[
+      tuple(re"/x/", '/x/'),
+      tuple(re"/hello world/", '/hello world/'),
+      tuple(re"/foo[1-9]/", '/foo[1-9]/'),
+      tuple(re"/ahh.*/", '/ahh.*/'),
+    ];
+  }
+
+  <<DataProvider('provideToString')>>
+  public function testToString(
+    Regex\Pattern<Regex\Match> $pattern,
+    string $expected,
+  ): void {
+    expect(Regex\to_string($pattern))->toEqual($expected);
+  }
 }

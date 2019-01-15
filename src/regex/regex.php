@@ -201,3 +201,12 @@ function split<T as Match>(
   $result[] = Str\slice($haystack, $match_end);
   return $result;
 }
+
+/**
+ * Renders a Regex Pattern to a string.
+ */
+function to_string<T as Match>(
+  Pattern<T> $pattern,
+): string {
+  return $pattern as string;
+}
