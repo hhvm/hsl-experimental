@@ -10,4 +10,5 @@
 
 namespace HH {
   class InvariantException extends \InvariantException {}
+  type KeyedContainer<Tk, Tv> = \KeyedContainer<Tk, Tv>;
 }
