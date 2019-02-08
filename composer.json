@@ -4,11 +4,11 @@
   "license": "MIT",
   "require-dev": {
     "hhvm/hacktest": "^1.0",
-    "facebook/fbexpect": "^2.0"
+    "facebook/fbexpect": "^2.0",
+    "hhvm/hhvm-autoload": "^2.0"
   },
   "require": {
     "hhvm": "^4.0",
-    "hhvm/hhvm-autoload": "^2.0",
-    "hhvm/hsl": "dev-master"
+    "hhvm/hsl": "^4.0"
   }
 }
