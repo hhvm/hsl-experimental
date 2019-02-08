@@ -40,7 +40,7 @@ function lowercase(string $string): string {
 function from_encoding(string $string, Encoding $encoding): string {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  return \mb_convert_encoding($string, Encoding::UTF8, $encoding);
+  return \mb_convert_encoding($string, Encoding::UTF8 as string, $encoding);
 }
 
 /**
@@ -50,7 +50,7 @@ function from_encoding(string $string, Encoding $encoding): string {
 function to_encoding(string $string, Encoding $encoding): string {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  return \mb_convert_encoding($string, $encoding, Encoding::UTF8);
+  return \mb_convert_encoding($string, $encoding as string, Encoding::UTF8);
 }
 
 type TConvertKanaOption = shape(
