@@ -2,6 +2,12 @@
   "name": "hhvm/hsl-experimental",
   "description": "The Hack Standard Library - Experimental Additions",
   "license": "MIT",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "4.x-dev",
+      "dev-v4.0.x": "4.0.x-dev"
+    }
+  },
   "require-dev": {
     "hhvm/hacktest": "^1.0",
     "facebook/fbexpect": "^2.0",
