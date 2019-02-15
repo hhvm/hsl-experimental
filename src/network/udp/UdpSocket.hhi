@@ -79,5 +79,5 @@ final class UdpSocket implements Socket {
    * @param UdpDatagram $datagram UDP datagram with payload and remote peer address.
    * @return int Number of bytes in the socket's send queue.
    */
-  public function sendAsync(UdpDatagram $datagram): int;
+  public function sendAsync(UdpDatagram $datagram): Awaitable<int>;
 }
