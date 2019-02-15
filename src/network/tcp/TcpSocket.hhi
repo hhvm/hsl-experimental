@@ -40,7 +40,7 @@ final class TcpSocket implements SocketHandle {
   /**
    * {@inheritdoc}
    */
-  public function close(?Throwable $e = null): void;
+  public function close(): void;
 
   /**
    * {@inheritdoc}
