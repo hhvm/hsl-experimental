@@ -29,8 +29,7 @@ final class TcpSocket implements SocketHandle {
    */
   public static function connect(
     string $host,
-    int $port,
-    ?TlsClientEncryption $tls = null,
+    int $port
   ): Awaitable<TcpSocket>;
 
   /**
