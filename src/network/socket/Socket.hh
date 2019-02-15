@@ -7,10 +7,8 @@ use type Throwable;
 interface Socket {
   /**
    * Close the underlying socket.
-   * 
-   * @param Throwable $e Reason for close, will be set as previous error.
    */
-  public function close(?Throwable $e = null): void;
+  public function close(): void;
 
   /**
    * Get the local address of the socket.

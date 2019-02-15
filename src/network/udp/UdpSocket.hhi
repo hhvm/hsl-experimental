@@ -42,7 +42,7 @@ final class UdpSocket implements Socket {
   /**
    * {@inheritdoc}
    */
-  public function close(?Throwable $e = null): void;
+  public function close(): void;
 
   /**
    * {@inheritdoc}
