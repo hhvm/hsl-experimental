@@ -9,21 +9,6 @@ use type Throwable;
  */
 final class UdpSocket implements Socket {
   /**
-   * Sets the maximum number of packet forwarding operations performed by routers.
-   */
-  const int TTL = 200;
-
-  /**
-   * Set to true to have multicast packets loop back to local sockets.
-   */
-  const int MULTICAST_LOOP = 250;
-
-  /**
-   * Sets the maximum number of packet forwarding operations performed by routers for multicast packets.
-   */
-  const int MULTICAST_TTL = 251;
-
-  /**
    * Bind a UDP socket to the given local peer.
    * 
    * @param string $address Local network interface address (IP) to be used.
@@ -53,6 +38,21 @@ final class UdpSocket implements Socket {
    * {@inheritdoc}
    */
   public function getPort(): ?int;
+
+  /**
+   * Sets the maximum number of packet forwarding operations performed by routers.
+   */
+  public function setTtl(int $max_packet): void;
+
+  /**
+   * Set to true to have multicast packets loop back to local sockets.
+   */
+  public function setMulticastLoop(bool $multicast_loop): void;
+
+  /**
+   * Sets the maximum number of packet forwarding operations performed by routers for multicast packets.
+   */
+  public function setMulticastTtl(int $max_packet): void;
 
   /**
    * Receive the next UDP datagram from the socket.
