@@ -1,3 +1,5 @@
+<?hh // strict
+
 namespace HH\Lib\Experimental\Network;
 
 use type HH\Lib\Experimental\IO\ReadHandle;
