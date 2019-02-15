@@ -10,16 +10,6 @@ use type Throwable;
  */
 final class TcpSocket implements SocketHandle {
   /**
-   * Disables Nagle's Algorithm when set.
-   */
-  const int NODELAY = 100;
-
-  /**
-   * Sets the TCP keep-alive timeout in seconds, 0 to disable keep-alive.
-   */
-  const int KEEPALIVE = 101;
-
-  /**
    * Sockets are created using connect() or TcpServer::accept().
    */
   private function __construct();
@@ -51,6 +41,16 @@ final class TcpSocket implements SocketHandle {
    * {@inheritdoc}
    */
   public function getPort(): ?int;
+
+  /**
+   * Sets the TCP keep-alive timeout in seconds, 0 to disable keep-alive.
+   */
+  public function setKeepAlive(int $seconds): void;
+
+  /**
+   * Disables Nagle's Algorithm when set.
+   */
+  public function setNoDely(bool $nodely): void;
 
   /**
    * {@inheritdoc}
