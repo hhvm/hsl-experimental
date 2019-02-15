@@ -2,8 +2,7 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use type HH\Lib\Experimental\IO\ReadHandle;
-use type HH\Lib\Experimental\IO\WriteHandle;
+use namespace HH\Lib\Experimental\IO;
 use type Throwable;
 
 /**
@@ -77,7 +76,7 @@ final class TcpSocket implements SocketHandle {
   /**
    * {@inheritdoc}
    */
-  public function getReadHandle(): ReadHandle;
+  public function getReadHandle(): IO\ReadHandle;
 
   /**
    * {@inheritdoc}
@@ -87,7 +86,7 @@ final class TcpSocket implements SocketHandle {
   /**
    * {@inheritdoc}
    */
-  public function getWriteHandle(): WriteHandle;
+  public function getWriteHandle(): IO\WriteHandle;
 
   /**
    * {@inheritdoc}
