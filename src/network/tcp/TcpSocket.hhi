@@ -55,11 +55,6 @@ final class TcpSocket implements SocketHandle {
   /**
    * {@inheritdoc}
    */
-  public function setOption(int $option, $value): bool;
-
-  /**
-   * {@inheritdoc}
-   */
   public function getRemoteAddress(): string;
 
   /**
