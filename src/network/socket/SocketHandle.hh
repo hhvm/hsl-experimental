@@ -20,8 +20,6 @@ interface SocketHandle extends Socket, IO\ReadHandle, IO\WriteHandle {
 
   /**
    * Place the given data in the socket's send queue.
-   * 
-   * Implementations may try an immediate write before placeing data in the send queue.
    */
   <<__Override>>
   public function writeAsync(string $data): Awaitable<void>;
