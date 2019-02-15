@@ -4,6 +4,11 @@ namespace HH\Lib\Experimental\Network;
 
 use type Throwable;
 
+<<__Sealed(
+  Server::class,
+  UdpSocket::class,
+  SocketHandle::class
+)>>
 interface Socket {
   /**
    * Close the underlying socket.
