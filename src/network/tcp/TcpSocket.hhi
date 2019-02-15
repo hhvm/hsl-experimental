@@ -69,11 +69,6 @@ final class TcpSocket implements SocketHandle {
   public function getRemotePort(): ?int;
 
   /**
-   * Negotiate TLS connection encryption, any further data transfer is encrypted.
-   */
-  public function encrypt(): TlsInfo;
-
-  /**
    * {@inheritdoc}
    */
   public function getReadHandle(): IO\ReadHandle;
