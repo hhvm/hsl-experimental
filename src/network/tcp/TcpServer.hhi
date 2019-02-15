@@ -25,7 +25,6 @@ final class TcpServer implements Server {
   public static function listen(
     string $host,
     int $port,
-    ?TlsServerEncryption $tls = null,
   ): TcpServer;
 
   /**
