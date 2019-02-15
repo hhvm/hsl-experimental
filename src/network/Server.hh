@@ -1,3 +1,5 @@
+<?hh // strict
+
 namespace HH\Lib\Experimental\Network;
 
 /**
