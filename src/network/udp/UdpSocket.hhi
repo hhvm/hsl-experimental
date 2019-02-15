@@ -55,11 +55,6 @@ final class UdpSocket implements Socket {
   public function getPort(): ?int;
 
   /**
-   * {@inheritdoc}
-   */
-  public function setOption(int $option, mixed $value): bool;
-
-  /**
    * Receive the next UDP datagram from the socket.
    */
   public function receive(): UdpDatagram;
