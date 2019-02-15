@@ -2,13 +2,12 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use type HH\Lib\Experimental\IO\ReadHandle;
-use type HH\Lib\Experimental\IO\WriteHandle;
+use namespace HH\Lib\Experimental\IO;
 
 /**
  * Contract for a reliable socket-based handle.
  */
-interface SocketHandle extends Socket, ReadHandle, WriteHandle {
+interface SocketHandle extends Socket, IO\ReadHandle, IO\WriteHandle {
   /**
   * Get the address of the remote peer.
   */
