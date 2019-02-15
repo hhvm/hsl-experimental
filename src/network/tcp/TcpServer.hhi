@@ -9,12 +9,6 @@ use type Throwable;
  */
 final class TcpServer implements Server {
   /**
-   * Enable / disable simultaneous asynchronous accept requests that are queued by the operating system
-   * when listening for new TCP connections.
-   */
-  const int SIMULTANEOUS_ACCEPTS = 150;
-
-  /**
    * Servers are created using listen().
    */
   private function __construct();
@@ -43,9 +37,10 @@ final class TcpServer implements Server {
   public function getPort(): ?int;
 
   /**
-   * {@inheritdoc}
+   * Enable / disable simultaneous asynchronous accept requests that are queued by the operating system
+   * when listening for new TCP connections.
    */
-  public function setOption(int $option, $value): bool;
+  public function setSimultaneousAccept(bool $simultaneous_accepts): void;
 
   /**
    * {@inheritdoc}
