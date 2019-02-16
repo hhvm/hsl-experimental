@@ -2,9 +2,7 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use type RuntimeException;
-
 /**
  * Is thrown when a network-related error is encountered.
  */
-final class SocketException extends RuntimeException {}
+final class SocketException extends \Exception {}
