@@ -7,10 +7,8 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
-namespace HH\Lib\Experimental\Network;
 
-use type Throwable;
+namespace HH\Lib\Experimental\Network;
 
 <<__Sealed(
   Server::class,
@@ -32,4 +30,9 @@ interface Socket {
    * Get the local network port, or NULL when no port is being used.
    */
   public function getPort(): ?int;
+
+  /**
+   * Get socket type.
+   */
+  public function getType(): SocketType;
 }
