@@ -28,11 +28,11 @@ final class TcpSocket
     string $host,
     int $port,
   ): Awaitable<TcpSocket> {
-    list($ip, $ipv4) = static::lookup($host);
+    $ip = _Private\dns_lookup($host);
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $socket = \socket_create(
-      $ipv4 ? (int)SocketDomain::INET : (int)SocketDomain::INET6,
+      is_ipv4($ip) ? (int) SocketDomain::INET : (int)SocketDomain::INET6,
       (int)SocketType::STREAM,
       (int)SocketProtocol::TCP,
     );
@@ -59,36 +59,6 @@ final class TcpSocket
       throw new SocketException(\socket_strerror($error), $error);
     }
     return new TcpSocket($socket);
-  }
-
-  private static function lookup(string $host): (string, bool) {
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $records = \dns_get_record($host);
-    if (0 === C\count($records)) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $inet = \inet_pton($host);
-      if (false === $inet) {
-        throw new SocketException('Invalid Host');
-      } else {
-        $ipv4 = !(
-          Str\search($host, ':') is nonnull &&
-          Str\search($host, ':', Str\search($host, ':') as int) is nonnull
-        );
-        return tuple($host, $ipv4);
-      }
-    } else {
-      foreach ($records as $record) {
-        if ($record['type'] === 'A') {
-          return tuple($record['ip'] as string, true);
-        } elseif ($record['type'] === 'AAAA') {
-          return tuple($record['ipv6'] as string, false);
-        }
-      }
-
-      throw new SocketException('Coundn\'t get dns reord');
-    }
   }
 
   /**
