@@ -24,10 +24,7 @@ final class TcpServer implements Server {
   /**
    * Create a TCP server listening on the given interface and port.
    */
-  public static function listen(
-    string $host,
-    int $port,
-  ): TcpServer;
+  public static function listen(string $host, int $port): TcpServer;
 
   /**
    * {@inheritdoc}
