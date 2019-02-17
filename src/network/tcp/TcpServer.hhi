@@ -7,7 +7,7 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\Experimental\Network;
 
 use type Throwable;
@@ -51,4 +51,9 @@ final class TcpServer implements Server {
    * {@inheritdoc}
    */
   public function accept(): SocketHandle;
+
+  /**
+   * Get socket type.
+   */
+  public function getType(): SocketType;
 }
