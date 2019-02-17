@@ -31,11 +31,4 @@ interface SocketHandle extends Socket, IO\ReadHandle, IO\WriteHandle {
    */
   <<__Override>>
   public function writeAsync(string $data): Awaitable<void>;
-
-  /**
-   * Get the number of bytes queued for send.
-   * 
-   * @return int Number of bytes in the socket's send queue.
-   */
-  public function getWriteQueueSize(): int;
 }
