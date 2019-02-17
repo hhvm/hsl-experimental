@@ -80,7 +80,11 @@ final class UdpSocket implements Socket {
    * The datagram will only be enqueued if it cannot be sent immediately.
    * 
    * @param UdpDatagram $datagram UDP datagram with payload and remote peer address.
-   * @return int Number of bytes in the socket's send queue.
    */
-  public function sendAsync(UdpDatagram $datagram): Awaitable<int>;
+  public function sendAsync(UdpDatagram $datagram): Awaitable<void>;
+
+  /**
+   * Get socket type.
+   */
+  public function getType(): SocketType;
 }
