@@ -83,7 +83,7 @@ final class TcpSocket
         if ($record['type'] === 'A') {
           return tuple($record['ip'] as string, true);
         } elseif ($record['type'] === 'AAAA') {
-          return tuple($record['ipv6'] as string, true);
+          return tuple($record['ipv6'] as string, false);
         }
       }
 
