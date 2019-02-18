@@ -12,7 +12,11 @@ namespace HH\Lib\Experimental\Filesystem;
 
 use namespace HH\Lib\{_Private, Experimental\IO};
 
-<<__Sealed(FileReadHandle::class, FileWriteHandle::class)>>
+<<__Sealed(
+  FileReadHandle::class,
+  FileWriteHandle::class,
+  FileDuplexHandle::class,
+)>>
 interface FileHandle extends IO\Handle {
   /**
    * Get the name of this file.
@@ -28,12 +32,12 @@ interface FileHandle extends IO\Handle {
   public function lock(FileLockType $mode): FileLock;
 }
 
-<<__Sealed(_Private\FileHandle::class, DisposableFileReadHandle::class)>>
+<<__Sealed(DisposableFileReadHandle::class, FileDuplexHandle::class)>>
 interface FileReadHandle extends FileHandle, IO\ReadHandle {
   public function seekForRead(int $offset): void;
 }
 
-<<__Sealed(_Private\FileHandle::class, DisposableFileWriteHandle::class)>>
+<<__Sealed(DisposableFileWriteHandle::class, FileDuplexHandle::class)>>
 interface FileWriteHandle extends FileHandle, IO\WriteHandle {
   /**
    * Move to a specific offset within a file.
@@ -44,17 +48,31 @@ interface FileWriteHandle extends FileHandle, IO\WriteHandle {
    * Any other pending operations (such as writes) will complete first.
    */
   public function seekForWriteAsync(int $offset): Awaitable<void>;
-
 }
 
-<<__Sealed(_Private\DisposableFileHandle::class)>>
+<<__Sealed(_Private\FileHandle::class, DisposableFileDuplexHandle::class)>>
+interface FileDuplexHandle
+  extends FileWriteHandle, FileReadHandle, IO\DuplexHandle {
+}
+
+<<__Sealed(DisposableFileDuplexHandle::class)>>
 interface DisposableFileReadHandle
   /* HH_FIXME[4194] non-disposable parent interface t34965102 */
   extends FileReadHandle, IO\DisposableReadHandle {
 }
 
-<<__Sealed(_Private\DisposableFileHandle::class)>>
+<<__Sealed(DisposableFileDuplexHandle::class)>>
 interface DisposableFileWriteHandle
   /* HH_FIXME[4194] non-disposable parent interface t34965102 */
   extends FileWriteHandle, IO\DisposableWriteHandle {
+}
+
+<<__Sealed(_Private\DisposableFileHandle::class)>>
+interface DisposableFileDuplexHandle
+  extends
+    /* HH_FIXME[4194] non-disposable parent interface t34965102 */
+    FileDuplexHandle,
+    DisposableFileWriteHandle,
+    DisposableFileReadHandle,
+    IO\DisposableDuplexHandle {
 }

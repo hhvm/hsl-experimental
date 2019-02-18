@@ -14,7 +14,7 @@ use namespace HH\Lib\Experimental\Filesystem;
 
 final class FileHandle
   extends NativeHandle
-  implements Filesystem\FileReadHandle, Filesystem\FileWriteHandle {
+  implements Filesystem\FileDuplexHandle {
 
   public function __construct(
     private string $filename,

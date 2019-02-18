@@ -13,7 +13,7 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\{Experimental\IO, Str};
 
 <<__Sealed(FileHandle::class, PipeHandle::class, StdioHandle::class)>>
-abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
+abstract class NativeHandle implements IO\DuplexHandle {
   private bool $isAwaitable = true;
   protected function __construct(private resource $impl) {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
@@ -36,9 +36,7 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
 
   final public function rawReadBlocking(?int $max_bytes = null): string {
     if ($max_bytes is int && $max_bytes < 0) {
-      throw new \InvalidArgumentException(
-        '$max_bytes must be null, or >= 0',
-      );
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
     if ($max_bytes === 0) {
       return '';
@@ -70,9 +68,7 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
     ?int $max_bytes = null,
   ): Awaitable<string> {
     if ($max_bytes is int && $max_bytes < 0) {
-      throw new \InvalidArgumentException(
-        '$max_bytes must be null, or >= 0',
-      );
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
 
     $data = '';
@@ -93,9 +89,7 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
     ?int $max_bytes = null,
   ): Awaitable<string> {
     if ($max_bytes is int && $max_bytes < 0) {
-      throw new \InvalidArgumentException(
-        '$max_bytes must be null, or >= 0',
-      );
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
 
     if ($max_bytes === null) {

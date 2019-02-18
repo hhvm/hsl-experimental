@@ -21,6 +21,7 @@ use namespace HH\Lib\Experimental\Filesystem;
   UserspaceHandle::class,
   ReadHandle::class,
   WriteHandle::class,
+  DuplexHandle::class,
 )>>
 interface Handle {
   public function isEndOfFile(): bool;

@@ -13,8 +13,8 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\{Experimental\Filesystem, Experimental\IO, Str};
 
 <<__Sealed(DisposableFileHandle::class)>>
-class DisposableHandleWrapper<T as IO\ReadHandle as IO\WriteHandle>
-  implements IO\DisposableReadHandle, IO\DisposableWriteHandle {
+class DisposableHandleWrapper<T as IO\DuplexHandle>
+  implements IO\DisposableDuplexHandle {
 
   public function __construct(protected T $impl) {
   }
@@ -43,7 +43,9 @@ class DisposableHandleWrapper<T as IO\ReadHandle as IO\WriteHandle>
     return await $this->impl->readAsync($max_bytes);
   }
 
-  public async function readLineAsync(?int $max_bytes = null): Awaitable<string> {
+  public async function readLineAsync(
+    ?int $max_bytes = null,
+  ): Awaitable<string> {
     return await $this->impl->readLineAsync($max_bytes);
   }
 
