@@ -8,7 +8,7 @@
  *
  */
  
-namespace HH\Lib\Experimental\Network\_Private;
+namespace HH\Lib\_Private;
 
 use namespace HH\Lib\Experimental\{IO, Network};
 use namespace HH\Lib\Str;

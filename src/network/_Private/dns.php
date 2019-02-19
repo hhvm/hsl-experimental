@@ -8,11 +8,14 @@
  *
  */
  
-namespace HH\Lib\Experimental\Network\_Private;
+namespace HH\Lib\_Private;
 
 use namespace HH\Lib\Experimental\Network;
 
-function dns_lookup(string $host, string $type = 'A'): Network\IPAddress {
+/**
+ * this is temporary.
+ */
+function dns_lookup(string $host): Network\IPAddress {
   try {
     return Network\ipv4($host);
   } catch (\HH\InvariantException $e) {}

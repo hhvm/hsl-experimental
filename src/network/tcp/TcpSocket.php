@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\{Experimental\IO, C, Str};
+use namespace HH\Lib\{Experimental\IO, C, Str, _Private};
 use type Throwable;
 
 /**
