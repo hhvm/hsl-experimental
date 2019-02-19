@@ -46,7 +46,7 @@ final class TcpSocket
     }
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_connect($socket, $ip, $port);
+    $ret = \socket_connect($socket, (string)$ip, $port);
     if ($ret === false) {
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */

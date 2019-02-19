@@ -12,18 +12,22 @@ namespace HH\Lib\Experimental\Network\_Private;
 
 use namespace HH\Lib\Experimental\Network;
 
-function dns_lookup(string $host): string {
-  if (Network\is_ipv4($host) || Network\is_ipv6($host)) {
-      return Network\ip($host);
-  }
+function dns_lookup(string $host, string $type = 'A'): Network\IPAddress {
+  try {
+    return Network\ipv4($host);
+  } catch (\HH\InvariantException $e) {}
+  try {
+    return Network\ipv6($host);
+  } catch (\HH\InvariantException $e) {}
+
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   $records = \dns_get_record($host);
   foreach ($records as $record) {
     if ($record['type'] === 'A') {
-      return Network\ip($record['ip']);
+      return Network\ipv4($record['ip']);
     } elseif ($record['type'] === 'AAAA') {
-      return Network\ip($record['ipv6']);
+      return Network\ipv6($record['ipv6']);
     }
   }
   \invariant_violation('Invalid host');
