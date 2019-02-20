@@ -7,7 +7,7 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\Experimental\Network;
 
 /**
@@ -17,5 +17,5 @@ interface Server extends Socket {
   /**
    * Accept the next inbound socket connection.
    */
-  public function accept(): SocketHandle;
+  public function accept(): Awaitable<SocketHandle>;
 }
