@@ -7,7 +7,7 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\Experimental\Network;
 
 use namespace HH\Lib\Experimental\IO;
@@ -19,12 +19,12 @@ interface SocketHandle extends Socket, IO\ReadHandle, IO\WriteHandle {
   /**
   * Get the address of the remote peer.
   */
-  public function getRemoteAddress(): string;
+  public function getRemoteAddress(): Host;
 
   /**
    * Get the network port used by the remote peer (or NULL if not network port is being used).
    */
-  public function getRemotePort(): ?int;
+  public function getRemotePort(): ?Port;
 
   /**
    * Place the given data in the socket's send queue.
