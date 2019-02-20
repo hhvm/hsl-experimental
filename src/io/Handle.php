@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\Network;
 
 /** An interface for IO handles.
  *
@@ -21,6 +22,7 @@ use namespace HH\Lib\Experimental\Filesystem;
   UserspaceHandle::class,
   ReadHandle::class,
   WriteHandle::class,
+  Network\Socket::class
 )>>
 interface Handle {
   public function isEndOfFile(): bool;
