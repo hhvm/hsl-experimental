@@ -7,13 +7,14 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\_Private;
 
 use namespace HH\Lib\Experimental\Network;
 
 /**
  * this is temporary.
+ * @link https://github.com/hhvm/hsl-experimental/issues/39
  */
 function dns_lookup(Network\Host $host): Network\IPAddress {
   try {
