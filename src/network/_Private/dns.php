@@ -15,13 +15,15 @@ use namespace HH\Lib\Experimental\Network;
 /**
  * this is temporary.
  */
-function dns_lookup(string $host): Network\IPAddress {
+function dns_lookup(Network\Host $host): Network\IPAddress {
   try {
     return Network\ipv4($host);
-  } catch (\HH\InvariantException $e) {}
+  } catch (\HH\InvariantException $e) {
+  }
   try {
     return Network\ipv6($host);
-  } catch (\HH\InvariantException $e) {}
+  } catch (\HH\InvariantException $e) {
+  }
 
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
