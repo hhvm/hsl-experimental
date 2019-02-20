@@ -43,10 +43,12 @@ function ipv6(string $ip): IPv6Address {
   return $address;
 }
 
+<<__Memoize>>
 function is_ipv4(IPAddress $address): bool {
   return $address === \filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
 }
 
+<<__Memoize>>
 function is_ipv6(IPAddress $address): bool {
   return $address === \filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6);
 }
