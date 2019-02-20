@@ -7,15 +7,23 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\_Private;
 
 use namespace HH\Lib\Experimental\{IO, Network};
 use namespace HH\Lib\Str;
 
 class NativeSocketHandle implements Network\SocketHandle {
-  protected function __construct(protected resource $socket) {
-    \socket_set_nonblock($socket);
+  private bool $closed = false;
+  public function __construct(
+    protected resource $socket,
+    bool $blocking = false,
+  ) {
+    if (!$blocking) {
+      static::safe(() ==> @\socket_set_nonblock($socket));
+    } else {
+      static::safe(() ==> @\socket_set_block($socket));
+    }
   }
 
   private ?Awaitable<mixed> $lastOperation;
@@ -33,34 +41,27 @@ class NativeSocketHandle implements Network\SocketHandle {
 
   final public function rawReadBlocking(?int $max_bytes = null): string {
     if ($max_bytes is int && $max_bytes < 0) {
-      throw new \InvalidArgumentException(
-        '$max_bytes must be null, or >= 0',
-      );
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
     if ($max_bytes === 0) {
       return '';
     }
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_read($this->socket, $max_bytes ?? -1);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
-    return $ret as string;
+    return (string)static::safe(
+      () ==> {
+        $buf = '';
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+        @\socket_recv($this->socket, &$buf, $max_bytes ?? -1, \MSG_WAITALL);
+        return $buf;
+      }
+    );
   }
 
   final public async function readAsync(
     ?int $max_bytes = null,
   ): Awaitable<string> {
     if ($max_bytes is int && $max_bytes < 0) {
-      throw new \InvalidArgumentException(
-        '$max_bytes must be null, or >= 0',
-      );
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
 
     $data = '';
@@ -71,7 +72,10 @@ class NativeSocketHandle implements Network\SocketHandle {
         $max_bytes -= Str\length($chunk);
       }
       if ($max_bytes === null || $max_bytes > 0) {
-        await \stream_await($this->socket, \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR);
+        await \stream_await(
+          $this->socket,
+          \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR,
+        );
       }
     }
     return $data;
@@ -81,25 +85,27 @@ class NativeSocketHandle implements Network\SocketHandle {
     ?int $max_bytes = null,
   ): Awaitable<string> {
     if ($max_bytes is int && $max_bytes < 0) {
-      throw new \InvalidArgumentException(
-        '$max_bytes must be null, or >= 0',
-      );
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
 
     if ($max_bytes === null) {
       // The PHP_NORMAL_READ parameter for socket_read will stop when it encounters \n or \r.
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $impl = () ==> \socket_read($this->socket, -1, \PHP_NORMAL_READ);
+      $impl = () ==> @\socket_read($this->socket, -1, \PHP_NORMAL_READ);
     } else {
       // The PHP_NORMAL_READ parameter for socket_read will stop when it encounters \n or \r.
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $impl = () ==> \socket_read($this->socket, $max_bytes + 1, \PHP_NORMAL_READ);
+      $impl =
+        () ==> @\socket_read($this->socket, $max_bytes + 1, \PHP_NORMAL_READ);
     }
     $data = $impl();
     while ($data === false && !$this->isEndOfFile()) {
-      await \stream_await($this->socket, \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR);
+      await \stream_await(
+        $this->socket,
+        \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR,
+      );
       $data = $impl();
     }
     return $data === false ? '' : $data;
@@ -108,16 +114,7 @@ class NativeSocketHandle implements Network\SocketHandle {
   final public function rawWriteBlocking(string $bytes): int {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_write($this->socket, $bytes);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
-    return $ret as int;
+    return static::safe(() ==> @\socket_write($this->socket, $bytes)) as int;
   }
 
   final public function writeAsync(string $bytes): Awaitable<void> {
@@ -128,7 +125,10 @@ class NativeSocketHandle implements Network\SocketHandle {
         if ($bytes === '') {
           break;
         }
-        await \stream_await($this->socket, \STREAM_AWAIT_WRITE | \STREAM_AWAIT_ERROR);
+        await \stream_await(
+          $this->socket,
+          \STREAM_AWAIT_WRITE | \STREAM_AWAIT_ERROR,
+        );
       }
     });
   }
@@ -142,121 +142,83 @@ class NativeSocketHandle implements Network\SocketHandle {
   }
 
   final public function isEndOfFile(): bool {
-    $buf = '';
+    \socket_clear_error();
+    if ($this->closed) {
+      return true;
+    }
+   $buf = '';
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $bytes = \socket_recv($this->socket, &$buf, -1, \MSG_PEEK);
-    if ($bytes === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
     return $bytes === 0 && null === $buf;
   }
 
   final public async function closeAsync(): Awaitable<void> {
     await $this->flushAsync();
+    $this->closed = true;
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     @\socket_close($this->socket);
   }
 
-    /**
-   * Close the underlying socket.
-   */
-  final public function close(): void {
-    \HH\Asio\join($this->closeAsync());
-  }
-
   /**
    * Get the local address of the socket.
    */
-  public function getAddress(): string {
+  public function getAddress(): Network\Host {
     $address = '';
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_getsockname($this->socket, &$address);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
-
+    static::safe(() ==> @\socket_getsockname($this->socket, &$address));
     return $address;
   }
 
   /**
    * Get the local network port, or NULL when no port is being used.
    */
-  public function getPort(): ?int {
+  public function getPort(): ?Network\Port {
     $address = '';
     $port = null;
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_getsockname($this->socket, &$address, &$port);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
-
+    static::safe(() ==> @\socket_getsockname($this->socket, &$address, &$port));
     return $port;
   }
 
   /**
    * Get the address of the remote peer.
    */
-  public function getRemoteAddress(): string {
+  public function getRemoteAddress(): Network\Host {
     $address = '';
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_getpeername($this->socket, &$address);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
-
+    static::safe(() ==> @\socket_getpeername($this->socket, &$address));
     return $address;
   }
 
   /**
    * Get the network port used by the remote peer (or NULL if not network port is being used).
    */
-  public function getRemotePort(): ?int {
+  public function getRemotePort(): ?Network\Port {
     $address = '';
     $port = null;
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_getpeername($this->socket, &$address, &$port);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new Network\SocketException(\socket_strerror($error), $error);
-    }
-
+    static::safe(() ==> @\socket_getpeername($this->socket, &$address, &$port));
     return $port;
   }
 
   public function getType(): Network\SocketType {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_get_option($this->socket, \SOL_SOCKET, \SO_TYPE);
+    $ret = static::safe(
+      () ==> @\socket_get_option($this->socket, \SOL_SOCKET, \SO_TYPE),
+    );
+    return Network\SocketType::assert($ret);
+  }
+
+  protected static function safe<T>((function(): T) $call): T {
+    \socket_clear_error();
+    $ret = $call();
     if ($ret === false) {
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
@@ -265,6 +227,6 @@ class NativeSocketHandle implements Network\SocketHandle {
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       throw new Network\SocketException(\socket_strerror($error), $error);
     }
-    return Network\SocketType::assert($ret);
+    return $ret;
   }
 }
