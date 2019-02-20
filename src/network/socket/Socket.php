@@ -10,17 +10,10 @@
 
 namespace HH\Lib\Experimental\Network;
 
-<<__Sealed(
-  Server::class,
-  UdpSocket::class,
-  SocketHandle::class
-)>>
-interface Socket {
-  /**
-   * Close the underlying socket.
-   */
-  public function close(): void;
+use namespace HH\Lib\Experimental\IO;
 
+<<__Sealed(Server::class, UdpSocket::class, SocketHandle::class)>>
+interface Socket extends IO\Handle {
   /**
    * Get the local address of the socket.
    */
