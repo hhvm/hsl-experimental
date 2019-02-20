@@ -24,12 +24,12 @@ interface Socket {
   /**
    * Get the local address of the socket.
    */
-  public function getAddress(): string;
+  public function getAddress(): Host;
 
   /**
    * Get the local network port, or NULL when no port is being used.
    */
-  public function getPort(): ?int;
+  public function getPort(): ?Port;
 
   /**
    * Get socket type.
