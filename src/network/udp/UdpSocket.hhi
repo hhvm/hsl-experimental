@@ -7,7 +7,7 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\Experimental\Network;
 
 use type Throwable;
@@ -19,33 +19,33 @@ final class UdpSocket implements Socket {
   /**
    * Bind a UDP socket to the given local peer.
    * 
-   * @param string $address Local network interface address (IP) to be used.
-   * @param int $port Local port to be used.
+   * @param IPAddress $address Local network interface address (IP) to be used.
+   * @param Port $port Local port to be used.
    */
-  public static function bind(string $address, int $port): UdpSocket;
+  public static function bind(IPAddress $address, Port $port): UdpSocket;
 
   /**
    * Bind a UDP socket and join the given UDP multicast group.
    * 
-   * @param string $group Address (IP) of the UDP multicast group.
-   * @param int $port Port being used by the UDP multicast group.
+   * @param IPAddress $group Address (IP) of the UDP multicast group.
+   * @param Port $port Port being used by the UDP multicast group.
    */
-  public static function multicast(string $group, int $port): UdpSocket;
+  public static function multicast(IPAddress $group, Port $port): UdpSocket;
 
   /**
    * {@inheritdoc}
    */
-  public function close(): void;
+  public function closeAsync(): Awaitable<void>;
 
   /**
    * {@inheritdoc}
    */
-  public function getAddress(): string;
+  public function getAddress(): Host;
 
   /**
    * {@inheritdoc}
    */
-  public function getPort(): ?int;
+  public function getPort(): ?Port;
 
   /**
    * Sets the maximum number of packet forwarding operations performed by routers.
@@ -87,4 +87,9 @@ final class UdpSocket implements Socket {
    * Get socket type.
    */
   public function getType(): SocketType;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEndOfFile(): bool;
 }
