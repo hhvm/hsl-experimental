@@ -83,7 +83,7 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
         $max_bytes -= Str\length($chunk);
       }
       if ($max_bytes === null || $max_bytes > 0) {
-        await $this->selectAsync(\STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR);
+        await $this->selectAsync(\STREAM_AWAIT_READ);
       }
     }
     return $data;
@@ -111,7 +111,7 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
     }
     $data = $impl();
     while ($data === false && !$this->isEndOfFile()) {
-      await $this->selectAsync(\STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR);
+      await $this->selectAsync(\STREAM_AWAIT_READ);
       $data = $impl();
     }
     return $data === false ? '' : $data;
@@ -136,7 +136,7 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
         if ($bytes === '') {
           break;
         }
-        await $this->selectAsync(\STREAM_AWAIT_WRITE | \STREAM_AWAIT_ERROR);
+        await $this->selectAsync(\STREAM_AWAIT_WRITE);
       }
     });
   }
