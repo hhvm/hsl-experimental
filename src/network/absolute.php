@@ -26,6 +26,12 @@ function ip(string $ip): IPAddress {
 }
 
 function host(string $host): Host {
+  if (is_ipv4($host)) {
+    return ipv4($host);
+  }
+  if (is_ipv6($host)) {
+    return ipv6($host);
+  }
   $ip = \gethostbyname($host);
   \invariant($ip !== $host && $ip !== false, 'Invalid hostname');
   return $host;
