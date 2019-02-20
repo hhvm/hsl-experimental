@@ -25,39 +25,18 @@ final class TcpSocket
    * Connect to the given peer (will automatically perform a DNS lookup for host names).
    */
   public static async function connect(
-    string $host,
-    int $port,
+    Host $host,
+    Port $port,
   ): Awaitable<TcpSocket> {
     $ip = _Private\dns_lookup($host);
+    $domain = is_ipv4($ip) ? \AF_INET : \AF_INET6;
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $socket = \socket_create(
-      is_ipv4($ip) ? (int) SocketDomain::INET : (int)SocketDomain::INET6,
-      (int)SocketType::STREAM,
-      (int)SocketProtocol::TCP,
-    );
-    if ($socket === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new SocketException(\socket_strerror($error), $error);
-    }
+    $socket =
+      static::safe(() ==> @\socket_create($domain, \SOCK_STREAM, \SOL_TCP));
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = \socket_connect($socket, (string)$ip, $port);
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      @\socket_close($socket);
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new SocketException(\socket_strerror($error), $error);
-    }
+    static::safe(() ==> @\socket_connect($socket, $ip, $port));
     return new TcpSocket($socket);
   }
 
@@ -67,20 +46,10 @@ final class TcpSocket
   public function setKeepAlive(int $seconds): void {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $result = \socket_set_option(
-      $this->socket,
-      (int)SocketProtocol::TCP,
-      \SO_KEEPALIVE,
-      $seconds,
+    static::safe(
+      () ==>
+        @\socket_set_option($this->socket, \SOL_TCP, \SO_KEEPALIVE, $seconds),
     );
-    if ($result === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new SocketException(\socket_strerror($error), $error);
-    }
   }
 
   /**
@@ -89,20 +58,10 @@ final class TcpSocket
   public function setNoDely(bool $nodely): void {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $result = \socket_set_option(
-      $this->socket,
-      (int)SocketProtocol::TCP,
-      \TCP_NODELAY,
-      $nodely ? 1 : 0,
+    static::safe(
+      () ==>
+        @\socket_set_option($this->socket, \SOL_TCP, \TCP_NODELAY, $nodely),
     );
-    if ($result === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new SocketException(\socket_strerror($error), $error);
-    }
   }
 
   /**

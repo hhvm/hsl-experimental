@@ -7,7 +7,7 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
- 
+
 namespace HH\Lib\Experimental\Network;
 
 /**
@@ -18,13 +18,13 @@ final class UdpDatagram {
    * Create a new UDP datagram.
    * 
    * @param string $data Payload to be transmitted.
-   * @param string $address IP address of the remote peer.
-   * @param int $port Port being used by the remote peer.
+   * @param IPAddress $address IP address of the remote peer.
+   * @param Port $port Port being used by the remote peer.
    */
   public function __construct(
-      private string $data,
-      private string $address,
-      private int $port
+    private string $data,
+    private IPAddress $address,
+    private Port $port,
   ) {}
 
   /**
@@ -37,7 +37,7 @@ final class UdpDatagram {
   /**
    * Get the remote peer ip address and port.
    */
-  public function getPeer(): (string, int) {
+  public function getPeer(): (IPAddress, Port) {
     return tuple($this->address, $this->port);
   }
 
@@ -47,24 +47,16 @@ final class UdpDatagram {
    * @param string $data Data to be transmitted.
    */
   public function withData(string $data): UdpDatagram {
-    return new self(
-        $data,
-        $this->address,
-        $this->port
-    );
+    return new self($data, $this->address, $this->port);
   }
 
   /**
    * Create a datagram with the same transmitted data.
    * 
-   * @param string $address IP address of the remote peer.
-   * @param int $port Port being used by the remote peer.
+   * @param IPAddress $address IP address of the remote peer.
+   * @param Port $port Port being used by the remote peer.
    */
-  public function withPeer(string $address, int $port): UdpDatagram {
-    return new self(
-      $this->data,
-      $address,
-      $port
-    );
+  public function withPeer(IPAddress $address, Port $port): UdpDatagram {
+    return new self($this->data, $address, $port);
   }
 }
