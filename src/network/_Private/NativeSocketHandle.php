@@ -18,8 +18,8 @@ class NativeSocketHandle implements Network\SocketHandle {
   public function __construct(
     protected resource $socket,
   ) {
-      static::safe(() ==> @\socket_set_nonblock($socket));
-    }
+    static::safe(() ==> @\socket_set_nonblock($socket));
+  }
 
   private ?Awaitable<mixed> $lastOperation;
   protected function queuedAsync<T>(
@@ -99,7 +99,7 @@ class NativeSocketHandle implements Network\SocketHandle {
     while ($data === false && !$this->isEndOfFile()) {
       await \stream_await(
         $this->socket,
-        \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR,
+          \STREAM_AWAIT_READ | \STREAM_AWAIT_ERROR,
       );
       $data = $impl();
     }
@@ -108,8 +108,8 @@ class NativeSocketHandle implements Network\SocketHandle {
 
   final public function rawWriteBlocking(string $bytes): int {
     return static::safe(() ==>
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       @\socket_write($this->socket, $bytes)
     ) as int;
   }
@@ -139,15 +139,17 @@ class NativeSocketHandle implements Network\SocketHandle {
   }
 
   final public function isEndOfFile(): bool {
-    \socket_clear_error();
     if ($this->closed) {
       return true;
     }
-   $buf = '';
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $bytes = \socket_recv($this->socket, &$buf, -1, \MSG_PEEK);
-    return $bytes === 0 && null === $buf;
+    $read = vec[$this->socket];
+    $write = null;
+    $expect = null;
+    $ret = static::safe(() ==> @\socket_select(&$read, &$write, &$expect, null));
+    if ($ret > 0) {
+      return false;
+    }
+    return true;
   }
 
   final public async function closeAsync(): Awaitable<void> {
@@ -218,9 +220,9 @@ class NativeSocketHandle implements Network\SocketHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \socket_clear_error();
     $ret = $call();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $error = \socket_last_error();
     if ($error !== 0) {
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
