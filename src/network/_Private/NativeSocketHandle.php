@@ -212,16 +212,19 @@ class NativeSocketHandle implements Network\SocketHandle {
   }
 
   protected static function safe<T>((function(): T) $call): T {
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \socket_clear_error();
     $ret = $call();
-    if ($ret === false) {
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       $error = \socket_last_error();
+    if ($error !== 0) {
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       throw new Network\SocketException(\socket_strerror($error), $error);
     }
+
     return $ret;
   }
 }
