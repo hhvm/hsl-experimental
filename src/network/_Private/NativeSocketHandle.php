@@ -107,9 +107,11 @@ class NativeSocketHandle implements Network\SocketHandle {
   }
 
   final public function rawWriteBlocking(string $bytes): int {
+    return static::safe(() ==>
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    return static::safe(() ==> @\socket_write($this->socket, $bytes)) as int;
+      @\socket_write($this->socket, $bytes)
+    ) as int;
   }
 
   final public function writeAsync(string $bytes): Awaitable<void> {
@@ -203,9 +205,9 @@ class NativeSocketHandle implements Network\SocketHandle {
   }
 
   public function getType(): Network\SocketType {
+    $ret = static::safe(
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = static::safe(
       () ==> @\socket_get_option($this->socket, \SOL_SOCKET, \SO_TYPE),
     );
     return Network\SocketType::assert($ret);
