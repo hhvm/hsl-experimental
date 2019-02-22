@@ -17,14 +17,9 @@ class NativeSocketHandle implements Network\SocketHandle {
   private bool $closed = false;
   public function __construct(
     protected resource $socket,
-    bool $blocking = false,
   ) {
-    if (!$blocking) {
       static::safe(() ==> @\socket_set_nonblock($socket));
-    } else {
-      static::safe(() ==> @\socket_set_block($socket));
     }
-  }
 
   private ?Awaitable<mixed> $lastOperation;
   protected function queuedAsync<T>(
