@@ -33,7 +33,7 @@ final class TcpServer implements Server {
     $errstr = '';
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $socket = \stream_socket_server(
+    $socket = @\stream_socket_server(
       Str\format('tcp://%s:%d', $ip, $port),
       &$err,
       &$errstr,
@@ -60,8 +60,7 @@ final class TcpServer implements Server {
   public function getAddress(): Host {
     $ret = @\stream_socket_get_name($this->socket, false);
     if (false === $ret) {
-      throw
-        new SocketException('Unable to retrieve local address of the socket.');
+      throw new SocketException('Unable to retrieve local address of the socket.');
     }
 
     return _Private\parseSocketAddress($ret);
@@ -85,7 +84,7 @@ final class TcpServer implements Server {
   public async function accept(): Awaitable<SocketHandle> {
     $connection = @\stream_socket_accept($this->socket);
     if ($connection === false) {
-      throw new SocketException('Unable to accept a socket connection.');
+      throw new SocketException('Unable to accept a socket.');
     }
     return _Private\NativeSocketHandle::create($connection);
   }
