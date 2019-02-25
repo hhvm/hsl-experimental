@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\_Private;
+use namespace HH\Lib\{Str, _Private};
 use type Throwable;
 
 /**
@@ -29,23 +29,18 @@ final class TcpServer implements Server {
     IPAddress $ip,
     Port $port,
   ): Awaitable<TcpServer> {
+    $err = 0;
+    $errstr = '';
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $socket = self::safe(
-      () ==> @\socket_create(
-        is_ipv6($ip) ? \AF_INET6 : \AF_INET,
-        \SOCK_STREAM,
-        \SOL_TCP,
-      ),
+    $socket = \stream_socket_server(
+      Str\format('tcp://%s:%d', $ip, $port),
+      &$err,
+      &$errstr,
     );
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    self::safe(() ==> @\socket_bind($socket, $ip, $port));
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    self::safe(() ==> @\socket_listen($socket));
-    self::safe(() ==> \socket_set_blocking($socket, false));
-
+    if ($socket === false) {
+      throw new SocketException($errstr, $err);
+    }
     return new TcpServer($socket);
   }
 
@@ -55,78 +50,43 @@ final class TcpServer implements Server {
   public async function closeAsync(): Awaitable<void> {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    self::safe(() ==> @\socket_close($this->socket));
+    @fclose($this->socket);
   }
 
+
   /**
-   * {@inheritdoc}
+   * Get the local address of the socket.
    */
   public function getAddress(): Host {
-    $address = '';
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    self::safe(() ==> @\socket_getsockname($this->socket, &$address));
-    return $address;
+    $ret = @\stream_socket_get_name($this->socket, false);
+    if (false === $ret) {
+      throw
+        new SocketException('Unable to retrieve local address of the socket.');
+    }
+
+    return _Private\parseSocketAddress($ret);
   }
 
   /**
-   * {@inheritdoc}
+   * Get the local network port, or NULL when no port is being used.
    */
   public function getPort(): ?Port {
-    $address = '';
-    $port = null;
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    self::safe(() ==> @\socket_getsockname($this->socket, &$address, &$port));
-    return $port;
-  }
+    $ret = @\stream_socket_get_name($this->socket, false);
+    if (false === $ret) {
+      throw new SocketException('Unable to retrieve local port of the socket.');
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function isEndOfFile(): bool {
-    $buf = '';
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $bytes =
-      self::safe(() ==> @\socket_recv($this->socket, &$buf, -1, \MSG_PEEK));
-    return $bytes === 0 && null === $buf;
+    return _Private\parseSocketPort($ret);
   }
 
   /**
    * {@inheritdoc}
    */
   public async function accept(): Awaitable<SocketHandle> {
-    $connection = @\socket_accept($this->socket);
-    if ($connection !== false) {
-      return new _Private\NativeSocketHandle($connection);
+    $connection = @\stream_socket_accept($this->socket);
+    if ($connection === false) {
+      throw new SocketException('Unable to accept a socket connection.');
     }
-    await \HH\Asio\usleep(10);
-    return await $this->accept();
-  }
-
-  /**
-   * Get socket type.
-   */
-  public function getType(): SocketType {
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $ret = self::safe(
-      () ==> @\socket_get_option($this->socket, \SOL_SOCKET, \SO_TYPE),
-    );
-    return SocketType::assert($ret);
-  }
-
-  private static function safe<T>((function(): T) $call): T {
-    $ret = $call();
-    if ($ret === false) {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $error = \socket_last_error();
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      throw new SocketException(\socket_strerror($error), $error);
-    }
-    return $ret;
+    return _Private\NativeSocketHandle::create($connection);
   }
 }
