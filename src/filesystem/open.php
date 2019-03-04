@@ -13,7 +13,7 @@ namespace HH\Lib\Experimental\Filesystem;
 use namespace HH\Lib\_Private;
 
 function open_read_only_non_disposable(string $path): FileReadHandle {
-  return _Private\fopen($path, 'r');
+  return _Private\fopen($path, 'rb');
 }
 
 function open_write_only_non_disposable(
