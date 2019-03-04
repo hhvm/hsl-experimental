@@ -56,6 +56,9 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
     if (!$this->isAwaitable) {
       return;
     }
+    if ($this->isEndOfFile()) {
+      return;
+    }
     try {
       /* HH_FIXME[2049] *not* PHP stdlib */
       /* HH_FIXME[4107] *not* PHP stdlib */
