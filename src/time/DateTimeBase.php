@@ -41,6 +41,7 @@ function unix_timestamp_to_local_time(
 }
 
 // <<__Const>>
+<<__ConsistentConstruct>>
 abstract class DateTimeBase {
 
   const int NS_IN_US = 1000;
