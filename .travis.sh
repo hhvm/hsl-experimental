@@ -16,7 +16,7 @@ fi
   cd $(mktemp -d)
   curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 )
-composer install
+composer install --ignore-platform-reqs
 
 hh_client
 hhvm vendor/bin/hacktest tests/
