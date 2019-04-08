@@ -19,4 +19,4 @@ fi
 composer install --ignore-platform-reqs
 
 hh_client
-hhvm vendor/bin/hacktest tests/
+vendor/bin/hacktest tests/
