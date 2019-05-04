@@ -16,11 +16,8 @@ namespace HH\Lib\Util;
  * It is recommended to use HH\Lib\Util\IRef<T> for type declarations.
  * Doing so allows your code to be flexible if a non HH\Lib Ref class
  * were to be introduced in your codebase.
- *
- * Extending this class is not recommended, however we understand that
- * this may be easier during the transition away from your own Ref<T> type.
  */
-class Ref<T> implements IRef<T> {
+final class Ref<T> implements IRef<T> {
   public function __construct(public T $value) {}
   public function getValue(): T {
     return $this->value;
