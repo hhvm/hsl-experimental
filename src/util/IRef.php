@@ -12,7 +12,7 @@ namespace HH\Lib\Util;
 
 /**
  * A replacement for PHP style references.
- * If your project already defined a Ref class,
+ * If your project already defines a Ref class,
  * you may implement this interface so both HH\Lib\Ref<T>
  * and Your\Project\Ref<T> would typecheck.
  */
