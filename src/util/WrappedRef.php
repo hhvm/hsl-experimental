@@ -12,13 +12,16 @@ namespace HH\Lib\Util;
 
 /**
  * A replacement for PHP style references.
- *
- * A bridge between a the HSL `IRef<T>`
- * and a similar class that does not implement `IRef<T>`.
+ * A bridge between a the HSL `IRef<T>` and a non-conforming Ref<T>`.
  * 
  * When dealing with another project that does not implement `IRef<T>`,
  * you might still need to use their project-bound `Ref<T>`.
  * This class acts like `IRef<T>` where T is the internal T from the other Ref.
+ *
+ * Reading and writing the new values using the provided callbacks ensures that:
+ * - all updates you make using `setValue()` and `getValue()` will be propagated.
+ * - all modifications to the project-bound Ref<T> will be transparently
+ *   read from within WrappedRef<T> by using `getValue()`.
  *
  * THIS DOES PREVENT THE GARBAGE COLLECTOR FROM DELETING THE UNDERLYING
  * PROJECT-BOUND REF<T> IF YOU ARE STILL HOLDING A REFERENCE TO IT.
