@@ -16,12 +16,19 @@ use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 // @oss-disable: <<Oncalls('hack')>>
 final class CSelectTest extends HackTest {
 
-  public static function provideTestFindKeyWithKey(): vec<mixed> {
+  public static function provideTestFindKeyWithKey(
+  ): vec<(
+    KeyedContainer<string, arraykey>,
+    (function(string, arraykey): bool),
+    ?string,
+  )> {
     return vec[
       tuple(
-        varray[],
-        ($_, $_) ==>
-          invariant_violation('Don\'t call me! There are no elements!'),
+        darray[],
+        ($_, $_) ==> {
+          invariant_violation('Don\'t call me! There are no elements!');
+          return false;
+        },
         null,
       ),
       tuple(
@@ -31,7 +38,8 @@ final class CSelectTest extends HackTest {
           'five_2' => 'brown',
           'three_2' => 'fox',
         },
-        ($length, $word) ==> Str\length($word) === 5 && $length === 'five_1',
+        ($length, $word) ==>
+          Str\length($word as string) === 5 && $length === 'five_1',
         'five_1',
       ),
       tuple(
