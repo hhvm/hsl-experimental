@@ -25,12 +25,11 @@ function for_each<Tv>(
     $traversable,
   <<__AtMostRxAsFunc>> (function(Tv): void) $value_func,
 ): vec<Tv> {
-  $result = vec[];
   $vec = vec($traversable);
   foreach ($vec as $value) {
     $value_func($value);
   }
-  return $result;
+  return $vec;
 }
 
 /**
@@ -52,9 +51,8 @@ function for_each_with_key<Tk as arraykey, Tv>(
   <<__AtMostRxAsFunc>> (function(Tk, Tv): void) $value_func,
 ): vec<Tv> {
   $dict = dict($traversable);
-  $result = vec[];
   foreach ($dict as $key => $value) {
     $value_func($key, $value);
   }
-  return $result;
+  return vec($dict);
 }

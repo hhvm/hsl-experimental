@@ -64,4 +64,24 @@ final class IterateTest extends \Facebook\HackTest\HackTest {
       );
   }
 
+  <<DataProvider('provideTraversables')>>
+  public function testForeachReturnsValuesFromTraversable(
+    KeyedTraversable<int, int> $traversable,
+  ): void {
+    expect(Vec\for_each($traversable, $_ ==> {}))->toBeSame(
+      vec[5, 6, 7, 8, 9],
+      'Values are not being returned',
+    );
+  }
+
+  <<DataProvider('provideTraversables')>>
+  public function testForeachWithKeyReturnsValuesFromTraversable(
+    KeyedTraversable<int, int> $traversable,
+  ): void {
+    expect(Vec\for_each_with_key($traversable, ($_, $_) ==> {}))->toBeSame(
+      vec[5, 6, 7, 8, 9],
+      'Values are not being returned',
+    );
+  }
+
 }
