@@ -13,7 +13,7 @@ use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-final class IterateTest extends \Facebook\HackTest\HackTest {
+final class VecIterateTest extends \Facebook\HackTest\HackTest {
 
   public static function generator(): Generator<int, int, void> {
     yield 0 => 5;
