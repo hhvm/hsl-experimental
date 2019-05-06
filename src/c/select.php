@@ -10,7 +10,7 @@
 
 namespace HH\Lib\C;
 
-use namespace HH\Lib\{_Private, Str};
+use namespace HH\Lib\Str;
 
 /**
  * Returns the key of the first value of the given KeyedTraversable for which
