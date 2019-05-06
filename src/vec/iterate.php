@@ -33,7 +33,7 @@ function for_each<Tv>(
 }
 
 /**
- * Applies a function to each key and value in a Traversable.
+ * Applies a function to each key and value in a KeyedTraversable.
  * Returns a vec with the same unaltered values as the passed Traversable<Tv>.
  *
  * For returning a new vec with the return values of $value_func

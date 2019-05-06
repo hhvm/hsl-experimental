@@ -36,7 +36,7 @@ function for_each<Tv as arraykey>(
 }
 
 /**
- * Applies a function to each key and value in a Traversable.
+ * Applies a function to each key and value in a KeyedTraversable.
  * Returns a keyset with the same unaltered values
  * as the passed Traversable<Tv>.
  *
