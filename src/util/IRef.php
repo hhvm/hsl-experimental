@@ -17,7 +17,6 @@ namespace HH\Lib\Util;
  * and Your\Project\Ref<T> would typecheck.
  */
 interface IRef<T> {
-  public function __construct(T $value);
   public function getValue(): T;
   public function setValue(T $value): T;
 }
