@@ -53,3 +53,12 @@ final class PHPErrorLogger implements \IDisposable {
     \set_error_handler($this->oldHandler);
   }
 }
+
+/**
+ * Stop eager execution of an async function.
+ *
+ * ==== ONLY USE THIS IN HSL IMPLEMENTATION AND TESTS ===
+ */
+function stop_eager_execution(): RescheduleWaitHandle {
+  return RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);
+}
