@@ -10,7 +10,7 @@
 
 use namespace HH\Lib\Vec;
 use namespace HH\Lib\Experimental\Async;
-use type HH\Lib\_Private\Ref;
+use type HH\Lib\Ref;
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
