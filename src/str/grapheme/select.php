@@ -56,11 +56,10 @@ function extract(string $string, int $size, int $start = 0): ?(string, int) {
     $size,
     0, /* $type: count graphemes */
     $start,
-    &$next,
+    inout $next,
   );
   if ($result === false) {
     return null;
   }
   return tuple($result, $next);
 }
-
