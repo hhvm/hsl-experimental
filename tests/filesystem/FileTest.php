@@ -37,7 +37,7 @@ final class FileTest extends HackTest {
 
     await using $f2 = Filesystem\open_read_only($filename);
     $content = await $f2->readAsync();
-    expect($content)->toBeSame('Hello, world!');
+    expect($content)->toEqual('Hello, world!');
 
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
@@ -49,7 +49,7 @@ final class FileTest extends HackTest {
       $path = $tf->getPath();
       await $tf->writeAsync('Hello, world');
       $content = file_get_contents($path->toString());
-      expect($content)->toBeSame('Hello, world');
+      expect($content)->toEqual('Hello, world');
     }
     expect($path->exists())->toBeFalse();
   }
@@ -83,9 +83,9 @@ final class FileTest extends HackTest {
       // NOT GUARANTEED BY HSL API; dependent on eager execution and undefined
       // or semi-defined ordering behavior. Testing here though as we at least
       // want to be aware if an HHVM change changes the behavior here.
-      expect($r1)->toBeSame($a);
-      expect($r2)->toBeSame($b);
-      expect($r3)->toBeSame($c);
+      expect($r1)->toEqual($a);
+      expect($r2)->toEqual($b);
+      expect($r3)->toEqual($c);
     }
   }
 
@@ -98,17 +98,17 @@ final class FileTest extends HackTest {
     await using ($tfr = Filesystem\open_read_only($path)) {
       $content = await $tfr->readAsync();
     }
-    expect($content)->toBeSame('Hello, world');
+    expect($content)->toEqual('Hello, world');
     await $tf->closeAsync();
 
-    expect(file_get_contents($path))->toBeSame('Hello, world');
+    expect(file_get_contents($path))->toEqual('Hello, world');
 
     await using $f =
       Filesystem\open_write_only($path, Filesystem\FileWriteMode::TRUNCATE);
     await $f->writeAsync('Foo bar');
     await $f->closeAsync();
 
-    expect(file_get_contents($path))->toBeSame('Foo bar');
+    expect(file_get_contents($path))->toEqual('Foo bar');
   }
 
   public async function testAppend(): Awaitable<void> {
@@ -122,7 +122,7 @@ final class FileTest extends HackTest {
     await $f->writeAsync("\nGoodbye, cruel world");
     await $f->closeAsync();
 
-    expect(file_get_contents($path))->toBeSame(
+    expect(file_get_contents($path))->toEqual(
       "Hello, world\nGoodbye, cruel world",
     );
   }

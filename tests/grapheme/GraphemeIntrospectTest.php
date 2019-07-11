@@ -29,7 +29,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
 
   <<DataProvider('provideLength')>>
   public function testLength(string $string, int $expected): void {
-    expect(Grapheme\length($string))->toBeSame($expected);
+    expect(Grapheme\length($string))->toEqual($expected);
   }
 
   public static function provideSearch(): vec<(string, string, int, ?int)> {
@@ -57,7 +57,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Grapheme\search($haystack, $needle, $offset))->toBeSame($expected);
+    expect(Grapheme\search($haystack, $needle, $offset))->toEqual($expected);
   }
 
   public static function provideSearchCI(): vec<(string, string, int, ?int)> {
@@ -86,7 +86,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Grapheme\search_ci($haystack, $needle, $offset))->toBeSame(
+    expect(Grapheme\search_ci($haystack, $needle, $offset))->toEqual(
       $expected,
     );
   }

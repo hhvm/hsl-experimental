@@ -99,8 +99,8 @@ final class PollTest extends HackTest {
       $exception = true;
     }
 
-    expect($results)->toBeSame($expected_results);
-    expect($exception)->toBeSame($expected_exception);
+    expect($results)->toEqual($expected_results);
+    expect($exception)->toEqual($expected_exception);
   }
 
   public async function testKeyed(): Awaitable<void> {

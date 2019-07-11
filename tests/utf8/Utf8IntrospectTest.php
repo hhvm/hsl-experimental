@@ -28,7 +28,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTest {
 
   <<DataProvider('provideLength')>>
   public function testLength(string $string, int $expected): void {
-    expect(Utf8\length($string))->toBeSame($expected);
+    expect(Utf8\length($string))->toEqual($expected);
   }
 
   public static function provideSearch(): vec<(string, string, int, ?int)> {
@@ -51,7 +51,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTest {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Utf8\search($haystack, $needle, $offset))->toBeSame($expected);
+    expect(Utf8\search($haystack, $needle, $offset))->toEqual($expected);
   }
 
   public static function provideSearchCI(): vec<(string, string, int, ?int)> {
@@ -74,7 +74,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTest {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Utf8\search_ci($haystack, $needle, $offset))->toBeSame($expected);
+    expect(Utf8\search_ci($haystack, $needle, $offset))->toEqual($expected);
   }
 
   public static function provideSearchLast(): vec<(string, string, int, ?int)> {
@@ -99,7 +99,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTest {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Utf8\search_last($haystack, $needle, $offset))->toBeSame($expected);
+    expect(Utf8\search_last($haystack, $needle, $offset))->toEqual($expected);
   }
 
   public function testPositionExceptions(): void {
@@ -134,7 +134,7 @@ final class Utf8IntrospectTest extends \Facebook\HackTest\HackTest {
 
   <<DataProvider('provideIsUtf8')>>
   public function testIsUtf8(string $string, bool $expected): void {
-    expect(Utf8\is_utf8($string))->toBeSame($expected);
+    expect(Utf8\is_utf8($string))->toEqual($expected);
   }
 
 }

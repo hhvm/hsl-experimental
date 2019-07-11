@@ -38,7 +38,7 @@ final class Utf8SelectTest extends \Facebook\HackTest\HackTest {
     ?int $length,
     string $expected,
   ): void {
-    expect(Utf8\slice($string, $offset, $length))->toBeSame($expected);
+    expect(Utf8\slice($string, $offset, $length))->toEqual($expected);
   }
 
   public function testSliceExceptions(): void {
@@ -70,6 +70,6 @@ final class Utf8SelectTest extends \Facebook\HackTest\HackTest {
     ?int $length,
     string $expected,
   ): void {
-    expect(Utf8\slice_bytes($string, $offset, $length))->toBeSame($expected);
+    expect(Utf8\slice_bytes($string, $offset, $length))->toEqual($expected);
   }
 }

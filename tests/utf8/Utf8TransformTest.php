@@ -28,7 +28,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
 
   <<DataProvider('provideLowercase')>>
   public function testLowercase(string $string, string $expected): void {
-    expect(Utf8\lowercase($string))->toBeSame($expected);
+    expect(Utf8\lowercase($string))->toEqual($expected);
   }
 
   public static function provideUppercase(): vec<(string, string)> {
@@ -43,7 +43,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
 
   <<DataProvider('provideUppercase')>>
   public function testUppercase(string $string, string $expected): void {
-    expect(Utf8\uppercase($string))->toBeSame($expected);
+    expect(Utf8\uppercase($string))->toEqual($expected);
   }
 
   public static function provideSplice(
@@ -69,7 +69,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
     string $expected,
   ): void {
     expect(Utf8\splice($string, $replacement, $offset, $length))
-      ->toBeSame($expected);
+      ->toEqual($expected);
   }
 
   public function testSpliceExceptions(): void {
@@ -98,7 +98,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
   <<DataProvider('provideConvertKana')>>
   public function testConvertKana(string $string, string $expected): void {
     expect(Utf8\convert_kana($string, shape('k' => true, 'a' => true)))
-      ->toBeSame($expected);
+      ->toEqual($expected);
   }
 
   public static function provideEncoding(): varray<mixed> {
@@ -121,7 +121,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
     Encoding $encoding,
     string $expected,
   ): void {
-    expect(Utf8\from_encoding($string, $encoding))->toBeSame($expected);
+    expect(Utf8\from_encoding($string, $encoding))->toEqual($expected);
   }
 
   <<DataProvider('provideEncoding')>>
@@ -130,7 +130,7 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
     Encoding $encoding,
     string $string,
   ): void {
-    expect(Utf8\to_encoding($string, $encoding))->toBeSame($expected);
+    expect(Utf8\to_encoding($string, $encoding))->toEqual($expected);
   }
 
 }

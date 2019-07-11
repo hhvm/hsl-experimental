@@ -44,7 +44,7 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTest {
     ?int $length,
     string $expected,
   ): void {
-    expect(Grapheme\slice($string, $offset, $length))->toBeSame($expected);
+    expect(Grapheme\slice($string, $offset, $length))->toEqual($expected);
   }
 
   public function testSliceExceptions(): void {
@@ -72,6 +72,6 @@ final class GraphemeSelectTest extends \Facebook\HackTest\HackTest {
     int $next,
     (string, int) $expected,
   ): void {
-    expect(Grapheme\extract($string, $offset, $next))->toBeSame($expected);
+    expect(Grapheme\extract($string, $offset, $next))->toEqual($expected);
   }
 }

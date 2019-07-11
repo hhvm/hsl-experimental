@@ -43,7 +43,7 @@ final class SemaphoreTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     $end = microtime(true);
     expect($end - $start)->toEqualWithDelta(self::SLEEP_BLOCK * 10, self::TIME_DELTA);
-    expect($results)->toBeSame(Vec\range(0, 99));
+    expect($results)->toEqual(Vec\range(0, 99));
   }
 
   public async function testLimitConcurrencyFastAsync(): Awaitable<void> {
@@ -52,7 +52,7 @@ final class SemaphoreTest extends HackTest {
       Vec\range(0, 99),
       async $i ==> await $semaphore->waitForAsync($i),
     );
-    expect($results)->toBeSame(Vec\range(0, 99));
+    expect($results)->toEqual(Vec\range(0, 99));
   }
 
   public async function testConcurrencyLimiterExceptionAsync(): Awaitable<void> {
@@ -97,7 +97,7 @@ final class SemaphoreTest extends HackTest {
     $end = microtime(true);
     expect($checker->value)->toBeFalse();
     expect($end - $start)->toEqualWithDelta(self::SLEEP_BLOCK * 10, self::TIME_DELTA);
-    expect($results)->toBeSame(Vec\range(0, 9));
+    expect($results)->toEqual(Vec\range(0, 9));
   }
 
   public async function testExtreme1(): Awaitable<void> {
@@ -113,7 +113,7 @@ final class SemaphoreTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     $end = microtime(true);
     expect($end - $start)->toEqualWithDelta(0., self::TIME_DELTA);
-    expect($results)->toBeSame(Vec\range(0, 9999));
+    expect($results)->toEqual(Vec\range(0, 9999));
   }
 
   public async function testExtreme2(): Awaitable<void> {
@@ -132,7 +132,7 @@ final class SemaphoreTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     $end = microtime(true);
     expect($end - $start)->toEqualWithDelta(self::SLEEP_BLOCK, self::TIME_DELTA);
-    expect($results)->toBeSame(Vec\range(0, 9999));
+    expect($results)->toEqual(Vec\range(0, 9999));
   }
 
   public async function testExtreme3(): Awaitable<void> {
@@ -151,6 +151,6 @@ final class SemaphoreTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     $end = microtime(true);
     expect($end - $start)->toEqualWithDelta(0., self::TIME_DELTA);
-    expect($results)->toBeSame(Vec\range(0, 9999));
+    expect($results)->toEqual(Vec\range(0, 9999));
   }
 }

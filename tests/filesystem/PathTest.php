@@ -45,7 +45,7 @@ final class PathTest extends HackTest {
   <<DataProvider('provideTestGetBaseName')>>
   public function testGetBaseName(string $path, string $name): void {
     $path = new Filesystem\Path($path);
-    expect($path->getBaseName())->toBeSame($name);
+    expect($path->getBaseName())->toEqual($name);
   }
 
   public static function provideTestGetParent(): varray<(string, string)> {
@@ -64,7 +64,7 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParent')>>
   public function testGetParent(string $path, string $parent): void {
-    expect((new Filesystem\Path($path))->getParent()->toString())->toBeSame(
+    expect((new Filesystem\Path($path))->getParent()->toString())->toEqual(
       $parent,
     );
   }
@@ -90,7 +90,7 @@ final class PathTest extends HackTest {
     string $expected,
   ): void {
     expect((new Filesystem\Path($path))->withExtension($extension)->toString())
-      ->toBeSame($expected);
+      ->toEqual($expected);
   }
 
   public static function provideTestGetParts(): varray<(string, vec<string>)> {
@@ -105,6 +105,6 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParts')>>
   public function testGetParts(string $path, vec<string> $parts): void {
-    expect((new Filesystem\Path($path))->getParts())->toBeSame($parts);
+    expect((new Filesystem\Path($path))->getParts())->toEqual($parts);
   }
 }
