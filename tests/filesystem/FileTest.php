@@ -77,9 +77,9 @@ final class FileTest extends HackTest {
       expect($r1 === $a || $r2 === $a || $r3 === $a)->toBeTrue();
       expect($r1 === $b || $r2 === $b || $r3 === $b)->toBeTrue();
       expect($r1 === $c || $r2 === $c || $r3 === $c)->toBeTrue();
-      expect($r1)->toNotBeSame($r2);
-      expect($r1)->toNotBeSame($r3);
-      expect($r2)->toNotBeSame($r3);
+      expect($r1)->toNotEqual($r2);
+      expect($r1)->toNotEqual($r3);
+      expect($r2)->toNotEqual($r3);
       // NOT GUARANTEED BY HSL API; dependent on eager execution and undefined
       // or semi-defined ordering behavior. Testing here though as we at least
       // want to be aware if an HHVM change changes the behavior here.
