@@ -5,3 +5,6 @@ safe_vector_array = true
 unsafe_rx = false
 ignored_paths = [ "vendor/.+/tests/.+" ]
 user_attributes=
+disallow_ambiguous_lambda=true
+disable_unsafe_expr=true
+disable_unsafe_block=true
