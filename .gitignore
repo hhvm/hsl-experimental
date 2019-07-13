@@ -2,4 +2,4 @@ vendor/
 *.swp
 *~
 composer.lock
-**/*hhast.parse-cache
+**/*hhast.parser-cache
