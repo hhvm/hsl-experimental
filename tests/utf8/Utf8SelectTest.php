@@ -13,7 +13,7 @@ use type Facebook\HackTest\DataProvider; // @oss-enable
 use function Facebook\FBExpect\expect; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class Utf8SelectTest extends \Facebook\HackTest\HackTest {
 
   public static function provideSlice(): vec<(string, int, ?int, string)> {
