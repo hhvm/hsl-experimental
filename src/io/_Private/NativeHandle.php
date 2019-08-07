@@ -146,9 +146,10 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
 
   final public function flushAsync(): Awaitable<void> {
     return $this->queuedAsync(async () ==> {
+      using new PHPWarningSuppressor();
       /* HH_IGNORE_ERROR[2049] */
       /* HH_IGNORE_ERROR[4107] */
-      @\fflush($this->impl);
+      \fflush($this->impl);
     });
   }
 
@@ -160,8 +161,9 @@ abstract class NativeHandle implements IO\ReadHandle, IO\WriteHandle {
 
   final public async function closeAsync(): Awaitable<void> {
     await $this->flushAsync();
+    using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    @\fclose($this->impl);
+    \fclose($this->impl);
   }
 }
