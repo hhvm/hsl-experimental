@@ -29,8 +29,8 @@ final class PathTest extends HackTest {
     expect($absolute_path->isRelative())->toBeFalse();
   }
 
-  public static function provideTestGetBaseName(): varray<(string, string)> {
-    return varray[
+  public static function provideTestGetBaseName(): vec<(string, string)> {
+    return vec[
       tuple('foo', 'foo'),
       tuple('/foo/bar/baz', 'baz'),
       tuple('/foo/bar/baz.php', 'baz.php'),
@@ -48,8 +48,8 @@ final class PathTest extends HackTest {
     expect($path->getBaseName())->toEqual($name);
   }
 
-  public static function provideTestGetParent(): varray<(string, string)> {
-    return varray[
+  public static function provideTestGetParent(): vec<(string, string)> {
+    return vec[
       tuple('', ''),
       tuple('foo', '.'),
       tuple('/foo/bar/baz', '/foo/bar'),
@@ -70,8 +70,8 @@ final class PathTest extends HackTest {
   }
 
   public static function provideTestWithExtension(
-  ): varray<(string, string, string)> {
-    return varray[
+  ): vec<(string, string, string)> {
+    return vec[
       tuple('/foo/bar', 'php', '/foo/bar.php'),
       tuple('/foo/bar.txt', 'php', '/foo/bar.php'),
       tuple('/foo/bar.txt.md', 'php', '/foo/bar.txt.php'),
@@ -93,8 +93,8 @@ final class PathTest extends HackTest {
       ->toEqual($expected);
   }
 
-  public static function provideTestGetParts(): varray<(string, vec<string>)> {
-    return varray[
+  public static function provideTestGetParts(): vec<(string, vec<string>)> {
+    return vec[
       tuple('/foo/bar', vec['foo', 'bar']),
       tuple('foo/bar/baz', vec['foo', 'bar', 'baz']),
       tuple('foo/bar/baz/', vec['foo', 'bar', 'baz']),
