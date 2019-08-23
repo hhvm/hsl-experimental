@@ -18,8 +18,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 use function HH\Lib\_Private\stop_eager_execution;
 
 // @oss-disable: <<
-  // @oss-disable: Oncalls('hphp_hphpi'),
-  // @oss-disable: InterestedIndividuals('jan', 'kendallhopkins')
+  // @oss-disable: Oncalls('hphp_hphpi')
 // @oss-disable: >>
 final class SemaphoreTest extends HackTest {
 

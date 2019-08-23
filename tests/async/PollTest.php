@@ -14,7 +14,7 @@ use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 // @oss-disable: use type HackTest;
 
-// @oss-disable: <<Oncalls('hphp_hphpi'), InterestedIndividuals('jan')>>
+// @oss-disable: <<Oncalls('hphp_hphpi')>>
 final class PollTest extends HackTest {
   public async function testEmpty(): Awaitable<void> {
     foreach (Async\Poll::create() await as $value) {

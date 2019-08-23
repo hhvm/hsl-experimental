@@ -15,7 +15,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: use type HackTest;
 use function HH\Lib\_Private\stop_eager_execution;
 
-// @oss-disable: <<Oncalls('hphp_hphpi'), InterestedIndividuals('jan')>>
+// @oss-disable: <<Oncalls('hphp_hphpi')>>
 final class ConditionTest extends HackTest {
 
   public async function testSucceedFirst(): Awaitable<void> {
