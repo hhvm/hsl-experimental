@@ -61,5 +61,5 @@ function extract(string $string, int $size, int $start = 0): ?(string, int) {
   if ($result === false) {
     return null;
   }
-  return tuple($result, $next);
+  return tuple($result, $next as nonnull);
 }
