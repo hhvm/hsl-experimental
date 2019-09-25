@@ -13,6 +13,8 @@ namespace HH\Lib\Experimental\Filesystem;
 use namespace HH\Lib\{_Private, Experimental\IO};
 
 <<__Sealed(
+  _Private\DisposableFileHandle::class,
+  _Private\NonDisposableFileHandle::class,
   FileReadHandle::class,
   FileWriteHandle::class,
 )>>
@@ -27,17 +29,6 @@ interface FileHandle extends IO\Handle {
    */
   public function getSize(): int;
 
-  <<__ReturnDisposable>>
-  public function lock(FileLockType $mode): FileLock;
-}
-
-<<__Sealed(DisposableFileReadHandle::class, FileReadWriteHandle::class)>>
-interface FileReadHandle extends FileHandle, IO\ReadHandle {
-  public function seekForRead(int $offset): void;
-}
-
-<<__Sealed(DisposableFileWriteHandle::class, FileReadWriteHandle::class)>>
-interface FileWriteHandle extends FileHandle, IO\WriteHandle {
   /**
    * Move to a specific offset within a file.
    *
@@ -46,32 +37,32 @@ interface FileWriteHandle extends FileHandle, IO\WriteHandle {
    *
    * Any other pending operations (such as writes) will complete first.
    */
-  public function seekForWriteAsync(int $offset): Awaitable<void>;
+  public function seekAsync(int $offset): Awaitable<void>;
+
+  <<__ReturnDisposable>>
+  public function lock(FileLockType $mode): FileLock;
 }
 
-<<__Sealed(_Private\FileHandle::class, DisposableFileReadWriteHandle::class)>>
+<<__Sealed(
+  DisposableFileReadHandle::class,
+  FileReadWriteHandle::class,
+  NonDisposableFileReadHandle::class,
+)>>
+interface FileReadHandle extends FileHandle, IO\ReadHandle {
+}
+
+<<__Sealed(
+  DisposableFileWriteHandle::class,
+  FileReadWriteHandle::class,
+  NonDisposableFileWriteHandle::class,
+)>>
+interface FileWriteHandle extends FileHandle, IO\WriteHandle {
+}
+
+<<__Sealed(
+  NonDisposableFileReadWriteHandle::class,
+  DisposableFileReadWriteHandle::class,
+)>>
 interface FileReadWriteHandle
   extends FileWriteHandle, FileReadHandle, IO\ReadWriteHandle {
-}
-
-<<__Sealed(DisposableFileReadWriteHandle::class)>>
-interface DisposableFileReadHandle
-  /* HH_FIXME[4194] non-disposable parent interface t34965102 */
-  extends FileReadHandle, IO\DisposableReadHandle {
-}
-
-<<__Sealed(DisposableFileReadWriteHandle::class)>>
-interface DisposableFileWriteHandle
-  /* HH_FIXME[4194] non-disposable parent interface t34965102 */
-  extends FileWriteHandle, IO\DisposableWriteHandle {
-}
-
-<<__Sealed(_Private\DisposableFileHandle::class)>>
-interface DisposableFileReadWriteHandle
-  extends
-    /* HH_FIXME[4194] non-disposable parent interface t34965102 */
-    FileReadWriteHandle,
-    DisposableFileWriteHandle,
-    DisposableFileReadHandle,
-    IO\DisposableReadWriteHandle {
 }

@@ -13,12 +13,12 @@ namespace HH\Lib\Experimental\Filesystem;
 use namespace HH\Lib\_Private;
 
 <<__ReturnDisposable>>
-function temporary_file(): DisposableFileWriteHandle {
+function temporary_file(): DisposableFileReadWriteHandle {
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   $path = \sys_get_temp_dir().'/'.\bin2hex(\random_bytes(8));
-  return new _Private\TemporaryFile(open_write_only_non_disposable(
-    $path,
-    FileWriteMode::MUST_CREATE,
-  ) as _Private\FileHandle);
+  return new _Private\TemporaryFile(
+    open_read_write_non_disposable($path,
+    FileWriteMode::MUST_CREATE),
+  );
 }
