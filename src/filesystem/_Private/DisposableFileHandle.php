@@ -15,9 +15,7 @@ use namespace HH\Lib\Experimental\Filesystem;
 <<__Sealed(TemporaryFile::class)>>
 class DisposableFileHandle
   extends DisposableHandleWrapper<FileHandle>
-  implements
-    Filesystem\DisposableFileReadHandle,
-    Filesystem\DisposableFileWriteHandle {
+  implements Filesystem\DisposableFileReadWriteHandle {
 
   public function __construct(FileHandle $impl) {
     parent::__construct($impl);
