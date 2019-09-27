@@ -12,7 +12,7 @@ namespace HH\Lib\Experimental\Filesystem;
 
 use namespace HH\Lib\_Private;
 
-function open_read_only_non_disposable(
+function open_read_only_nd(
   string $path,
 ): NonDisposableFileReadHandle {
   return
@@ -22,7 +22,7 @@ function open_read_only_non_disposable(
     );
 }
 
-function open_write_only_non_disposable(
+function open_write_only_nd(
   string $path,
   FileWriteMode $mode = FileWriteMode::OPEN_OR_CREATE,
 ): NonDisposableFileWriteHandle {
@@ -33,7 +33,7 @@ function open_write_only_non_disposable(
     );
 }
 
-function open_read_write_non_disposable(
+function open_read_write_nd(
   string $path,
   FileWriteMode $mode = FileWriteMode::OPEN_OR_CREATE,
 ): NonDisposableFileReadWriteHandle {
@@ -47,7 +47,7 @@ function open_read_write_non_disposable(
 <<__ReturnDisposable>>
 function open_read_only(string $path): DisposableFileReadHandle {
   return new _Private\DisposableFileReadHandle(
-    open_read_only_non_disposable($path),
+    open_read_only_nd($path),
   );
 }
 
@@ -57,7 +57,7 @@ function open_write_only(
   FileWriteMode $mode = FileWriteMode::OPEN_OR_CREATE,
 ): DisposableFileWriteHandle {
   return new _Private\DisposableFileWriteHandle(
-    open_write_only_non_disposable($path, $mode),
+    open_write_only_nd($path, $mode),
   );
 }
 
@@ -67,6 +67,6 @@ function open_read_write(
   FileWriteMode $mode = FileWriteMode::OPEN_OR_CREATE,
 ): DisposableFileReadWriteHandle {
   return new _Private\DisposableFileReadWriteHandle(
-    open_read_write_non_disposable($path, $mode),
+    open_read_write_nd($path, $mode),
   );
 }

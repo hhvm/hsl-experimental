@@ -22,7 +22,7 @@ final class FileTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP Stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
-    $f1 = Filesystem\open_write_only_non_disposable(
+    $f1 = Filesystem\open_write_only_nd(
       $filename,
       Filesystem\FileWriteMode::MUST_CREATE,
     );

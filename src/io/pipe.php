@@ -15,7 +15,7 @@ use namespace HH\Lib\_Private;
 /** Create a pair of handles, where writes to the `WriteHandle` can be
  * read from the `ReadHandle`.
  */
-function pipe_non_disposable(
+function pipe_nd(
 ): (NonDisposableReadHandle, NonDisposableWriteHandle) {
   /* HH_IGNORE_ERROR[2049] intentionally not in HHI */
   /* HH_IGNORE_ERROR[4107] intentionally not in HHI */

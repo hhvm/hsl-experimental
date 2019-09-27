@@ -23,7 +23,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: <<Oncalls('hack')>>
 final class PipeTest extends HackTest {
   public async function testWritesAreReadableAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_non_disposable();
+    list($r, $w) = IO\pipe_nd();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
 
     $read = await $r->readLineAsync();
@@ -40,7 +40,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadAllAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_non_disposable();
+    list($r, $w) = IO\pipe_nd();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
     await $w->closeAsync();
     $s = await $r->readAsync();
@@ -48,7 +48,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testPartialReadAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_non_disposable();
+    list($r, $w) = IO\pipe_nd();
     await $w->writeAsync('1234567890');
     $s = await $r->readAsync(5);
     expect($s)->toEqual('12345');
@@ -57,7 +57,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testPartialReadLineAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_non_disposable();
+    list($r, $w) = IO\pipe_nd();
     await $w->writeAsync("1234567890\n12345\n67890\n");
     $s = await $r->readLineAsync(5);
     expect($s)->toEqual('12345');
@@ -70,7 +70,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadTooManyAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_non_disposable();
+    list($r, $w) = IO\pipe_nd();
     await $w->writeAsync('1234567890');
     await $w->closeAsync();
     $s = await $r->readAsync(11);
@@ -79,8 +79,8 @@ final class PipeTest extends HackTest {
 
   public async function testInteractionAsync(): Awaitable<void> {
     // Emulate a client-server environment
-    list($cr, $sw) = IO\pipe_non_disposable();
-    list($sr, $cw) = IO\pipe_non_disposable();
+    list($cr, $sw) = IO\pipe_nd();
+    list($sr, $cw) = IO\pipe_nd();
 
     await Tuple\from_async(
       async { // client
