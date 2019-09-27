@@ -12,54 +12,17 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\{Experimental\Filesystem, Experimental\IO, Str};
 
-<<__Sealed(DisposableFileHandle::class)>>
-class DisposableHandleWrapper<T as IO\ReadWriteHandle>
-  implements IO\DisposableReadWriteHandle {
-
-  public function __construct(protected T $impl) {
+/* HH_FIXME[4194] disposable extending non-disposable interface */
+abstract class DisposableHandleWrapper<T as IO\NonDisposableHandle>
+  implements IO\Handle, \IAsyncDisposable {
+  protected function __construct(protected T $impl) {
   }
 
   public async function __disposeAsync(): Awaitable<void> {
     await $this->impl->closeAsync();
   }
 
-  ///// IO\Handle /////
-
-  public function isEndOfFile(): bool {
+  final public function isEndOfFile(): bool {
     return $this->impl->isEndOfFile();
-  }
-
-  public async function closeAsync(): Awaitable<void> {
-    await $this->impl->closeAsync();
-  }
-
-  ///// IO\ReadHandle /////
-
-  public function rawReadBlocking(?int $max_bytes = null): string {
-    return $this->impl->rawReadBlocking($max_bytes);
-  }
-
-  public async function readAsync(?int $max_bytes = null): Awaitable<string> {
-    return await $this->impl->readAsync($max_bytes);
-  }
-
-  public async function readLineAsync(
-    ?int $max_bytes = null,
-  ): Awaitable<string> {
-    return await $this->impl->readLineAsync($max_bytes);
-  }
-
-  ///// IO\WriteHandle /////
-
-  public function rawWriteBlocking(string $bytes): int {
-    return $this->impl->rawWriteBlocking($bytes);
-  }
-
-  public async function writeAsync(string $bytes): Awaitable<void> {
-    await $this->impl->writeAsync($bytes);
-  }
-
-  public async function flushAsync(): Awaitable<void> {
-    await $this->impl->flushAsync();
   }
 }

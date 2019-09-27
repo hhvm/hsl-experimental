@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\IO;
 
+use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\Filesystem;
 
 /** An interface for IO handles.
@@ -18,11 +19,12 @@ use namespace HH\Lib\Experimental\Filesystem;
  */
 <<__Sealed(
   Filesystem\FileHandle::class,
-  UserspaceHandle::class,
+  NonDisposableHandle::class,
   ReadHandle::class,
+  UserspaceHandle::class,
   WriteHandle::class,
+  _Private\DisposableHandleWrapper::class,
 )>>
 interface Handle {
   public function isEndOfFile(): bool;
-  public function closeAsync(): Awaitable<void>;
 }

@@ -12,12 +12,11 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\Experimental\Filesystem;
 
-<<__Sealed(TemporaryFile::class)>>
-class DisposableFileHandle
-  extends DisposableHandleWrapper<FileHandle>
-  implements Filesystem\DisposableFileReadWriteHandle {
-
-  public function __construct(FileHandle $impl) {
+<<__ConsistentConstruct>>
+abstract class DisposableFileHandle<T as NonDisposableFileHandle>
+  extends DisposableHandleWrapper<T>
+  implements Filesystem\FileHandle {
+  final public function __construct(T $impl) {
     parent::__construct($impl);
   }
 
@@ -36,11 +35,7 @@ class DisposableFileHandle
     return $this->impl->lock($type);
   }
 
-  final public async function seekForWriteAsync(int $offset): Awaitable<void> {
-    await $this->impl->seekForWriteAsync($offset);
-  }
-
-  final public function seekForRead(int $offset): void {
-    $this->impl->seekForRead($offset);
+  final public async function seekAsync(int $offset): Awaitable<void> {
+    await $this->impl->seekAsync($offset);
   }
 }

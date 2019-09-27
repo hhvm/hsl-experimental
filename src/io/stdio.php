@@ -18,24 +18,27 @@ use namespace HH\Lib\_Private;
  *
  * @see request_output
  */
-function server_output(): WriteHandle {
-  return _Private\StdioHandle::serverOutput();
+<<__Memoize>>
+function server_output(): NonDisposableWriteHandle {
+  return new _Private\StdioWriteHandle('php://stdout');
 }
 
 /** Return STDERR for the server process.
  *
  * @see request_error
  */
-function server_error(): WriteHandle {
-  return _Private\StdioHandle::serverError();
+<<__Memoize>>
+function server_error(): NonDisposableWriteHandle {
+  return new _Private\StdioWriteHandle('php://stderr');
 }
 
 /** Return STDIN for the server process.
  *
  * @see request_input
  */
-function server_input(): ReadHandle {
-  return _Private\StdioHandle::serverInput();
+<<__Memoize>>
+function server_input(): NonDisposableReadHandle {
+  return new _Private\StdioReadHandle('php://stdin');
 }
 
 /** Return the output handle for the current request.
@@ -54,7 +57,7 @@ function request_output(): WriteHandle {
   if (\php_sapi_name() === "cli") {
     return server_output();
   }
-  return _Private\StdioHandle::requestOutput();
+  return new _Private\StdioWriteHandle('php://output');
 }
 
 /** Return the error output handle for the current request.
@@ -66,7 +69,14 @@ function request_output(): WriteHandle {
  * In CLI mode, this is usually the process STDERR.
  */
 function request_error(): WriteHandle {
-  return _Private\StdioHandle::requestError();
+  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  if (\php_sapi_name() !== "cli") {
+    throw new InvalidHandleException(
+      'requestError is not supported in the current execution mode',
+    );
+  }
+  return server_error();
 }
 
 /** Return the input handle for the current request.
@@ -83,5 +93,5 @@ function request_input(): ReadHandle {
   if (\php_sapi_name() === "cli") {
     return server_input();
   }
-  return _Private\StdioHandle::requestInput();
+  return new _Private\StdioReadHandle('php://input');
 }

@@ -30,7 +30,7 @@ final class FileLock implements \IDisposable {
     $this->resource =
       /* HH_IGNORE_ERROR[4179] doing dodgy things to disposables */
       /* HH_IGNORE_ERROR[4188] doing dodgy things to disposables */
-      ($handle as _Private\FileHandle)->getImplementationDetail();
+      ($handle as _Private\NonDisposableFileHandle)->__getResource_DO_NOT_USE();
     $_wouldblock = null;
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */

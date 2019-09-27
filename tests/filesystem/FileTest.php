@@ -22,7 +22,7 @@ final class FileTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP Stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
-    await using $f1 = Filesystem\open_write_only(
+    $f1 = Filesystem\open_write_only_non_disposable(
       $filename,
       Filesystem\FileWriteMode::MUST_CREATE,
     );
@@ -99,32 +99,35 @@ final class FileTest extends HackTest {
       $content = await $tfr->readAsync();
     }
     expect($content)->toEqual('Hello, world');
-    await $tf->closeAsync();
 
     expect(file_get_contents($path))->toEqual('Hello, world');
 
-    await using $f =
-      Filesystem\open_write_only($path, Filesystem\FileWriteMode::TRUNCATE);
-    await $f->writeAsync('Foo bar');
-    await $f->closeAsync();
-
+    await using (
+      $f = Filesystem\open_write_only($path, Filesystem\FileWriteMode::TRUNCATE)
+    ) {
+      await $f->writeAsync('Foo bar');
+    }
+    ;
     expect(file_get_contents($path))->toEqual('Foo bar');
   }
 
   public async function testAppend(): Awaitable<void> {
     await using $tf = Filesystem\temporary_file();
     await $tf->writeAsync('Hello, world');
-    await $tf->closeAsync();
+    await $tf->flushAsync();
 
     $path = $tf->getPath()->toString();
-    await using $f =
-      Filesystem\open_write_only($path, Filesystem\FileWriteMode::APPEND);
-    await $f->writeAsync("\nGoodbye, cruel world");
-    await $f->closeAsync();
+    await using (
+      $f = Filesystem\open_write_only($path, Filesystem\FileWriteMode::APPEND)
+    ) {
+      await $f->writeAsync("\nGoodbye, cruel world");
+    }
+    ;
 
     expect(file_get_contents($path))->toEqual(
       "Hello, world\nGoodbye, cruel world",
     );
   }
+
 
 }

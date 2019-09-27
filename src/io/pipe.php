@@ -15,6 +15,13 @@ use namespace HH\Lib\_Private;
 /** Create a pair of handles, where writes to the `WriteHandle` can be
  * read from the `ReadHandle`.
  */
-function pipe_non_disposable(): (ReadHandle, WriteHandle) {
-  return _Private\PipeHandle::createPair();
+function pipe_non_disposable(
+): (NonDisposableReadHandle, NonDisposableWriteHandle) {
+  /* HH_IGNORE_ERROR[2049] intentionally not in HHI */
+  /* HH_IGNORE_ERROR[4107] intentionally not in HHI */
+  list($r, $w) = _Private\Native\pipe() as (resource, resource);
+  return tuple(
+    new _Private\PipeReadHandle($r),
+    new _Private\PipeWriteHandle($w),
+  );
 }

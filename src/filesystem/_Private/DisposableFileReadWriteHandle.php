@@ -10,9 +10,9 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\Experimental\{Filesystem, IO};
+use namespace HH\Lib\Experimental\Filesystem;
 
-final class TemporaryFile
+final class DisposableFileReadWriteHandle
   extends DisposableFileHandle<Filesystem\NonDisposableFileReadWriteHandle>
   implements Filesystem\DisposableFileReadWriteHandle {
   use DisposableReadHandleWrapperTrait<
@@ -21,11 +21,4 @@ final class TemporaryFile
   use DisposableWriteHandleWrapperTrait<
     Filesystem\NonDisposableFileReadWriteHandle,
   >;
-
-  public async function __disposeAsync(): Awaitable<void> {
-    await parent::__disposeAsync();
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    \unlink($this->getPath()->toString());
-  }
 }
