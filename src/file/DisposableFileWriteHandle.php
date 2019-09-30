@@ -8,8 +8,8 @@
  *
  */
 
-namespace HH\Lib\Experimental\Filesystem;
+namespace HH\Lib\Experimental\File;
 
 /* HH_FIXME[4194] disposable extending non-disposable interface */
-interface DisposableFileReadHandle extends \IAsyncDisposable, FileReadHandle {
+interface DisposableFileWriteHandle extends \IAsyncDisposable, FileWriteHandle {
 }

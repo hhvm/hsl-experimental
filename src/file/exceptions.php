@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Filesystem;
+namespace HH\Lib\Experimental\File;
 
 final class FileCreateException extends \Exception {}
 final class FileOpenException extends \Exception {}

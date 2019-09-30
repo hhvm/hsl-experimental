@@ -11,14 +11,14 @@
 namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\File;
 
 /** An interface for IO handles.
  *
  * Order of operations is guaranteed.
  */
 <<__Sealed(
-  Filesystem\FileHandle::class,
+  File\FileHandle::class,
   NonDisposableHandle::class,
   ReadHandle::class,
   UserspaceHandle::class,

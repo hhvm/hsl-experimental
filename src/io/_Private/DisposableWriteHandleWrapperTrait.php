@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\{Experimental\Filesystem, Experimental\IO, Str};
+use namespace HH\Lib\{Experimental\Fileystem, Experimental\IO, Str};
 
 trait DisposableWriteHandleWrapperTrait<T as IO\NonDisposableWriteHandle>
   implements IO\DisposableWriteHandle {

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\Fileystem;
 use namespace HH\Lib\_Private;
 
 /** An interface for a writable Handle.

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\{Experimental\Filesystem, Experimental\IO, Str};
+use namespace HH\Lib\{Experimental\Fileystem, Experimental\IO, Str};
 
 /* HH_FIXME[4194] disposable extending non-disposable interface */
 abstract class DisposableHandleWrapper<T as IO\NonDisposableHandle>

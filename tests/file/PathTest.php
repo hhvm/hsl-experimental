@@ -9,7 +9,7 @@
  */
 
 
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\File;
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -20,11 +20,11 @@ use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: <<Oncalls('hack')>>
 final class PathTest extends HackTest {
   public function testAbsolute(): void {
-    $relative_path = new Filesystem\Path('foo/bar/baz');
+    $relative_path = new File\Path('foo/bar/baz');
     expect($relative_path->isAbsolute())->toBeFalse();
     expect($relative_path->isRelative())->toBeTrue();
 
-    $absolute_path = new Filesystem\Path('/foo/bar/baz');
+    $absolute_path = new File\Path('/foo/bar/baz');
     expect($absolute_path->isAbsolute())->toBeTrue();
     expect($absolute_path->isRelative())->toBeFalse();
   }
@@ -44,7 +44,7 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetBaseName')>>
   public function testGetBaseName(string $path, string $name): void {
-    $path = new Filesystem\Path($path);
+    $path = new File\Path($path);
     expect($path->getBaseName())->toEqual($name);
   }
 
@@ -64,7 +64,7 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParent')>>
   public function testGetParent(string $path, string $parent): void {
-    expect((new Filesystem\Path($path))->getParent()->toString())->toEqual(
+    expect((new File\Path($path))->getParent()->toString())->toEqual(
       $parent,
     );
   }
@@ -89,7 +89,7 @@ final class PathTest extends HackTest {
     string $extension,
     string $expected,
   ): void {
-    expect((new Filesystem\Path($path))->withExtension($extension)->toString())
+    expect((new File\Path($path))->withExtension($extension)->toString())
       ->toEqual($expected);
   }
 
@@ -105,6 +105,6 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParts')>>
   public function testGetParts(string $path, vec<string> $parts): void {
-    expect((new Filesystem\Path($path))->getParts())->toEqual($parts);
+    expect((new File\Path($path))->getParts())->toEqual($parts);
   }
 }

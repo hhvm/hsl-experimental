@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Filesystem;
+namespace HH\Lib\Experimental\File;
 
 use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\IO;

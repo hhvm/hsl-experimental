@@ -10,12 +10,12 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\Experimental\{IO, Filesystem};
+use namespace HH\Lib\Experimental\{IO, File};
 
 <<__ConsistentConstruct>>
 abstract class NonDisposableFileHandle
   extends LegacyPHPResourceHandle
-  implements Filesystem\FileHandle, IO\NonDisposableHandle {
+  implements File\FileHandle, IO\NonDisposableHandle {
   protected string $filename;
 
   final protected function __construct(string $path, string $mode) {
@@ -28,7 +28,7 @@ abstract class NonDisposableFileHandle
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   $f = \fopen($path, $mode);
     if ($f === false) {
-      throw new Filesystem\FileOpenException(
+      throw new File\FileOpenException(
         'Failed to open file: '.$errors->getLastErrorx()['message'],
       );
     }
@@ -44,8 +44,8 @@ abstract class NonDisposableFileHandle
   }
 
   <<__Memoize>>
-  final public function getPath(): Filesystem\Path {
-    return new Filesystem\Path($this->filename);
+  final public function getPath(): File\Path {
+    return new File\Path($this->filename);
   }
 
   final public function getSize(): int {
@@ -56,9 +56,9 @@ abstract class NonDisposableFileHandle
 
   <<__ReturnDisposable>>
   final public function lock(
-    Filesystem\FileLockType $type,
-  ): Filesystem\FileLock {
-    return new Filesystem\FileLock($this, $type);
+    File\FileLockType $type,
+  ): File\FileLock {
+    return new File\FileLock($this, $type);
   }
 
   final public async function seekAsync(int $offset): Awaitable<void> {

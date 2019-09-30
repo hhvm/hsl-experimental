@@ -10,16 +10,16 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\Experimental\{Filesystem, IO};
+use namespace HH\Lib\Experimental\{File, IO};
 
 final class TemporaryFile
-  extends DisposableFileHandle<Filesystem\NonDisposableFileReadWriteHandle>
-  implements Filesystem\DisposableFileReadWriteHandle {
+  extends DisposableFileHandle<File\NonDisposableFileReadWriteHandle>
+  implements File\DisposableFileReadWriteHandle {
   use DisposableReadHandleWrapperTrait<
-    Filesystem\NonDisposableFileReadWriteHandle,
+    File\NonDisposableFileReadWriteHandle,
   >;
   use DisposableWriteHandleWrapperTrait<
-    Filesystem\NonDisposableFileReadWriteHandle,
+    File\NonDisposableFileReadWriteHandle,
   >;
 
   public async function __disposeAsync(): Awaitable<void> {

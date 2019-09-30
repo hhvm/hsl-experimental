@@ -8,13 +8,13 @@
  *
  */
 
-namespace HH\Lib\Experimental\Filesystem;
+namespace HH\Lib\Experimental\File;
 
 use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\IO;
 
-final class NonDisposableFileWriteHandle
+final class NonDisposableFileReadHandle
   extends _Private\NonDisposableFileHandle
-  implements FileWriteHandle, IO\NonDisposableWriteHandle {
-  use _Private\LegacyPHPResourceWriteHandleTrait;
+  implements FileReadHandle, IO\NonDisposableReadHandle {
+  use _Private\LegacyPHPResourceReadHandleTrait;
 }

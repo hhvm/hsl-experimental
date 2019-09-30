@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\Fileystem;
 
 /* HH_FIXME[4194] non-disposable parent interface t34965102 */
 interface DisposableReadWriteHandle extends ReadWriteHandle, \IAsyncDisposable {

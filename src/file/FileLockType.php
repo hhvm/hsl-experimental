@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Filesystem;
+namespace HH\Lib\Experimental\File;
 
 enum FileLockType: int as int {
   /**

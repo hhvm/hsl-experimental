@@ -10,17 +10,17 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\File;
 
 <<__ConsistentConstruct>>
 abstract class DisposableFileHandle<T as NonDisposableFileHandle>
   extends DisposableHandleWrapper<T>
-  implements Filesystem\FileHandle {
+  implements File\FileHandle {
   final public function __construct(T $impl) {
     parent::__construct($impl);
   }
 
-  final public function getPath(): Filesystem\Path {
+  final public function getPath(): File\Path {
     return $this->impl->getPath();
   }
 
@@ -30,8 +30,8 @@ abstract class DisposableFileHandle<T as NonDisposableFileHandle>
 
   <<__ReturnDisposable>>
   final public function lock(
-    Filesystem\FileLockType $type,
-  ): Filesystem\FileLock {
+    File\FileLockType $type,
+  ): File\FileLock {
     return $this->impl->lock($type);
   }
 

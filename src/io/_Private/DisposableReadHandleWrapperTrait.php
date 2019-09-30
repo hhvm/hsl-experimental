@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\{Experimental\Filesystem, Experimental\IO, Str};
+use namespace HH\Lib\{Experimental\Fileystem, Experimental\IO, Str};
 
 trait DisposableReadHandleWrapperTrait<T as IO\NonDisposableReadHandle>
   implements IO\DisposableReadHandle {

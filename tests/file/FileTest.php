@@ -8,7 +8,7 @@
  *
  */
 
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\File;
 use namespace HH\Lib\{Str, Tuple};
 
 use function Facebook\FBExpect\expect; // @oss-enable
@@ -22,20 +22,20 @@ final class FileTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP Stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
-    $f1 = Filesystem\open_write_only_nd(
+    $f1 = File\open_write_only_nd(
       $filename,
-      Filesystem\FileWriteMode::MUST_CREATE,
+      File\FileWriteMode::MUST_CREATE,
     );
     await $f1->writeAsync('Hello, world!');
     expect(async () ==> {
-      await using $f2 = Filesystem\open_write_only(
+      await using File\open_write_only(
         $filename,
-        Filesystem\FileWriteMode::MUST_CREATE,
+        File\FileWriteMode::MUST_CREATE,
       );
-    })->toThrow(Filesystem\FileOpenException::class);
+    })->toThrow(File\FileOpenException::class);
     await $f1->closeAsync();
 
-    await using $f2 = Filesystem\open_read_only($filename);
+    await using $f2 = File\open_read_only($filename);
     $content = await $f2->readAsync();
     expect($content)->toEqual('Hello, world!');
 
@@ -45,7 +45,7 @@ final class FileTest extends HackTest {
   }
 
   public async function testTemporaryFile(): Awaitable<void> {
-    await using ($tf = Filesystem\temporary_file()) {
+    await using ($tf = File\temporary_file()) {
       $path = $tf->getPath();
       await $tf->writeAsync('Hello, world');
       $content = file_get_contents($path->toString());
@@ -55,7 +55,7 @@ final class FileTest extends HackTest {
   }
 
   public async function testMultipleReads(): Awaitable<void> {
-    await using ($tf = Filesystem\temporary_file()) {
+    await using ($tf = File\temporary_file()) {
       // 10MB is hopefully small enough to not make test infra sad, but
       // way bigger than any reasonable IO buffer size
       $a = Str\repeat('a', 10 * 1024 * 1024);
@@ -65,7 +65,7 @@ final class FileTest extends HackTest {
       await $tf->flushAsync();
 
       await using (
-        $tfr = Filesystem\open_read_only($tf->getPath()->toString())
+        $tfr = File\open_read_only($tf->getPath()->toString())
       ) {
         list($r1, $r2, $r3) = await Tuple\from_async(
           $tfr->readAsync(10 * 1024 * 1024),
@@ -90,12 +90,12 @@ final class FileTest extends HackTest {
   }
 
   public async function testTruncate(): Awaitable<void> {
-    await using $tf = Filesystem\temporary_file();
+    await using $tf = File\temporary_file();
     await $tf->writeAsync('Hello, world');
     await $tf->flushAsync();
 
     $path = $tf->getPath()->toString();
-    await using ($tfr = Filesystem\open_read_only($path)) {
+    await using ($tfr = File\open_read_only($path)) {
       $content = await $tfr->readAsync();
     }
     expect($content)->toEqual('Hello, world');
@@ -103,7 +103,7 @@ final class FileTest extends HackTest {
     expect(file_get_contents($path))->toEqual('Hello, world');
 
     await using (
-      $f = Filesystem\open_write_only($path, Filesystem\FileWriteMode::TRUNCATE)
+      $f = File\open_write_only($path, File\FileWriteMode::TRUNCATE)
     ) {
       await $f->writeAsync('Foo bar');
     }
@@ -112,13 +112,13 @@ final class FileTest extends HackTest {
   }
 
   public async function testAppend(): Awaitable<void> {
-    await using $tf = Filesystem\temporary_file();
+    await using $tf = File\temporary_file();
     await $tf->writeAsync('Hello, world');
     await $tf->flushAsync();
 
     $path = $tf->getPath()->toString();
     await using (
-      $f = Filesystem\open_write_only($path, Filesystem\FileWriteMode::APPEND)
+      $f = File\open_write_only($path, File\FileWriteMode::APPEND)
     ) {
       await $f->writeAsync("\nGoodbye, cruel world");
     }

@@ -10,10 +10,10 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\Experimental\Filesystem;
+use namespace HH\Lib\Experimental\File;
 
 final class DisposableFileReadHandle
-  extends DisposableFileHandle<Filesystem\NonDisposableFileReadHandle>
-  implements Filesystem\DisposableFileReadHandle {
-  use DisposableReadHandleWrapperTrait<Filesystem\NonDisposableFileReadHandle>;
+  extends DisposableFileHandle<File\NonDisposableFileReadHandle>
+  implements File\DisposableFileReadHandle {
+  use DisposableReadHandleWrapperTrait<File\NonDisposableFileReadHandle>;
 }
