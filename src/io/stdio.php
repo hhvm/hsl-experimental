@@ -32,15 +32,6 @@ function server_error(): WriteHandle {
   return new _Private\StdioWriteHandle('php://stderr');
 }
 
-/** Return STDIN for the server process.
- *
- * @see request_input
- */
-<<__Memoize>>
-function server_input(): ReadHandle {
-  return new _Private\StdioReadHandle('php://stdin');
-}
-
 /** Return the output handle for the current request.
  *
  * This should generally be used for sending data to clients. In CLI mode, this
@@ -91,7 +82,7 @@ function request_input(): NonDisposableReadHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() === "cli") {
-    return server_input() as NonDisposableReadHandle;
+    return new _Private\StdioReadHandle('php://stdin');
   }
-  return new _Private\StdioReadHandle('php://input') as NonDisposableReadHandle;
+  return new _Private\StdioReadHandle('php://input');
 }
