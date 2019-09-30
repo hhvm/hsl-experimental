@@ -19,7 +19,7 @@ use namespace HH\Lib\_Private;
  * @see request_output
  */
 <<__Memoize>>
-function server_output(): NonDisposableWriteHandle {
+function server_output(): WriteHandle {
   return new _Private\StdioWriteHandle('php://stdout');
 }
 
@@ -28,7 +28,7 @@ function server_output(): NonDisposableWriteHandle {
  * @see request_error
  */
 <<__Memoize>>
-function server_error(): NonDisposableWriteHandle {
+function server_error(): WriteHandle {
   return new _Private\StdioWriteHandle('php://stderr');
 }
 
@@ -37,7 +37,7 @@ function server_error(): NonDisposableWriteHandle {
  * @see request_input
  */
 <<__Memoize>>
-function server_input(): NonDisposableReadHandle {
+function server_input(): ReadHandle {
   return new _Private\StdioReadHandle('php://stdin');
 }
 
@@ -49,13 +49,13 @@ function server_input(): NonDisposableReadHandle {
  * @see requestOutput
  */
 <<__Memoize>>
-function request_output(): WriteHandle {
+function request_output(): NonDisposableWriteHandle {
   // php://output has differing eof behavior for interactive stdin - we need
   // the php://stdout for interactive usage (e.g. repls)
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() === "cli") {
-    return server_output();
+    return server_output() as NonDisposableWriteHandle;
   }
   return new _Private\StdioWriteHandle('php://output');
 }
@@ -68,7 +68,7 @@ function request_output(): WriteHandle {
  *
  * In CLI mode, this is usually the process STDERR.
  */
-function request_error(): WriteHandle {
+function request_error(): NonDisposableWriteHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {
@@ -76,7 +76,7 @@ function request_error(): WriteHandle {
       'requestError is not supported in the current execution mode',
     );
   }
-  return server_error();
+  return server_error() as NonDisposableWriteHandle;
 }
 
 /** Return the input handle for the current request.
@@ -85,13 +85,13 @@ function request_error(): WriteHandle {
  * POST data, if any.
  */
 <<__Memoize>>
-function request_input(): ReadHandle {
+function request_input(): NonDisposableReadHandle {
   // php://input has differing eof behavior for interactive stdin - we need
   // the php://stdin for interactive usage (e.g. repls)
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() === "cli") {
-    return server_input();
+    return server_input() as NonDisposableReadHandle;
   }
-  return new _Private\StdioReadHandle('php://input');
+  return new _Private\StdioReadHandle('php://input') as NonDisposableReadHandle;
 }
