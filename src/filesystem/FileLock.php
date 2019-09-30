@@ -24,7 +24,7 @@ final class FileLock implements \IDisposable {
   private resource $resource;
 
   public function __construct(
-    <<__AcceptDisposable>>FileHandle $handle,
+    <<__AcceptDisposable>> FileHandle $handle,
     FileLockType $lock_type,
   ) {
     $this->resource =

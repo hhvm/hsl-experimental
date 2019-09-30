@@ -13,9 +13,9 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\IO;
 
 final class PipeReadHandle
-  extends NativeHandle
+  extends LegacyPHPResourceHandle
   implements IO\NonDisposableReadHandle {
-  use NativeReadHandleTrait;
+  use LegacyPHPResourceReadHandleTrait;
   public function __construct(resource $r) {
     parent::__construct($r);
   }

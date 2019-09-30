@@ -16,6 +16,6 @@ use namespace HH\Lib\Experimental\IO;
 final class NonDisposableFileReadWriteHandle
   extends _Private\NonDisposableFileHandle
   implements FileReadWriteHandle, IO\NonDisposableReadWriteHandle {
-  use _Private\NativeReadHandleTrait;
-  use _Private\NativeWriteHandleTrait;
+  use _Private\LegacyPHPResourceReadHandleTrait;
+  use _Private\LegacyPHPResourceWriteHandleTrait;
 }

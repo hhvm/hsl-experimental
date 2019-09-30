@@ -18,7 +18,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 
 /** Test pipes specifically, and core IO functions.
  *
- * This is basic coverage for all `NativeHandle`s
+ * This is basic coverage for all `LegacyPHPResourceHandle`s
  */
 // @oss-disable: <<Oncalls('hack')>>
 final class PipeTest extends HackTest {

@@ -12,8 +12,8 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\{Experimental\IO, Str};
 
-trait NativeReadHandleTrait implements IO\ReadHandle {
-  require extends NativeHandle;
+trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
+  require extends LegacyPHPResourceHandle;
 
   final public function rawReadBlocking(?int $max_bytes = null): string {
     if ($max_bytes is int && $max_bytes < 0) {

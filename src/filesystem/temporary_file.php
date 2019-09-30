@@ -18,7 +18,6 @@ function temporary_file(): DisposableFileReadWriteHandle {
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   $path = \sys_get_temp_dir().'/'.\bin2hex(\random_bytes(8));
   return new _Private\TemporaryFile(
-    open_read_write_nd($path,
-    FileWriteMode::MUST_CREATE),
+    open_read_write_nd($path, FileWriteMode::MUST_CREATE),
   );
 }

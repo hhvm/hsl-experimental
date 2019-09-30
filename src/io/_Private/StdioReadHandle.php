@@ -13,9 +13,9 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\IO;
 
 final class StdioReadHandle
-  extends NativeHandle
+  extends LegacyPHPResourceHandle
   implements IO\NonDisposableReadHandle {
-  use NativeReadHandleTrait;
+  use LegacyPHPResourceReadHandleTrait;
 
   public function __construct(string $php_uri) {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */

@@ -13,9 +13,9 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\IO;
 
 final class PipeWriteHandle
-  extends NativeHandle
+  extends LegacyPHPResourceHandle
   implements IO\NonDisposableWriteHandle {
-  use NativeWriteHandleTrait;
+  use LegacyPHPResourceWriteHandleTrait;
 
   public function __construct(resource $r) {
     parent::__construct($r);

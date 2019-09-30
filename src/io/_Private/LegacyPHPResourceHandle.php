@@ -12,7 +12,7 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\{Experimental\IO, Str};
 
-abstract class NativeHandle implements IO\NonDisposableHandle {
+abstract class LegacyPHPResourceHandle implements IO\NonDisposableHandle {
   protected bool $isAwaitable = true;
   protected function __construct(protected resource $impl) {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */

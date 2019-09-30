@@ -14,7 +14,7 @@ use namespace HH\Lib\Experimental\{IO, Filesystem};
 
 <<__ConsistentConstruct>>
 abstract class NonDisposableFileHandle
-  extends NativeHandle
+  extends LegacyPHPResourceHandle
   implements Filesystem\FileHandle, IO\NonDisposableHandle {
   protected string $filename;
 

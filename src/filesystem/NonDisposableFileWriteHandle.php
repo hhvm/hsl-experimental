@@ -16,5 +16,5 @@ use namespace HH\Lib\Experimental\IO;
 final class NonDisposableFileWriteHandle
   extends _Private\NonDisposableFileHandle
   implements FileWriteHandle, IO\NonDisposableWriteHandle {
-  use _Private\NativeWriteHandleTrait;
+  use _Private\LegacyPHPResourceWriteHandleTrait;
 }

@@ -12,8 +12,8 @@ namespace HH\Lib\_Private;
 
 use namespace HH\Lib\{Experimental\IO, Str};
 
-trait NativeWriteHandleTrait implements IO\WriteHandle {
-  require extends NativeHandle;
+trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
+  require extends LegacyPHPResourceHandle;
 
   final public function rawWriteBlocking(string $bytes): int {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */

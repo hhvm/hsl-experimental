@@ -12,9 +12,7 @@ namespace HH\Lib\Experimental\Filesystem;
 
 use namespace HH\Lib\_Private;
 
-function open_read_only_nd(
-  string $path,
-): NonDisposableFileReadHandle {
+function open_read_only_nd(string $path): NonDisposableFileReadHandle {
   return
     NonDisposableFileReadHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
       $path,
@@ -46,9 +44,7 @@ function open_read_write_nd(
 
 <<__ReturnDisposable>>
 function open_read_only(string $path): DisposableFileReadHandle {
-  return new _Private\DisposableFileReadHandle(
-    open_read_only_nd($path),
-  );
+  return new _Private\DisposableFileReadHandle(open_read_only_nd($path));
 }
 
 <<__ReturnDisposable>>
