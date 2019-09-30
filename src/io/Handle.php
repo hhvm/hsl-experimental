@@ -18,7 +18,7 @@ use namespace HH\Lib\Experimental\File;
  * Order of operations is guaranteed.
  */
 <<__Sealed(
-  File\FileHandle::class,
+  File\Handle::class,
   NonDisposableHandle::class,
   ReadHandle::class,
   UserspaceHandle::class,

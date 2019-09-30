@@ -14,18 +14,18 @@ use namespace HH\Lib\{_Private, Experimental\IO};
 
 /**
  * A File Lock, which is unlocked as a disposable. To acquire one, call `lock`
- * on a FileBase object.
+ * on a Base object.
  *
  * Note that in some cases, such as the non-blocking lock types, we may throw
- * an `FileLockAcquisitionException` instead of acquiring the lock. If this
+ * an `LockAcquisitionException` instead of acquiring the lock. If this
  * is not desired behavior it should be guarded against.
  */
-final class FileLock implements \IDisposable {
+final class Lock implements \IDisposable {
   private resource $resource;
 
   public function __construct(
-    <<__AcceptDisposable>> FileHandle $handle,
-    FileLockType $lock_type,
+    <<__AcceptDisposable>> Handle $handle,
+    LockType $lock_type,
   ) {
     $this->resource =
       /* HH_IGNORE_ERROR[4179] doing dodgy things to disposables */
@@ -36,7 +36,7 @@ final class FileLock implements \IDisposable {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $flock_result = \flock($this->resource, $lock_type, inout $_wouldblock);
     if (!$flock_result) {
-      throw new FileLockAcquisitionException();
+      throw new LockAcquisitionException();
     }
   }
 

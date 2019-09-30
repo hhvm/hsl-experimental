@@ -10,6 +10,11 @@
 
 namespace HH\Lib\Experimental\File;
 
-/* HH_FIXME[4194] disposable extending non-disposable interface */
-interface DisposableFileReadHandle extends \IAsyncDisposable, FileReadHandle {
+use namespace HH\Lib\_Private;
+use namespace HH\Lib\Experimental\IO;
+
+final class NonDisposableReadHandle
+  extends _Private\NonDisposableFileHandle
+  implements ReadHandle, IO\NonDisposableReadHandle {
+  use _Private\LegacyPHPResourceReadHandleTrait;
 }

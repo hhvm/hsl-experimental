@@ -24,15 +24,15 @@ final class FileTest extends HackTest {
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
     $f1 = File\open_write_only_nd(
       $filename,
-      File\FileWriteMode::MUST_CREATE,
+      File\WriteMode::MUST_CREATE,
     );
     await $f1->writeAsync('Hello, world!');
     expect(async () ==> {
       await using File\open_write_only(
         $filename,
-        File\FileWriteMode::MUST_CREATE,
+        File\WriteMode::MUST_CREATE,
       );
-    })->toThrow(File\FileOpenException::class);
+    })->toThrow(File\OpenException::class);
     await $f1->closeAsync();
 
     await using $f2 = File\open_read_only($filename);
@@ -103,7 +103,7 @@ final class FileTest extends HackTest {
     expect(file_get_contents($path))->toEqual('Hello, world');
 
     await using (
-      $f = File\open_write_only($path, File\FileWriteMode::TRUNCATE)
+      $f = File\open_write_only($path, File\WriteMode::TRUNCATE)
     ) {
       await $f->writeAsync('Foo bar');
     }
@@ -118,7 +118,7 @@ final class FileTest extends HackTest {
 
     $path = $tf->getPath()->toString();
     await using (
-      $f = File\open_write_only($path, File\FileWriteMode::APPEND)
+      $f = File\open_write_only($path, File\WriteMode::APPEND)
     ) {
       await $f->writeAsync("\nGoodbye, cruel world");
     }

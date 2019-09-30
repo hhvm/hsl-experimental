@@ -15,10 +15,10 @@ use namespace HH\Lib\{_Private, Experimental\IO};
 <<__Sealed(
   _Private\DisposableFileHandle::class,
   _Private\NonDisposableFileHandle::class,
-  FileReadHandle::class,
-  FileWriteHandle::class,
+  ReadHandle::class,
+  WriteHandle::class,
 )>>
-interface FileHandle extends IO\Handle {
+interface Handle extends IO\Handle {
   /**
    * Get the name of this file.
    */
@@ -40,29 +40,29 @@ interface FileHandle extends IO\Handle {
   public function seekAsync(int $offset): Awaitable<void>;
 
   <<__ReturnDisposable>>
-  public function lock(FileLockType $mode): FileLock;
+  public function lock(LockType $mode): Lock;
 }
 
 <<__Sealed(
-  DisposableFileReadHandle::class,
-  FileReadWriteHandle::class,
-  NonDisposableFileReadHandle::class,
+  DisposableReadHandle::class,
+  ReadWriteHandle::class,
+  NonDisposableReadHandle::class,
 )>>
-interface FileReadHandle extends FileHandle, IO\ReadHandle {
+interface ReadHandle extends Handle, IO\ReadHandle {
 }
 
 <<__Sealed(
-  DisposableFileWriteHandle::class,
-  FileReadWriteHandle::class,
-  NonDisposableFileWriteHandle::class,
+  DisposableWriteHandle::class,
+  ReadWriteHandle::class,
+  NonDisposableWriteHandle::class,
 )>>
-interface FileWriteHandle extends FileHandle, IO\WriteHandle {
+interface WriteHandle extends Handle, IO\WriteHandle {
 }
 
 <<__Sealed(
-  NonDisposableFileReadWriteHandle::class,
-  DisposableFileReadWriteHandle::class,
+  NonDisposableReadWriteHandle::class,
+  DisposableReadWriteHandle::class,
 )>>
-interface FileReadWriteHandle
-  extends FileWriteHandle, FileReadHandle, IO\ReadWriteHandle {
+interface ReadWriteHandle
+  extends WriteHandle, ReadHandle, IO\ReadWriteHandle {
 }

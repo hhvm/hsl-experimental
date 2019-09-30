@@ -10,10 +10,10 @@
 
 namespace HH\Lib\Experimental\File;
 
-final class FileCreateException extends \Exception {}
-final class FileOpenException extends \Exception {}
+final class CreateException extends \Exception {}
+final class OpenException extends \Exception {}
 
 /**
  * An exception thrown when a file lock was not successfully acquired.
  */
-final class FileLockAcquisitionException extends \Exception {}
+final class LockAcquisitionException extends \Exception {}
