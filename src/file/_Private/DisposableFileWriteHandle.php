@@ -13,9 +13,9 @@ namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\File;
 
 final class DisposableFileWriteHandle
-  extends DisposableFileHandle<File\NonDisposableFileWriteHandle>
-  implements File\DisposableFileWriteHandle {
+  extends DisposableFileHandle<File\NonDisposableWriteHandle>
+  implements File\DisposableWriteHandle {
   use DisposableWriteHandleWrapperTrait<
-    File\NonDisposableFileWriteHandle,
+    File\NonDisposableWriteHandle,
   >;
 }

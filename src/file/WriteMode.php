@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\File;
 
-enum FileWriteMode: string {
+enum WriteMode: string {
   /**
    * Open the file for writing only; place the file pointer at the beginning of
    * the file.

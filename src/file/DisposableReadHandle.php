@@ -11,5 +11,5 @@
 namespace HH\Lib\Experimental\File;
 
 /* HH_FIXME[4194] disposable extending non-disposable interface */
-interface DisposableFileWriteHandle extends \IAsyncDisposable, FileWriteHandle {
+interface DisposableReadHandle extends \IAsyncDisposable, ReadHandle {
 }

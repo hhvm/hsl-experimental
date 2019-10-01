@@ -15,7 +15,7 @@ use namespace HH\Lib\Experimental\File;
 <<__ConsistentConstruct>>
 abstract class DisposableFileHandle<T as NonDisposableFileHandle>
   extends DisposableHandleWrapper<T>
-  implements File\FileHandle {
+  implements File\Handle {
   final public function __construct(T $impl) {
     parent::__construct($impl);
   }
@@ -30,8 +30,8 @@ abstract class DisposableFileHandle<T as NonDisposableFileHandle>
 
   <<__ReturnDisposable>>
   final public function lock(
-    File\FileLockType $type,
-  ): File\FileLock {
+    File\LockType $type,
+  ): File\Lock {
     return $this->impl->lock($type);
   }
 

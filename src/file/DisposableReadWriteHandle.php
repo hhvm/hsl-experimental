@@ -10,11 +10,6 @@
 
 namespace HH\Lib\Experimental\File;
 
-use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\IO;
-
-final class NonDisposableFileWriteHandle
-  extends _Private\NonDisposableFileHandle
-  implements FileWriteHandle, IO\NonDisposableWriteHandle {
-  use _Private\LegacyPHPResourceWriteHandleTrait;
+/* HH_FIXME[4194] disposable extending non-disposable interface */
+interface DisposableReadWriteHandle extends \IAsyncDisposable, ReadWriteHandle, DisposableReadHandle, DisposableWriteHandle {
 }
