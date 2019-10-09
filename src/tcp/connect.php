@@ -18,24 +18,29 @@ async function connect_nd_async(
   int $port,
   Network\IPProtocolBehavior $ipver = Network\IPProtocolBehavior::PREFER_IPV6,
 ): Awaitable<NonDisposableSocket> {
-  // TODO: implement a true async native `connect()` function
-
   if ($ipver !== Network\IPProtocolBehavior::FORCE_IPV4) {
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     $sock = \socket_create(\AF_INET6, \SOCK_STREAM, \SOL_TCP);
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
-    if ($sock is resource && \socket_connect($sock, $host, $port)) {
-      return new _Private\NonDisposableTCPSocket($sock);
-    }
-  }
-  if ($ipver === Network\IPProtocolBehavior::FORCE_IPV6) {
-    throw new \Exception(
+    if ($sock is resource) {
+      $err = await _Private\socket_connect_async($sock, $host, $port);
+      if ($err === 0) {
+        return new _Private\NonDisposableTCPSocket($sock);
+      }
+    } else {
       /* HH_IGNORE_ERROR[2049] PHP STDLib */
-    /* HH_IGNORE_ERROR[4107] PHP STDLib */
-      "Failed to connect: ".\socket_strerror(\socket_last_error()),
-    );
+      /* HH_IGNORE_ERROR[4107] PHP STDLib */
+      $err = \socket_last_error();
+    }
+    if ($ipver === Network\IPProtocolBehavior::FORCE_IPV6) {
+      throw new \Exception(
+        /* HH_IGNORE_ERROR[2049] PHP STDLib */
+        /* HH_IGNORE_ERROR[4107] PHP STDLib */
+        "Failed to connect: ".\socket_strerror($err).' ('.$err.')',
+      );
+    }
   }
   // We either have FORCE_IPV4, or PREFER_IPV6 but we failed to connect
   /* HH_IGNORE_ERROR[2049] PHP STDLib */
@@ -43,13 +48,20 @@ async function connect_nd_async(
   $sock = \socket_create(\AF_INET, \SOCK_STREAM, \SOL_TCP);
   /* HH_IGNORE_ERROR[2049] PHP STDLib */
   /* HH_IGNORE_ERROR[4107] PHP STDLib */
-  if ($sock is resource && \socket_connect($sock, $host, $port)) {
-    return new _Private\NonDisposableTCPSocket($sock);
+  if ($sock is resource) {
+    $err = await _Private\socket_connect_async($sock, $host, $port);
+    if ($err === 0) {
+      return new _Private\NonDisposableTCPSocket($sock);
+    }
+  } else {
+    /* HH_IGNORE_ERROR[2049] PHP STDLib */
+    /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    $err = \socket_last_error();
   }
   throw new \Exception(
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
-  /* HH_IGNORE_ERROR[4107] PHP STDLib */
-    "Failed to connect: ".\socket_strerror(\socket_last_error()),
+    /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    "Failed to connect: ".\socket_strerror($err).' ('.$err.')',
   );
 }
 
