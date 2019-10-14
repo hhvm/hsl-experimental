@@ -8,12 +8,11 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
+namespace HH\Lib\Experimental\Network;
 
 use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\{IO, Network};
+use namespace HH\Lib\Experimental\{IO, TCP};
 
-<<__Sealed(_Private\DisposableTCPSocket::class)>>
-interface DisposableSocket
-  extends \IAsyncDisposable, Socket, Network\DisposableSocket {
+<<__Sealed(TCP\DisposableSocket::class, _Private\DisposableSocket::class)>>
+interface DisposableSocket extends Socket, IO\DisposableReadWriteHandle {
 }

@@ -11,8 +11,9 @@
 namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\Experimental\{IO, Network};
 
 <<__Sealed(_Private\NonDisposableTCPSocket::class)>>
-interface NonDisposableSocket extends Socket, IO\NonDisposableReadWriteHandle {
+interface NonDisposableSocket
+  extends Socket, IO\NonDisposableReadWriteHandle, Network\NonDisposableSocket {
 }

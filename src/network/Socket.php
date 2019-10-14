@@ -12,6 +12,6 @@ namespace HH\Lib\Experimental\Network;
 
 use namespace HH\Lib\Experimental\{IO, TCP};
 
-<<__Sealed(TCP\Socket::class)>>
-interface Socket extends IO\Handle {
+<<__Sealed(DisposableSocket::class, NonDisposableSocket::class, TCP\Socket::class)>>
+interface Socket extends IO\ReadWriteHandle {
 }
