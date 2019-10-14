@@ -10,27 +10,24 @@
 
 namespace HH\Lib\_Private;
 
-<<__Memoize>>
-function einprogress(): int {
-  // This is why we can't have nice things
-
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
-  if (\php_uname('s') === 'Darwin') {
-    return 36;
-  }
-  return 115;
-}
+use type HH\Lib\Experimental\OS\Errno;
 
 /** Asynchronously connect to a socket.
  *
- * Returns an error code, or 0 on success.
+ * Returns a PHP Socket Error Code:
+ * - 0 for success
+ * - errno if > 0
+ * - -(10000 + h_errno) if < 0
  */
 async function socket_connect_async(
   resource $sock,
   string $host,
   int $port,
+  ?float $timeout_seconds = null,
 ): Awaitable<int> {
+  // We return error codes and expect the user-facing functions to deal with
+  // them. Don't spew PHP errors to logs.
+  using new PHPWarningSuppressor();
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   \socket_set_blocking($sock, false);
@@ -42,7 +39,7 @@ async function socket_connect_async(
   }
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
-  if (\socket_last_error($sock) !== einprogress()) {
+  if (\socket_last_error($sock) !== Errno::EINPROGRESS) {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     return \socket_last_error($sock);
@@ -55,7 +52,16 @@ async function socket_connect_async(
   // when complete
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
-  await \stream_await($sock, \STREAM_AWAIT_WRITE);
+  $res = await \stream_await($sock, \STREAM_AWAIT_WRITE, $timeout_seconds ?? 0.0);
+  if ($res === \STREAM_AWAIT_CLOSED) {
+    return Errno::ECONNRESET as int;
+  }
+  if ($res === \STREAM_AWAIT_TIMEOUT) {
+    /* HH_IGNORE_ERROR[2049] PHP stdlib */
+    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    \fclose($sock);
+    return Errno::ETIMEDOUT as int;
+  }
   // \socket_last_error() is not populated by async socket failures: it's
   // effectively a cache of the C errno constant after the last socket_*
   // call - but given that the failure of an async connect is detected by

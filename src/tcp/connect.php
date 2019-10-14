@@ -13,11 +13,18 @@ namespace HH\Lib\Experimental\TCP;
 use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\Network;
 
+/** Connect to a socket asynchronously, returning a non-disposable handle.
+ *
+ * If using IPv6 with a fallback to IPv4 with a connection timeout, the timeout
+ * will apply separately to the IPv4 and IPv6 connection attempts.
+ */
 async function connect_nd_async(
   string $host,
   int $port,
-  Network\IPProtocolBehavior $ipver = Network\IPProtocolBehavior::PREFER_IPV6,
+  ?ConnectOptions $opts = null,
 ): Awaitable<NonDisposableSocket> {
+  $ipver = $opts['ip_version'] ?? Network\IPProtocolBehavior::PREFER_IPV6;
+  $timeout = $opts['timeout'] ?? null;
   if ($ipver !== Network\IPProtocolBehavior::FORCE_IPV4) {
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
@@ -25,14 +32,14 @@ async function connect_nd_async(
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     if ($sock is resource) {
-      $err = await _Private\socket_connect_async($sock, $host, $port);
+      $err = await _Private\socket_connect_async($sock, $host, $port, $timeout);
       if ($err === 0) {
         return new _Private\NonDisposableTCPSocket($sock);
       }
     } else {
       /* HH_IGNORE_ERROR[2049] PHP STDLib */
       /* HH_IGNORE_ERROR[4107] PHP STDLib */
-      $err = \socket_last_error();
+      $err = \socket_last_error() as int;
     }
     if ($ipver === Network\IPProtocolBehavior::FORCE_IPV6) {
       throw new \Exception(
@@ -49,14 +56,14 @@ async function connect_nd_async(
   /* HH_IGNORE_ERROR[2049] PHP STDLib */
   /* HH_IGNORE_ERROR[4107] PHP STDLib */
   if ($sock is resource) {
-    $err = await _Private\socket_connect_async($sock, $host, $port);
+    $err = await _Private\socket_connect_async($sock, $host, $port, $timeout);
     if ($err === 0) {
       return new _Private\NonDisposableTCPSocket($sock);
     }
   } else {
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
-    $err = \socket_last_error();
+    $err = \socket_last_error() as int;
   }
   throw new \Exception(
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
@@ -65,12 +72,17 @@ async function connect_nd_async(
   );
 }
 
+/** Connect to a socket asynchronously, returning a disposable handle.
+ *
+ * If using IPv6 with a fallback to IPv4 with a connection timeout, the timeout
+ * will apply separately to the IPv4 and IPv6 connection attempts.
+ */
 <<__ReturnDisposable>>
 async function connect_async(
   string $host,
   int $port,
-  Network\IPProtocolBehavior $ipver = Network\IPProtocolBehavior::PREFER_IPV6,
+  ?ConnectOptions $opts = null,
 ): Awaitable<DisposableSocket> {
-  $nd = await connect_nd_async($host, $port, $ipver);
+  $nd = await connect_nd_async($host, $port, $opts);
   return new _Private\DisposableTCPSocket($nd);
 }
