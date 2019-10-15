@@ -15,6 +15,8 @@ use const HH\Lib\Experimental\_Private\IS_MACOS;
 
 /** OS-level error number constants from `errno.h`.
  *
+ * These values are typically stored in a global `errno` variable by C APIs.
+ *
  * `0` is used to indicate success, but not defined in `errno.h`; we expect
  * Hack programs to use the `Errno` type when an error is known to have
  * occurred, or `?Errno` when an error /may/ have occurred.
