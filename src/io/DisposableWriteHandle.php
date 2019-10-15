@@ -10,7 +10,5 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\Experimental\Fileystem;
-
 interface DisposableWriteHandle extends WriteHandle, \IAsyncDisposable {
 }

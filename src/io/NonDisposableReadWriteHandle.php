@@ -10,8 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\_Private;
-
 interface NonDisposableReadWriteHandle
   extends ReadWriteHandle, NonDisposableReadHandle, NonDisposableWriteHandle {
 }

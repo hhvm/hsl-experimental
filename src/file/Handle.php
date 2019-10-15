@@ -18,7 +18,7 @@ use namespace HH\Lib\Experimental\IO;
   ReadHandle::class,
   WriteHandle::class,
 )>>
-interface Handle extends IO\Handle {
+interface Handle extends IO\SeekableHandle {
   /**
    * Get the name of this file.
    */
@@ -28,16 +28,6 @@ interface Handle extends IO\Handle {
    * Get the size of the file.
    */
   public function getSize(): int;
-
-  /**
-   * Move to a specific offset within a file.
-   *
-   * Offset is relative to the start of the file - so, the beginning of the
-   * file is always offset 0.
-   *
-   * Any other pending operations (such as writes) will complete first.
-   */
-  public function seekAsync(int $offset): Awaitable<void>;
 
   <<__ReturnDisposable>>
   public function lock(LockType $mode): Lock;

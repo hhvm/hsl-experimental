@@ -22,6 +22,7 @@ use namespace HH\Lib\Experimental\{File, Network};
   NonDisposableHandle::class,
   ReadHandle::class,
   UserspaceHandle::class,
+  SeekableHandle::class,
   WriteHandle::class,
   _Private\DisposableHandleWrapper::class,
 )>>
