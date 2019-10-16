@@ -57,4 +57,3 @@ enum Encoding: string {
   WINDOWS_1252 = 'Windows-1252';
   WINDOWS_1254 = 'Windows-1254';
 }
-

@@ -63,6 +63,5 @@ interface WriteHandle extends Handle, IO\WriteHandle {
   NonDisposableReadWriteHandle::class,
   DisposableReadWriteHandle::class,
 )>>
-interface ReadWriteHandle
-  extends WriteHandle, ReadHandle, IO\ReadWriteHandle {
+interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\ReadWriteHandle {
 }

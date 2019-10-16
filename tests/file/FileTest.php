@@ -22,16 +22,10 @@ final class FileTest extends HackTest {
     /* HH_IGNORE_ERROR[2049] PHP Stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
-    $f1 = File\open_write_only_nd(
-      $filename,
-      File\WriteMode::MUST_CREATE,
-    );
+    $f1 = File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE);
     await $f1->writeAsync('Hello, world!');
     expect(async () ==> {
-      await using File\open_write_only(
-        $filename,
-        File\WriteMode::MUST_CREATE,
-      );
+      await using File\open_write_only($filename, File\WriteMode::MUST_CREATE);
     })->toThrow(File\OpenException::class);
     await $f1->closeAsync();
 
@@ -64,9 +58,7 @@ final class FileTest extends HackTest {
       await $tf->writeAsync($a.$b.$c);
       await $tf->flushAsync();
 
-      await using (
-        $tfr = File\open_read_only($tf->getPath()->toString())
-      ) {
+      await using ($tfr = File\open_read_only($tf->getPath()->toString())) {
         list($r1, $r2, $r3) = await Tuple\from_async(
           $tfr->readAsync(10 * 1024 * 1024),
           $tfr->readAsync(10 * 1024 * 1024),
@@ -102,9 +94,7 @@ final class FileTest extends HackTest {
 
     expect(file_get_contents($path))->toEqual('Hello, world');
 
-    await using (
-      $f = File\open_write_only($path, File\WriteMode::TRUNCATE)
-    ) {
+    await using ($f = File\open_write_only($path, File\WriteMode::TRUNCATE)) {
       await $f->writeAsync('Foo bar');
     }
     ;
@@ -117,9 +107,7 @@ final class FileTest extends HackTest {
     await $tf->flushAsync();
 
     $path = $tf->getPath()->toString();
-    await using (
-      $f = File\open_write_only($path, File\WriteMode::APPEND)
-    ) {
+    await using ($f = File\open_write_only($path, File\WriteMode::APPEND)) {
       await $f->writeAsync("\nGoodbye, cruel world");
     }
     ;

@@ -86,9 +86,7 @@ final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
     int $offset,
     ?int $expected,
   ): void {
-    expect(Grapheme\search_ci($haystack, $needle, $offset))->toEqual(
-      $expected,
-    );
+    expect(Grapheme\search_ci($haystack, $needle, $offset))->toEqual($expected);
   }
 
   public function testPositionExceptions(): void {

@@ -76,4 +76,3 @@ function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
   }
   return $position;
 }
-

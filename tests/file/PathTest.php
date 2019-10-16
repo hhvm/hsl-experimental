@@ -64,9 +64,7 @@ final class PathTest extends HackTest {
 
   <<DataProvider('provideTestGetParent')>>
   public function testGetParent(string $path, string $parent): void {
-    expect((new File\Path($path))->getParent()->toString())->toEqual(
-      $parent,
-    );
+    expect((new File\Path($path))->getParent()->toString())->toEqual($parent);
   }
 
   public static function provideTestWithExtension(

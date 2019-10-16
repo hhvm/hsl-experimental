@@ -161,6 +161,7 @@ function splice(
   if ($length === null || ($offset + $length) >= $total_length) {
     return slice($string, 0, $offset).$replacement;
   }
-  return
-    slice($string, 0, $offset).$replacement.slice($string, $offset + $length);
+  return slice($string, 0, $offset).
+    $replacement.
+    slice($string, $offset + $length);
 }

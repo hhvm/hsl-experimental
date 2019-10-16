@@ -55,9 +55,7 @@ abstract class NonDisposableFileHandle
   }
 
   <<__ReturnDisposable>>
-  final public function lock(
-    File\LockType $type,
-  ): File\Lock {
+  final public function lock(File\LockType $type): File\Lock {
     return new File\Lock($this, $type);
   }
 

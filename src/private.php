@@ -33,7 +33,7 @@ final class PHPErrorLogger implements \IDisposable {
     );
   }
 
-  private function handleError(int $level , string $message): bool {
+  private function handleError(int $level, string $message): bool {
     $this->errors[] = shape('level' => $level, 'message' => $message);
     return $this->suppress;
   }

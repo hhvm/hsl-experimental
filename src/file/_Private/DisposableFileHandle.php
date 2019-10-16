@@ -29,9 +29,7 @@ abstract class DisposableFileHandle<T as NonDisposableFileHandle>
   }
 
   <<__ReturnDisposable>>
-  final public function lock(
-    File\LockType $type,
-  ): File\Lock {
+  final public function lock(File\LockType $type): File\Lock {
     return $this->impl->lock($type);
   }
 

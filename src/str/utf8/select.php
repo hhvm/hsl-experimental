@@ -51,4 +51,3 @@ function slice_bytes(string $string, int $offset, ?int $length = null): string {
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   return \mb_strcut($string, $offset, $length, Encoding::UTF8);
 }
-
