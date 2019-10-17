@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\OS;
 
+// hackfmt-ignore
 /** OS-level host error number constants from `netdb.h`.
  *
  * These values are typically stored in a global `h_errno` variable by C APIs.
@@ -20,7 +21,7 @@ namespace HH\Lib\Experimental\OS;
  */
 enum HErrno: int {
   HOST_NOT_FOUND = 1;
-  TRY_AGAIN = 2;
-  NO_RECOVERY = 3;
-  NO_DATA = 4;
+  TRY_AGAIN      = 2;
+  NO_RECOVERY    = 3;
+  NO_DATA        = 4;
 }
