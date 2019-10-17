@@ -12,5 +12,6 @@ namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\Fileystem;
 
-interface DisposableReadWriteHandle extends ReadWriteHandle, \IAsyncDisposable {
+interface DisposableReadWriteHandle
+  extends ReadWriteHandle, DisposableReadHandle, DisposableWriteHandle {
 }
