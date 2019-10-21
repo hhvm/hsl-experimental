@@ -8,6 +8,7 @@
  *
  */
 
+use namespace HH\Lib\Vec;
 use namespace HH\Lib\Experimental\{Network, OS, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
@@ -16,7 +17,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use type HackTest;
 use type HH\Lib\Experimental\Network\{IPProtocolBehavior, IPProtocolVersion};
-use type \HH\Lib\Ref;
+use type HH\Lib\Ref;
 
 // @oss-disable: <<Oncalls('hf')>>
 final class HSLTCPTest extends HackTest {
@@ -69,7 +70,17 @@ final class HSLTCPTest extends HackTest {
     string $client_address,
     IPProtocolBehavior $client_protocol,
   ): Awaitable<void> {
-    $server = await TCP\Server::createAsync($server_protocol, $bind_address, 0);
+    try {
+      $server = await TCP\Server::createAsync(
+        $server_protocol,
+        $bind_address,
+        0,
+      );
+    } catch (Network\AddressNotAvailableException $_) {
+      expect($server_protocol)->toEqual(IPProtocolVersion::IPV6);
+      self::markTestSkipped("IPv6 not supported on this host");
+      return;
+    }
     list($host, $port) = $server->getLocalAddress();
     expect($host)->toNotEqual($bind_address);
     expect($port)->toNotEqual(0);
@@ -114,9 +125,9 @@ final class HSLTCPTest extends HackTest {
         try {
           await using ($conn = await TCP\connect_async('localhost', 0)) {
           }
-          ;
         } catch (Network\SocketException $e) {
-          expect($e->getErrno())->toEqual(OS\Errno::EAGAIN);
+          expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])
+            ->toInclude($e->getErrno());
           throw $e;
         }
       },

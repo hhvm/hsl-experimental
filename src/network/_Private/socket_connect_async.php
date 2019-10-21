@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\Network\_Private;
 
+use const HH\Lib\Experimental\OS\_Private\IS_MACOS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 use type HH\Lib\Experimental\OS\Errno;
 
@@ -35,14 +36,20 @@ async function socket_connect_async(
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   $res = \socket_connect($sock, $host, $port);
+  /* HH_IGNORE_ERROR[2049] PHP stdlib */
+  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  $err = \socket_last_error($sock);
   if ($res === true) {
     return 0;
   }
-  // fun fact: if you try to connect to port 0, `\socket_last_error($sock)`
-  // returns 0
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
-  $err = \socket_last_error($sock) ?: \posix_get_last_error();
+  if ($err === 0) {
+    // $res == false && $err === 0 means that HHVM did not call connect()
+    // because of an invalid set of arguments, e.g. AF_INET(6) without a port.
+    //
+    // Copy the platform-specific C behavior, to keep things compatible if
+    // we switch to a thinner wrapper around `connect()`
+    return (IS_MACOS ? Errno::EADDRNOTAVAIL : Errno::ECONNREFUSED) as int;
+  }
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   if ($err !== Errno::EINPROGRESS) {
@@ -69,7 +76,7 @@ async function socket_connect_async(
   // \socket_last_error() is not populated by async socket failures: it's
   // effectively a cache of the C errno constant after the last socket_*
   // call - but given that the failure of an async connect is detected by
-  //select - which has its' own use of errno, it can't be set the usual way.
+  // select - which has its' own use of errno, it can't be set the usual way.
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   return \socket_get_option($sock, \SOL_SOCKET, \SO_ERROR);

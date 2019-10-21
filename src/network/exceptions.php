@@ -43,7 +43,7 @@ final class HostResolutionException extends Exception {
  * Sites that catch this likely want to also catch `HostResolutionException`, or
  * just `Network\Exception`.
  */
-final class SocketException extends Exception implements OS\IExceptionWithErrno {
+class SocketException extends Exception implements OS\IExceptionWithErrno {
   public function __construct(private OS\Errno $errno) {
     parent::__construct();
   }
@@ -54,5 +54,11 @@ final class SocketException extends Exception implements OS\IExceptionWithErrno 
 
   public function getHErrno(): null {
     return null;
+  }
+}
+
+final class AddressNotAvailableException extends SocketException {
+  public function __construct() {
+    parent::__construct(OS\Errno::EADDRNOTAVAIL);
   }
 }

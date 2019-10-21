@@ -44,20 +44,20 @@ async function connect_nd_async(
 
   $err = 0;
   foreach ($afs as $af) {
+    \socket_clear_error();
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     $sock = \socket_create($af, \SOCK_STREAM, \SOL_TCP);
+    // This must be *immediately* after the socket_create call, not in an else
+    // block
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    $err = \posix_get_last_error() as int;
     if ($sock is resource) {
       $err = await Network\_Private\socket_connect_async($sock, $host, $port, $timeout);
       if ($err === 0) {
         return new namespace\_Private\NonDisposableTCPSocket($sock);
       }
-    } else {
-      /* HH_IGNORE_ERROR[2049] PHP STDLib */
-      /* HH_IGNORE_ERROR[4107] PHP STDLib */
-      $err = \socket_last_error() as int;
     }
   }
   Network\_Private\throw_socket_error('connecting to socket', $err);
