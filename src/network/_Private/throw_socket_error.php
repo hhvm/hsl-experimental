@@ -9,21 +9,16 @@
  */
 
 namespace HH\Lib\Experimental\Network\_Private;
+
+use namespace HH\Lib\Experimental\{Network, OS};
 use namespace HH\Lib\Str;
 
-function throw_socket_error(string $operation, int $errno): noreturn {
+function throw_socket_error(string $_operation, int $errno): noreturn {
   invariant($errno !== 0, "%s should not be called on success", __FUNCTION__);
-  // TODO: throw more specific errors, depending on if `$errno` is:
-  // - a specific value
-  // - a positive value (OS\Errno)
-  // - a negative value -(OS\HErrno + 10000)
-  throw new \Exception(
-    Str\format(
-      "Error %s: %s",
-      $operation,
-      /* HH_IGNORE_ERROR[2049] PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] PHPStdLib */
-      \socket_strerror($errno),
-    ),
-  );
+  if ($errno < 0) {
+    throw new Network\HostResolutionException(
+      (-($errno + 10000)) as OS\HErrno,
+    );
+  }
+  throw new Network\SocketException($errno as OS\Errno);
 }

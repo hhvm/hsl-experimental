@@ -60,7 +60,6 @@ async function connect_nd_async(
       $err = \socket_last_error() as int;
     }
   }
-
   Network\_Private\throw_socket_error('connecting to socket', $err);
 }
 

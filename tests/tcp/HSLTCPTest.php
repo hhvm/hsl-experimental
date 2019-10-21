@@ -8,7 +8,7 @@
  *
  */
 
-use namespace HH\Lib\Experimental\{Network, TCP};
+use namespace HH\Lib\Experimental\{Network, OS, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
@@ -106,5 +106,20 @@ final class HSLTCPTest extends HackTest {
     }
     expect($client_recv->value)->toEqual("foo\n");
     expect($server_recv->value)->toEqual("bar\n");
+  }
+
+  public async function testConnectingToInvalidPort(): Awaitable<void> {
+    expect(
+      async () ==> {
+        try {
+          await using ($conn = await TCP\connect_async('localhost', 0)) {
+          }
+          ;
+        } catch (Network\SocketException $e) {
+          expect($e->getErrno())->toEqual(OS\Errno::EAGAIN);
+          throw $e;
+        }
+      },
+    )->toThrow(Network\SocketException::class);
   }
 }

@@ -38,12 +38,15 @@ async function socket_connect_async(
   if ($res === true) {
     return 0;
   }
+  // fun fact: if you try to connect to port 0, `\socket_last_error($sock)`
+  // returns 0
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
-  if (\socket_last_error($sock) !== Errno::EINPROGRESS) {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
-    return \socket_last_error($sock);
+  $err = \socket_last_error($sock) ?: \posix_get_last_error();
+  /* HH_IGNORE_ERROR[2049] PHP stdlib */
+  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  if ($err !== Errno::EINPROGRESS) {
+    return $err;
   }
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
