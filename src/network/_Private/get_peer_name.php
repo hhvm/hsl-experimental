@@ -28,7 +28,7 @@ function get_peer_name(resource $sock): (string, int) {
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
   $err = \socket_last_error($sock) as int;
   throw_socket_error(
-    'retrieving local address',
+    'retrieving peer address',
     $err === 0 ? Errno::EAFNOSUPPORT as int : $err,
   );
 }
