@@ -105,7 +105,11 @@ final class HSLTCPTest extends HackTest {
           )
         ) {
           list($ph, $pp) = $conn->getPeerAddress();
-          expect($ph)->toEqual($host);
+          $expected = vec[$host];
+          if ($host === '127.0.0.1' && $client_protocol === IPProtocolBehavior::PREFER_IPV6) {
+            $expected[] = '::ffff:'.$host;
+          }
+          expect($expected)->toContain($host);
           expect($pp)->toEqual($port);
           list($lh, $lp) = $conn->getLocalAddress();
           expect($lh)->toEqual($ph);
