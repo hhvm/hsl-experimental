@@ -8,15 +8,15 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\Network\_Private;
 
-use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\Experimental\{IO, Network};
 
 final class NonDisposableSocket
-  extends LegacyPHPResourceHandle
+  extends IO\_Private\LegacyPHPResourceHandle
   implements Network\NonDisposableSocket {
-  use LegacyPHPResourceReadHandleTrait;
-  use LegacyPHPResourceWriteHandleTrait;
+  use IO\_Private\LegacyPHPResourceReadHandleTrait;
+  use IO\_Private\LegacyPHPResourceWriteHandleTrait;
 
   public function __construct(resource $impl) {
     parent::__construct($impl);

@@ -8,19 +8,19 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\TCP\_Private;
 
 use namespace HH\Lib\Experimental\{IO, TCP};
 
 final class DisposableTCPSocket
-  extends DisposableHandleWrapper<TCP\NonDisposableSocket>
+  extends IO\_Private\DisposableHandleWrapper<TCP\NonDisposableSocket>
   implements
     \IAsyncDisposable,
     IO\DisposableReadWriteHandle,
     TCP\DisposableSocket {
 
-  use DisposableReadHandleWrapperTrait<TCP\NonDisposableSocket>;
-  use DisposableWriteHandleWrapperTrait<TCP\NonDisposableSocket>;
+  use IO\_Private\DisposableReadHandleWrapperTrait<TCP\NonDisposableSocket>;
+  use IO\_Private\DisposableWriteHandleWrapperTrait<TCP\NonDisposableSocket>;
 
   public function __construct(TCP\NonDisposableSocket $impl) {
     parent::__construct($impl);

@@ -8,16 +8,18 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\Network\_Private;
 
-use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\Experimental\{IO, Network};
 
 final class DisposableSocket
-  extends DisposableHandleWrapper<Network\NonDisposableSocket>
+  extends IO\_Private\DisposableHandleWrapper<Network\NonDisposableSocket>
   implements \IAsyncDisposable, Network\DisposableSocket {
 
-  use DisposableReadHandleWrapperTrait<Network\NonDisposableSocket>;
-  use DisposableWriteHandleWrapperTrait<Network\NonDisposableSocket>;
+  use IO\_Private\DisposableReadHandleWrapperTrait<Network\NonDisposableSocket>;
+  use IO\_Private\DisposableWriteHandleWrapperTrait<
+    Network\NonDisposableSocket,
+  >;
 
   public function __construct(Network\NonDisposableSocket $impl) {
     parent::__construct($impl);

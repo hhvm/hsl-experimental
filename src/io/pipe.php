@@ -10,15 +10,13 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\_Private;
-
 /** Create a pair of handles, where writes to the `WriteHandle` can be
  * read from the `ReadHandle`.
  */
 function pipe_nd(): (NonDisposableReadHandle, NonDisposableWriteHandle) {
   /* HH_IGNORE_ERROR[2049] intentionally not in HHI */
   /* HH_IGNORE_ERROR[4107] intentionally not in HHI */
-  list($r, $w) = _Private\Native\pipe() as (resource, resource);
+  list($r, $w) = \HH\Lib\_Private\Native\pipe() as (resource, resource);
   return tuple(
     new _Private\PipeReadHandle($r),
     new _Private\PipeWriteHandle($w),

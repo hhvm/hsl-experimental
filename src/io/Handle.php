@@ -10,7 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\{File, Network};
 
 /** An interface for IO handles.

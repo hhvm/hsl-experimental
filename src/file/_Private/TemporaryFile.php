@@ -8,15 +8,15 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\File\_Private;
 
 use namespace HH\Lib\Experimental\{File, IO};
 
 final class TemporaryFile
   extends DisposableFileHandle<File\NonDisposableReadWriteHandle>
   implements File\DisposableReadWriteHandle {
-  use DisposableReadHandleWrapperTrait<File\NonDisposableReadWriteHandle>;
-  use DisposableWriteHandleWrapperTrait<File\NonDisposableReadWriteHandle>;
+  use IO\_Private\DisposableReadHandleWrapperTrait<File\NonDisposableReadWriteHandle>;
+  use IO\_Private\DisposableWriteHandleWrapperTrait<File\NonDisposableReadWriteHandle>;
 
   public async function __disposeAsync(): Awaitable<void> {
     await parent::__disposeAsync();

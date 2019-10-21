@@ -10,7 +10,6 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\{IO, TCP};
 
 <<__Sealed(TCP\DisposableSocket::class, _Private\DisposableSocket::class)>>

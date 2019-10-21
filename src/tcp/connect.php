@@ -10,7 +10,6 @@
 
 namespace HH\Lib\Experimental\TCP;
 
-use namespace HH\Lib\_Private;
 use namespace HH\Lib\Experimental\Network;
 
 /** Connect to a socket asynchronously, returning a non-disposable handle.
@@ -51,9 +50,9 @@ async function connect_nd_async(
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     if ($sock is resource) {
-      $err = await _Private\socket_connect_async($sock, $host, $port, $timeout);
+      $err = await Network\_Private\socket_connect_async($sock, $host, $port, $timeout);
       if ($err === 0) {
-        return new _Private\NonDisposableTCPSocket($sock);
+        return new namespace\_Private\NonDisposableTCPSocket($sock);
       }
     } else {
       /* HH_IGNORE_ERROR[2049] PHP STDLib */

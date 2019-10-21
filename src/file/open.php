@@ -10,8 +10,6 @@
 
 namespace HH\Lib\Experimental\File;
 
-use namespace HH\Lib\_Private;
-
 function open_read_only_nd(string $path): NonDisposableReadHandle {
   return
     NonDisposableReadHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(

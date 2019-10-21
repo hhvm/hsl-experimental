@@ -8,12 +8,12 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\File\_Private;
 
-use namespace HH\Lib\Experimental\File;
+use namespace HH\Lib\Experimental\{File, IO};
 
 final class DisposableFileReadHandle
   extends DisposableFileHandle<File\NonDisposableReadHandle>
   implements File\DisposableReadHandle {
-  use DisposableReadHandleWrapperTrait<File\NonDisposableReadHandle>;
+  use IO\_Private\DisposableReadHandleWrapperTrait<File\NonDisposableReadHandle>;
 }

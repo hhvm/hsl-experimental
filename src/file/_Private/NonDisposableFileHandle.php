@@ -8,25 +8,26 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\File\_Private;
 
 use namespace HH\Lib\Experimental\{IO, File};
+use type HH\Lib\_Private\PHPErrorLogger;
 
 <<__ConsistentConstruct>>
 abstract class NonDisposableFileHandle
-  extends LegacyPHPResourceHandle
+  extends IO\_Private\LegacyPHPResourceHandle
   implements File\Handle, IO\NonDisposableHandle {
   protected string $filename;
 
   final protected function __construct(string $path, string $mode) {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  // fopen indicates errors by returning false and raising a warning; log
-  // the warning and convert to an exception
-  using $errors = new PHPErrorLogger(/* suppress = */ true);
+    // fopen indicates errors by returning false and raising a warning; log
+    // the warning and convert to an exception
+    using $errors = new PHPErrorLogger(/* suppress = */ true);
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  $f = \fopen($path, $mode);
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $f = \fopen($path, $mode);
     if ($f === false) {
       throw new File\OpenException(
         'Failed to open file: '.$errors->getLastErrorx()['message'],

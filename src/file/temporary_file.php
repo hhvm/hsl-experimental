@@ -10,8 +10,6 @@
 
 namespace HH\Lib\Experimental\File;
 
-use namespace HH\Lib\_Private;
-
 <<__ReturnDisposable>>
 function temporary_file(): DisposableReadWriteHandle {
   /* HH_IGNORE_ERROR[2049] PHP stdlib */

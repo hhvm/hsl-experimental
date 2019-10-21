@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\File;
 
-use namespace HH\Lib\{_Private, Experimental\IO};
+use namespace HH\Lib\Experimental\IO;
 
 <<__Sealed(
   _Private\DisposableFileHandle::class,

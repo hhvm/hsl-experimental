@@ -8,8 +8,9 @@
  *
  */
 
-namespace HH\Lib\_Private;
+namespace HH\Lib\Experimental\Network\_Private;
 
+use type HH\Lib\_Private\PHPWarningSuppressor;
 use type HH\Lib\Experimental\OS\Errno;
 
 /** Asynchronously connect to a socket.

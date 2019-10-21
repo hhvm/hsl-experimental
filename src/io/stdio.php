@@ -10,8 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\_Private;
-
 /** Return STDOUT for the server process.
  *
  * This is usually not the same thing as request output.
