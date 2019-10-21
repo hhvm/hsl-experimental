@@ -10,12 +10,24 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\Experimental\{IO, TCP};
+use namespace HH\Lib\Experimental\{IO, TCP, UnixSocket};
 
 <<__Sealed(
   DisposableSocket::class,
   NonDisposableSocket::class,
   TCP\Socket::class,
+  UnixSocket\Socket::class,
 )>>
 interface Socket extends IO\ReadWriteHandle {
+  /** A local or peer address.
+   *
+   * For IP-based sockets, this is likely to be a host and port;
+   * for Unix sockets, it is likely to be a filesystem path.
+   */
+  abstract const type TAddress;
+
+  /** Returns the local address and port */
+  public function getLocalAddress(): this::TAddress;
+  /** Returns the remote address and port */
+  public function getPeerAddress(): this::TAddress;
 }

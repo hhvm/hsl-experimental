@@ -10,10 +10,13 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\Experimental\{IO, TCP};
+use namespace HH\Lib\Experimental\{IO, TCP, UnixSocket};
 
 <<
-  __Sealed(TCP\NonDisposableSocket::class, _Private\NonDisposableSocket::class),
+  __Sealed(
+    TCP\NonDisposableSocket::class,
+    UnixSocket\NonDisposableSocket::class,
+  ),
 >>
 interface NonDisposableSocket extends Socket, IO\NonDisposableReadWriteHandle {
 }

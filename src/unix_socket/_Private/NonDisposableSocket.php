@@ -8,17 +8,25 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network\_Private;
+namespace HH\Lib\Experimental\UnixSocket\_Private;
 
-use namespace HH\Lib\Experimental\{IO, Network};
+use namespace HH\Lib\Experimental\{IO, Network, UnixSocket};
 
 final class NonDisposableSocket
   extends IO\_Private\LegacyPHPResourceHandle
-  implements Network\NonDisposableSocket {
+  implements UnixSocket\NonDisposableSocket, IO\NonDisposableReadWriteHandle {
   use IO\_Private\LegacyPHPResourceReadHandleTrait;
   use IO\_Private\LegacyPHPResourceWriteHandleTrait;
 
   public function __construct(resource $impl) {
     parent::__construct($impl);
+  }
+
+  public function getLocalAddress(): string {
+    return Network\_Private\get_sock_name($this->impl)[0];
+  }
+
+  public function getPeerAddress(): string {
+    return Network\_Private\get_peer_name($this->impl)[0];
   }
 }

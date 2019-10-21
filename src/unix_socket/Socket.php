@@ -8,12 +8,12 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
+namespace HH\Lib\Experimental\UnixSocket;
 
 use namespace HH\Lib\Experimental\{IO, Network};
 
 <<__Sealed(DisposableSocket::class, NonDisposableSocket::class)>>
 interface Socket extends Network\Socket {
-  /** A host and port number */
-  const type TAddress = (string, int);
+  /** A file path */
+  const type TAddress = string;
 }
