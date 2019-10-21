@@ -26,45 +26,41 @@ final class HSLUnixSocketTest extends HackTest {
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     $path = \sys_get_temp_dir().'/hsl-unix-socket-'.PseudoRandom\int(0, Math\INT64_MAX).'.sock';
     try {
-      await $this->testBasicConnectivityImplAsync($path);
+      $server = await UnixSocket\Server::createAsync($path);
+      expect($server->getLocalAddress())->toEqual($path);
+      $server_recv = new Ref('');
+      $client_recv = new Ref('');
+      concurrent {
+        await async {
+          ///// Server /////
+          await using ($client = await $server->nextConnectionAsync()) {
+            expect($client->getLocalAddress())->toEqual($path);
+            expect($client->getPeerAddress())->toEqual('');
+
+            $server_recv->value = await $client->readLineAsync();
+            await $client->writeAsync("foo\n");
+          }
+          ;
+        };
+        await async {
+          ///// client /////
+          await using (
+            $conn = await UnixSocket\connect_async($path)
+          ) {
+            expect($conn->getLocalAddress())->toEqual('');
+            expect($conn->getPeerAddress())->toEqual($path);
+
+            await $conn->writeAsync("bar\n");
+            $client_recv->value = await $conn->readLineAsync();
+          }
+        };
+      }
+      expect($client_recv->value)->toEqual("foo\n");
+      expect($server_recv->value)->toEqual("bar\n");
     } finally {
       /* HH_IGNORE_ERROR[2049] PHPStdLib */
       /* HH_IGNORE_ERROR[4107] PHPStdLib */
       \unlink($path);
     }
-  }
-
-  private async function testBasicConnectivityImplAsync(string $path): Awaitable<void> {
-    $server = await UnixSocket\Server::createAsync($path);
-    expect($server->getLocalAddress())->toEqual($path);
-    $server_recv = new Ref('');
-    $client_recv = new Ref('');
-    concurrent {
-      await async {
-        ///// Server /////
-        await using ($client = await $server->nextConnectionAsync()) {
-          expect($client->getLocalAddress())->toEqual($path);
-          expect($client->getPeerAddress())->toEqual('');
-
-          $server_recv->value = await $client->readLineAsync();
-          await $client->writeAsync("foo\n");
-        }
-        ;
-      };
-      await async {
-        ///// client /////
-        await using (
-          $conn = await UnixSocket\connect_async($path)
-        ) {
-          expect($conn->getLocalAddress())->toEqual('');
-          expect($conn->getPeerAddress())->toEqual($path);
-
-          await $conn->writeAsync("bar\n");
-          $client_recv->value = await $conn->readLineAsync();
-        }
-      };
-    }
-    expect($client_recv->value)->toEqual("foo\n");
-    expect($server_recv->value)->toEqual("bar\n");
   }
 }
