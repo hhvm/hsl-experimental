@@ -8,51 +8,39 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
+namespace HH\Lib\Experimental\UnixSocket;
 
 use namespace HH\Lib\Experimental\Network;
 
 final class Server
   implements Network\Server<Socket, DisposableSocket, NonDisposableSocket> {
-  const type TAddress = (string, int);
+  const type TAddress = string;
 
   private function __construct(private resource $impl) {
   }
 
-  public static async function createAsync(
-    Network\IPProtocolVersion $ipv,
-    string $address,
-    int $port,
-  ): Awaitable<this> {
-    switch ($ipv) {
-      case Network\IPProtocolVersion::IPV6:
-        $af = \AF_INET6;
-        break;
-      case Network\IPProtocolVersion::IPV4:
-        $af = \AF_INET;
-        break;
-    }
+  public static async function createAsync(string $path): Awaitable<this> {
     return await Network\_Private\socket_create_bind_listen_async(
-      $af,
+      \AF_UNIX,
       \SOCK_STREAM,
-      \SOL_TCP,
-      $address,
-      $port,
+      /* proto = */ 0,
+      $path,
+      /* port = */ 0,
     )
       |> new self($$);
   }
 
   <<__ReturnDisposable>>
   public async function nextConnectionAsync(): Awaitable<DisposableSocket> {
-    return new _Private\DisposableTCPSocket(await $this->nextConnectionNDAsync());
+    return new _Private\DisposableSocket(await $this->nextConnectionNDAsync());
   }
 
   public async function nextConnectionNDAsync(): Awaitable<NonDisposableSocket> {
     return await Network\_Private\socket_accept_async($this->impl)
-      |> new _Private\NonDisposableTCPSocket($$);
+      |> new _Private\NonDisposableSocket($$);
   }
 
-  public function getLocalAddress(): (string, int) {
-    return Network\_Private\get_sock_name($this->impl);
+  public function getLocalAddress(): string {
+    return Network\_Private\get_sock_name($this->impl)[0];
   }
 }
