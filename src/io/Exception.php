@@ -12,12 +12,12 @@ namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\OS;
 
-final class WriteException extends Exception implements OS\IExceptionWithErrno {
-  public function __construct(private OS\Errno $errno) {
-    parent::__construct();
-  }
-
-  public function getErrno(): OS\Errno {
-    return $this->errno;
-  }
+/** Any kind of IO exception.
+ *
+ * Subclasses will usually implement `OS\IExceptionWithErrno`, but not always;
+ * for example, some socket errors will have an `HErrno` instead.
+ */
+abstract class Exception
+  extends \Exception
+  implements OS\IExceptionWithNullableErrno {
 }

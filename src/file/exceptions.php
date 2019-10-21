@@ -10,10 +10,25 @@
 
 namespace HH\Lib\Experimental\File;
 
-final class CreateException extends \Exception {}
-final class OpenException extends \Exception {}
+use namespace HH\Lib\Experimental\{IO, OS};
+
+abstract class Exception
+  extends IO\Exception
+  implements OS\IExceptionWithErrno {
+
+  public function __construct(private OS\Errno $errno) {
+    parent::__construct();
+  }
+
+  public function getErrno(): OS\Errno {
+    return $this->errno;
+  }
+}
+
+final class CreateException extends Exception {}
+final class OpenException extends Exception {}
 
 /**
  * An exception thrown when a file lock was not successfully acquired.
  */
-final class LockAcquisitionException extends \Exception {}
+final class LockAcquisitionException extends Exception {}

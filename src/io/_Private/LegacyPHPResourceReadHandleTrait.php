@@ -10,12 +10,15 @@
 
 namespace HH\Lib\Experimental\IO\_Private;
 
-use namespace HH\Lib\{Experimental\IO, Str};
+use namespace HH\Lib\Str;
+use namespace HH\Lib\Experimental\{IO, OS};
+use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
   require extends LegacyPHPResourceHandle;
 
   final public function rawReadBlocking(?int $max_bytes = null): string {
+    using new PHPWarningSuppressor();
     if ($max_bytes is int && $max_bytes < 0) {
       throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
@@ -26,7 +29,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \stream_get_contents($this->impl, $max_bytes ?? -1);
     if ($result === false) {
-      throw new IO\ReadException();
+      throw new IO\ReadException(OS\_Private\errno() as nonnull);
     }
     return $result as string;
   }

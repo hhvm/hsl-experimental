@@ -10,8 +10,8 @@
 
 namespace HH\Lib\Experimental\File\_Private;
 
-use namespace HH\Lib\Experimental\{IO, File};
-use type HH\Lib\_Private\PHPErrorLogger;
+use namespace HH\Lib\Experimental\{IO, File, OS};
+use type HH\Lib\_Private\PHPWarningSuppressor;
 
 <<__ConsistentConstruct>>
 abstract class NonDisposableFileHandle
@@ -20,18 +20,13 @@ abstract class NonDisposableFileHandle
   protected string $filename;
 
   final protected function __construct(string $path, string $mode) {
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    // fopen indicates errors by returning false and raising a warning; log
-    // the warning and convert to an exception
-    using $errors = new PHPErrorLogger(/* suppress = */ true);
+    using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $f = \fopen($path, $mode);
+    $err = OS\_Private\errno();
     if ($f === false) {
-      throw new File\OpenException(
-        'Failed to open file: '.$errors->getLastErrorx()['message'],
-      );
+      throw new File\OpenException($err as nonnull);
     }
     $this->filename = $path;
     parent::__construct($f);

@@ -10,7 +10,8 @@
 
 namespace HH\Lib\Experimental\IO\_Private;
 
-use namespace HH\Lib\{Experimental\IO, Str};
+use namespace HH\Lib\Str;
+use namespace HH\Lib\Experimental\{IO, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
@@ -22,7 +23,9 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \fwrite($this->impl, $bytes);
     if ($result === false) {
-      throw new IO\WriteException();
+      throw new IO\WriteException(
+        OS\_Private\errno() as nonnull,
+      );
     }
     return $result as int;
   }

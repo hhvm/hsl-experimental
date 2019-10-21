@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\File;
 
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\Experimental\{IO, OS};
 
 /**
  * A File Lock, which is unlocked as a disposable. To acquire one, call `lock`
@@ -36,7 +36,7 @@ final class Lock implements \IDisposable {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $flock_result = \flock($this->resource, $lock_type, inout $_wouldblock);
     if (!$flock_result) {
-      throw new LockAcquisitionException();
+      throw new LockAcquisitionException(OS\_Private\errno() as nonnull);
     }
   }
 

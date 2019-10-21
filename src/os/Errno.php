@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\OS;
 
-use const HH\Lib\Experimental\_Private\IS_MACOS;
+use const HH\Lib\Experimental\OS\_Private\IS_MACOS;
 
 // hackfmt-ignore
 /** OS-level error number constants from `errno.h`.

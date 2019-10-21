@@ -10,6 +10,7 @@
 
 use namespace HH\Lib\Experimental\File;
 use namespace HH\Lib\{Str, Tuple};
+use namespace HH\Lib\Experimental\OS;
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type HH\InvariantException as InvalidRegexException; // @oss-enable
@@ -24,8 +25,15 @@ final class FileTest extends HackTest {
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
     $f1 = File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE);
     await $f1->writeAsync('Hello, world!');
+    await $f1->flushAsync();
     expect(async () ==> {
-      await using File\open_write_only($filename, File\WriteMode::MUST_CREATE);
+      try {
+        await using (File\open_write_only($filename, File\WriteMode::MUST_CREATE)) {
+        };
+      } catch (File\OpenException $e) {
+        expect($e->getErrno())->toEqual(OS\Errno::EEXIST);
+        throw $e;
+      }
     })->toThrow(File\OpenException::class);
     await $f1->closeAsync();
 
