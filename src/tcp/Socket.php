@@ -14,4 +14,8 @@ use namespace HH\Lib\Experimental\{IO, Network};
 
 <<__Sealed(DisposableSocket::class, NonDisposableSocket::class)>>
 interface Socket extends Network\Socket {
+  /** Returns the local address and port */
+  public function getLocalAddress(): (string, int);
+  /** Returns the remote address and port */
+  public function getPeerAddress(): (string, int);
 }

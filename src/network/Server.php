@@ -15,7 +15,11 @@ interface Server<
   TDSock as TSock as DisposableSocket,
   TNDSock as TSock as NonDisposableSocket,
 > {
+  abstract const type TAddress;
+
   <<__ReturnDisposable>>
   public function nextConnectionAsync(): Awaitable<TDSock>;
   public function nextConnectionNDAsync(): Awaitable<TNDSock>;
+
+  public function getLocalAddress(): this::TAddress;
 }

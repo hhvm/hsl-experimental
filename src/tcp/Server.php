@@ -16,6 +16,8 @@ use type HH\Lib\_Private\PHPWarningSuppressor;
 
 final class Server
   implements Network\Server<Socket, DisposableSocket, NonDisposableSocket> {
+  const type TAddress = (string, int);
+
   private function __construct(private resource $impl) {
   }
 
@@ -85,6 +87,8 @@ final class Server
   }
 
   public async function nextConnectionNDAsync(): Awaitable<NonDisposableSocket> {
+    using new PHPWarningSuppressor();
+
     $retry = true;
     while (true) {
       /* HH_IGNORE_ERROR[2049] PHP stdlib */
@@ -100,7 +104,7 @@ final class Server
       /* HH_IGNORE_ERROR[2049] PHP stdlib */
       /* HH_IGNORE_ERROR[4107] PHP stdlib */
       $err = \socket_last_error($this->impl) as int;
-      if ($retry === false || $err !== Errno::EAGAIN) {
+      if ($retry === false || ($err !== 0 && $err !== Errno::EAGAIN)) {
         Network\_Private\throw_socket_error('accepting connection', $err);
       }
       // accept (3P) defines select() as indicating the FD ready for read when there's a connection
@@ -109,5 +113,9 @@ final class Server
       await \stream_await($this->impl, \STREAM_AWAIT_READ);
       $retry = false;
     }
+  }
+
+  public function getLocalAddress(): (string, int) {
+    return Network\_Private\get_sock_name($this->impl);
   }
 }

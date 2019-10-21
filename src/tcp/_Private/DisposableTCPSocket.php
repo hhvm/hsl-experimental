@@ -25,4 +25,12 @@ final class DisposableTCPSocket
   public function __construct(TCP\NonDisposableSocket $impl) {
     parent::__construct($impl);
   }
+
+  public function getLocalAddress(): (string, int) {
+    return $this->impl->getLocalAddress();
+  }
+
+  public function getPeerAddress(): (string, int) {
+    return $this->impl->getPeerAddress();
+  }
 }

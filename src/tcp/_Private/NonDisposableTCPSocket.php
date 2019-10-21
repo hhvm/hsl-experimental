@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\TCP\_Private;
 
-use namespace HH\Lib\Experimental\{IO, TCP};
+use namespace HH\Lib\Experimental\{IO, Network, TCP};
 
 final class NonDisposableTCPSocket
   extends IO\_Private\LegacyPHPResourceHandle
@@ -20,5 +20,13 @@ final class NonDisposableTCPSocket
 
   public function __construct(resource $impl) {
     parent::__construct($impl);
+  }
+
+  public function getLocalAddress(): (string, int) {
+    return Network\_Private\get_sock_name($this->impl);
+  }
+
+  public function getPeerAddress(): (string, int) {
+    return Network\_Private\get_peer_name($this->impl);
   }
 }
