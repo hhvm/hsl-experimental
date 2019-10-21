@@ -44,6 +44,8 @@ async function connect_nd_async(
 
   $err = 0;
   foreach ($afs as $af) {
+    /* HH_IGNORE_ERROR[2049] PHP STDLib */
+    /* HH_IGNORE_ERROR[4107] PHP STDLib */
     \socket_clear_error();
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */

@@ -127,7 +127,7 @@ final class HSLTCPTest extends HackTest {
           }
         } catch (Network\SocketException $e) {
           expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])
-            ->toInclude($e->getErrno());
+            ->toContain($e->getErrno());
           throw $e;
         }
       },
