@@ -21,7 +21,7 @@ use namespace HH\Lib\Experimental\Network;
 async function connect_nd_async(
   string $host,
   int $port,
-  ?ConnectOptions $opts = null,
+  ConnectOptions $opts = shape(),
 ): Awaitable<NonDisposableSocket> {
   $ipver = $opts['ip_version'] ?? Network\IPProtocolBehavior::PREFER_IPV6;
   $timeout = $opts['timeout'] ?? null;
@@ -79,7 +79,7 @@ async function connect_nd_async(
 async function connect_async(
   string $host,
   int $port,
-  ?ConnectOptions $opts = null,
+  ConnectOptions $opts = shape(),
 ): Awaitable<DisposableSocket> {
   $nd = await connect_nd_async($host, $port, $opts);
   return new _Private\DisposableTCPSocket($nd);

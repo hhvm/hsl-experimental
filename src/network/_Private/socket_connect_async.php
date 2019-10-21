@@ -23,7 +23,7 @@ async function socket_connect_async(
   resource $sock,
   string $host,
   int $port,
-  ?float $timeout_seconds = null,
+  ?float $timeout_seconds,
 ): Awaitable<int> {
   // We return error codes and expect the user-facing functions to deal with
   // them. Don't spew PHP errors to logs.

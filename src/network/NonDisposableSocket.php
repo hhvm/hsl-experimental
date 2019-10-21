@@ -8,12 +8,13 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
+namespace HH\Lib\Experimental\Network;
 
 use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\Experimental\{IO, TCP};
 
-<<__Sealed(_Private\NonDisposableTCPSocket::class)>>
-interface NonDisposableSocket
-  extends Socket, Network\NonDisposableSocket {
+<<
+  __Sealed(TCP\NonDisposableSocket::class, _Private\NonDisposableSocket::class),
+>>
+interface NonDisposableSocket extends Socket, IO\NonDisposableReadWriteHandle {
 }

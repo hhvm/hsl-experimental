@@ -11,9 +11,9 @@
 namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\Experimental\Network;
 
 <<__Sealed(_Private\DisposableTCPSocket::class)>>
 interface DisposableSocket
-  extends \IAsyncDisposable, IO\DisposableReadWriteHandle, Socket {
+  extends Socket, Network\DisposableSocket {
 }
