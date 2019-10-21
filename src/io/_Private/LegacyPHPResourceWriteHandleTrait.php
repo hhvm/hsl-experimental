@@ -17,6 +17,7 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
   require extends LegacyPHPResourceHandle;
 
   final public function rawWriteBlocking(string $bytes): int {
+    using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \fwrite($this->impl, $bytes);
