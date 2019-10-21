@@ -10,12 +10,11 @@
 
 namespace HH\Lib\Experimental\Network;
 
-/** General behavior for selecting which IP version to use.
+/** A specific version of IP.
  *
- * Use `IPProtocolVersion` instead if a specific version is required.
+ * Use `IPProtocolBehavior` instead if possible.
  */
-enum IPProtocolBehavior: int {
-  PREFER_IPV6 = 0;
-  FORCE_IPV6 = 6;
-  FORCE_IPV4 = 4;
+enum IPProtocolVersion : int {
+  IPV6 = 6;
+  IPV4 = 4;
 }

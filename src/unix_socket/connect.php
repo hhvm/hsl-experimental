@@ -36,12 +36,7 @@ async function connect_nd_async(
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     $err = \socket_last_error() as int;
   }
-  invariant($err !== 0, "Throwing exception but all socket calls succeeded");
-  throw new \Exception(
-    /* HH_IGNORE_ERROR[2049] PHP STDLib */
-    /* HH_IGNORE_ERROR[4107] PHP STDLib */
-    "Failed to connect: ".\socket_strerror($err).' ('.$err.')',
-  );
+  Network\_Private\throw_socket_error('connecting to socket', $err);
 }
 
 <<__ReturnDisposable>>
