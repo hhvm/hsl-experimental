@@ -20,3 +20,18 @@ function errno(): ?OS\Errno {
   $errno = \posix_get_last_error() as int;
   return $errno === 0 ? null : OS\Errno::assert($errno);
 }
+
+trait ExceptionWithErrnoTrait<T as ?OS\Errno> {
+  require extends \Exception;
+
+  private T $errno;
+
+  final public function __construct(T $errno) {
+    $this->errno = $errno;
+    parent::__construct();
+  }
+
+  public function getErrno(): T {
+    return $this->errno;
+  }
+}

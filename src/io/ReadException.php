@@ -12,12 +12,6 @@ namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\OS;
 
-final class ReadException extends Exception implements OS\IExceptionWithErrno {
-  public function __construct(private OS\Errno $errno) {
-    parent::__construct();
-  }
-
-  public function getErrno(): OS\Errno {
-    return $this->errno;
-  }
+final class ReadException extends Exception implements ExceptionWithErrno {
+  use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;
 }

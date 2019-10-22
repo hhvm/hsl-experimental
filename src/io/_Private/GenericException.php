@@ -8,10 +8,10 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\Experimental\IO\_Private;
 
-use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\Experimental\{IO, OS};
 
-final class WriteException extends Exception implements ExceptionWithErrno {
+final class GenericException extends IO\Exception implements IO\ExceptionWithErrno {
   use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;
 }
