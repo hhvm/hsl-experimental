@@ -26,15 +26,10 @@ final class FileTest extends HackTest {
     $f1 = File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE);
     await $f1->writeAsync('Hello, world!');
     await $f1->flushAsync();
-    expect(async () ==> {
-      try {
-        await using (File\open_write_only($filename, File\WriteMode::MUST_CREATE)) {
-        };
-      } catch (File\OpenException $e) {
-        expect($e->getErrno())->toEqual(OS\Errno::EEXIST);
-        throw $e;
-      }
-    })->toThrow(File\OpenException::class);
+    $e = expect(
+      () ==> File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE),
+    )->toThrow(File\OpenException::class);
+    expect($e->getErrno())->toEqual(OS\Errno::EEXIST);
     await $f1->closeAsync();
 
     await using $f2 = File\open_read_only($filename);

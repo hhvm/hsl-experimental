@@ -123,17 +123,10 @@ final class HSLTCPTest extends HackTest {
   }
 
   public async function testConnectingToInvalidPort(): Awaitable<void> {
-    expect(
-      async () ==> {
-        try {
-          await using ($conn = await TCP\connect_async('localhost', 0)) {
-          }
-        } catch (Network\SocketException $e) {
-          expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])
-            ->toContain($e->getErrno());
-          throw $e;
-        }
-      },
-    )->toThrow(Network\SocketException::class);
+    $ex = expect(async () ==> await TCP\connect_nd_async('localhost', 0))
+      ->toThrow(Network\SocketException::class);
+    expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])->toContain(
+      $ex->getErrno(),
+    );
   }
 }
