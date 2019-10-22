@@ -16,9 +16,12 @@ use namespace HH\Lib\Str;
 function throw_socket_error(string $_operation, int $errno): noreturn {
   invariant($errno !== 0, "%s should not be called on success", __FUNCTION__);
   if ($errno < 0) {
-    throw new Network\HostResolutionException(
-      (-($errno + 10000)) as OS\HErrno,
-    );
+    throw new Network\HostResolutionException((-($errno + 10000)) as OS\HErrno);
   }
-  throw new Network\SocketException($errno as OS\Errno);
+  switch ($errno as OS\Errno) {
+    case OS\Errno::EADDRNOTAVAIL:
+      throw new Network\AddressNotAvailableException();
+    default:
+      throw new Network\SocketException($errno as OS\Errno);
+  }
 }
