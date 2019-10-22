@@ -10,13 +10,13 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\Experimental\{IO, TCP, UnixSocket};
+use namespace HH\Lib\Experimental\{IO, TCP, Unix};
 
 <<__Sealed(
   DisposableSocket::class,
   NonDisposableSocket::class,
   TCP\Socket::class,
-  UnixSocket\Socket::class,
+  Unix\Socket::class,
 )>>
 interface Socket extends IO\ReadWriteHandle {
   /** A local or peer address.

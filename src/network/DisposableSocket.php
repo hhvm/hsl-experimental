@@ -10,8 +10,8 @@
 
 namespace HH\Lib\Experimental\Network;
 
-use namespace HH\Lib\Experimental\{IO, TCP, UnixSocket};
+use namespace HH\Lib\Experimental\{IO, TCP, Unix};
 
-<<__Sealed(TCP\DisposableSocket::class, UnixSocket\DisposableSocket::class)>>
+<<__Sealed(TCP\DisposableSocket::class, Unix\DisposableSocket::class)>>
 interface DisposableSocket extends Socket, IO\DisposableReadWriteHandle {
 }

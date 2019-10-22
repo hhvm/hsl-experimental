@@ -8,13 +8,13 @@
  *
  */
 
-namespace HH\Lib\Experimental\UnixSocket\_Private;
+namespace HH\Lib\Experimental\Unix\_Private;
 
-use namespace HH\Lib\Experimental\{IO, Network, UnixSocket};
+use namespace HH\Lib\Experimental\{IO, Network, Unix};
 
 final class NonDisposableSocket
   extends IO\_Private\LegacyPHPResourceHandle
-  implements UnixSocket\NonDisposableSocket, IO\NonDisposableReadWriteHandle {
+  implements Unix\NonDisposableSocket, IO\NonDisposableReadWriteHandle {
   use IO\_Private\LegacyPHPResourceReadHandleTrait;
   use IO\_Private\LegacyPHPResourceWriteHandleTrait;
 

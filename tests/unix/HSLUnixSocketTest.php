@@ -8,7 +8,7 @@
  *
  */
 
-use namespace HH\Lib\Experimental\{Network, UnixSocket};
+use namespace HH\Lib\Experimental\{Network, Unix};
 use namespace HH\Lib\{Math, PseudoRandom};
 
 use function Facebook\FBExpect\expect; // @oss-enable
@@ -26,7 +26,7 @@ final class HSLUnixSocketTest extends HackTest {
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     $path = \sys_get_temp_dir().'/hsl-unix-socket-'.PseudoRandom\int(0, Math\INT64_MAX).'.sock';
     try {
-      $server = await UnixSocket\Server::createAsync($path);
+      $server = await Unix\Server::createAsync($path);
       expect($server->getLocalAddress())->toEqual($path);
       $server_recv = new Ref('');
       $client_recv = new Ref('');
@@ -45,7 +45,7 @@ final class HSLUnixSocketTest extends HackTest {
         await async {
           ///// client /////
           await using (
-            $conn = await UnixSocket\connect_async($path)
+            $conn = await Unix\connect_async($path)
           ) {
             expect($conn->getLocalAddress())->toEqual('');
             expect($conn->getPeerAddress())->toEqual($path);

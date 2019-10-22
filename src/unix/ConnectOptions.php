@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\UnixSocket;
+namespace HH\Lib\Experimental\Unix;
 
 type ConnectOptions = shape(
   ?'timeout' => ?float,

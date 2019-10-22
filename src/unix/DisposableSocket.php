@@ -8,10 +8,10 @@
  *
  */
 
-namespace HH\Lib\Experimental\UnixSocket;
+namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\Network;
 
-<<__Sealed(_Private\NonDisposableSocket::class)>>
-interface NonDisposableSocket extends Socket, Network\NonDisposableSocket {
+<<__Sealed(_Private\DisposableSocket::class)>>
+interface DisposableSocket extends Socket, Network\DisposableSocket {
 }
