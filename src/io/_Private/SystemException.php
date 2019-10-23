@@ -12,6 +12,13 @@ namespace HH\Lib\Experimental\IO\_Private;
 
 use namespace HH\Lib\Experimental\{IO, OS};
 
-final class GenericException extends IO\Exception implements IO\ExceptionWithErrno {
+/** Class for Errnos without a more-specific exception.
+ *
+ * DO NOT CATCH THIS DIRECTLY. Catch `IO\Exception` or `IO\ExceptionWithErrno`
+ * instead.
+ */
+final class SystemException
+  extends IO\Exception
+  implements IO\ExceptionWithErrno {
   use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;
 }

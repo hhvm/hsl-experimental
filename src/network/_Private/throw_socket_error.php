@@ -22,6 +22,6 @@ function throw_socket_error(string $_operation, int $errno): noreturn {
     case OS\Errno::EADDRNOTAVAIL:
       throw new Network\AddressNotAvailableException();
     default:
-      throw new IO\_Private\GenericException($errno as OS\Errno);
+      throw new IO\_Private\SystemException($errno as OS\Errno);
   }
 }
