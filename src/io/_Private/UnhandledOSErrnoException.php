@@ -17,7 +17,7 @@ use namespace HH\Lib\Experimental\{IO, OS};
  * DO NOT CATCH THIS DIRECTLY. Catch `IO\Exception` or `IO\ExceptionWithErrno`
  * instead.
  */
-final class SystemException
+final class UnhandledOSErrnoException
   extends IO\Exception
   implements IO\ExceptionWithErrno {
   use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;
