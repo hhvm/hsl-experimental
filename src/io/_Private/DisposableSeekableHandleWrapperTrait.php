@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private;
 
-use namespace HH\Lib\{Experimental\Fileystem, Experimental\IO, Str};
+use namespace HH\Lib\Experimental\IO;
 
 trait DisposableSeekableHandleWrapperTrait<T as IO\NonDisposableSeekableHandle>
   implements IO\DisposableSeekableHandle {
