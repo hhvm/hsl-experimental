@@ -12,7 +12,6 @@ use namespace HH\Lib\Vec;
 use namespace HH\Lib\Experimental\{Network, OS, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
-use type HH\InvariantException as InvalidRegexException; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use type HackTest;
