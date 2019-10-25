@@ -1,4 +1,4 @@
-<?hh // strict
+<?hh
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -8,10 +8,11 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS;
+namespace HH\Lib\Experimental\IO;
 
-interface IExceptionWithNullableErrno {
-  require extends \Exception;
+use namespace HH\Lib\Experimental\OS;
 
-  public function getErrno(): ?Errno;
+/** An IO exception with an `OS\Errno`. */
+interface ExceptionWithErrno extends OS\ExceptionWithErrno {
+  require extends Exception;
 }

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Network\_Private;
 
-use namespace HH\Lib\Experimental\{Network, OS};
+use namespace HH\Lib\Experimental\{IO, Network, OS};
 use namespace HH\Lib\Str;
 
 function throw_socket_error(string $_operation, int $errno): noreturn {
@@ -22,6 +22,6 @@ function throw_socket_error(string $_operation, int $errno): noreturn {
     case OS\Errno::EADDRNOTAVAIL:
       throw new Network\AddressNotAvailableException();
     default:
-      throw new Network\SocketException($errno as OS\Errno);
+      throw new IO\_Private\UnhandledOSErrnoException($errno as OS\Errno);
   }
 }

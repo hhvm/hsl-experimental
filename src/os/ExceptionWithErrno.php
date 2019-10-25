@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -8,10 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\Experimental\OS;
 
-use namespace HH\Lib\Experimental\OS;
+interface ExceptionWithErrno extends ExceptionWithNullableErrno {
 
-final class WriteException extends Exception implements ExceptionWithErrno {
-  use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;
+  public function getErrno(): Errno;
 }

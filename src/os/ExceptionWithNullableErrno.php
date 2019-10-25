@@ -10,7 +10,8 @@
 
 namespace HH\Lib\Experimental\OS;
 
-interface IExceptionWithErrno extends IExceptionWithNullableErrno {
+interface ExceptionWithNullableErrno {
+  require extends \Exception;
 
-  public function getErrno(): Errno;
+  public function getErrno(): ?Errno;
 }

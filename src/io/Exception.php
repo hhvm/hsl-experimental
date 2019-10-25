@@ -19,5 +19,5 @@ use namespace HH\Lib\Experimental\OS;
  */
 abstract class Exception
   extends \Exception
-  implements OS\IExceptionWithNullableErrno {
+  implements OS\ExceptionWithNullableErrno {
 }

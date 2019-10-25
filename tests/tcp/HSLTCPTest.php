@@ -9,7 +9,7 @@
  */
 
 use namespace HH\Lib\Vec;
-use namespace HH\Lib\Experimental\{Network, OS, TCP};
+use namespace HH\Lib\Experimental\{IO, Network, OS, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -123,7 +123,7 @@ final class HSLTCPTest extends HackTest {
 
   public async function testConnectingToInvalidPort(): Awaitable<void> {
     $ex = expect(async () ==> await TCP\connect_nd_async('localhost', 0))
-      ->toThrow(Network\SocketException::class);
+      ->toThrow(IO\ExceptionWithErrno::class);
     expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])->toContain(
       $ex->getErrno(),
     );

@@ -8,23 +8,16 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\Experimental\IO\_Private;
 
 use namespace HH\Lib\Experimental\{IO, OS};
 
-/**
- * An exception thrown when opening a file fails.
+/** Class for Errnos without a more-specific exception.
+ *
+ * DO NOT CATCH THIS DIRECTLY. Catch `IO\Exception` or `IO\ExceptionWithErrno`
+ * instead.
  */
-final class OpenException
-  extends IO\Exception
-  implements IO\ExceptionWithErrno {
-  use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;
-}
-
-/**
- * An exception thrown when a file lock was not successfully acquired.
- */
-final class LockAcquisitionException
+final class UnhandledOSErrnoException
   extends IO\Exception
   implements IO\ExceptionWithErrno {
   use OS\_Private\ExceptionWithErrnoTrait<OS\Errno>;

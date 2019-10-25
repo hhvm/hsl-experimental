@@ -11,10 +11,18 @@
 
 namespace HH\Lib\Experimental\IO;
 
+use namespace HH\Lib\Experimental\OS;
+
 /** Indicates that an invalid handle was used or requested.
  *
- * For example, calling `IO\requestError()` throws this exception in an
+ * For example, calling `IO\request_error()` throws this exception in an
  * HTTP request, as the model only defines input and output streams, not an
  * error stream.
  */
-final class InvalidHandleException extends \Exception {}
+final class InvalidHandleException
+  extends Exception
+  implements ExceptionWithErrno {
+  public function getErrno(): OS\Errno {
+    return OS\Errno::EBADF;
+  }
+}
