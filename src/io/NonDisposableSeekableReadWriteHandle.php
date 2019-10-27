@@ -12,7 +12,7 @@ namespace HH\Lib\Experimental\IO;
 
 interface NonDisposableSeekableReadWriteHandle
   extends
-    ReadWriteHandle,
+    NonDisposableReadWriteHandle,
     NonDisposableSeekableHandle,
     NonDisposableSeekableReadHandle,
     NonDisposableSeekableWriteHandle {
