@@ -17,7 +17,7 @@ use type HH\Lib\_Private\PHPWarningSuppressor;
 abstract class NonDisposableFileHandle
   extends IO\_Private\LegacyPHPResourceHandle
   implements File\Handle, IO\NonDisposableHandle {
-  use LegacyPHPResourceSeekableHandleTrait;
+  use IO\_Private\LegacyPHPResourceSeekableHandleTrait;
 
   protected string $filename;
 
