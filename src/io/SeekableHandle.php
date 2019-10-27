@@ -10,10 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\_Private;
-use namespace HH\Lib\Experimental\{File, Network};
-
-
 interface SeekableHandle extends Handle {
   /**
    * Move to a specific offset within a handle.
