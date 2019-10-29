@@ -10,9 +10,9 @@
 
 namespace HH\Lib\Experimental\Network\_Private;
 
-function maybe_throw_socket_error(string $operation, int $errno): void {
-  if ($errno === 0) {
+function maybe_throw_socket_error(int $php_socket_error, string $message): void {
+  if ($php_socket_error === 0) {
     return;
   }
-  throw_socket_error($operation, $errno);
+  throw_socket_error($php_socket_error, $message);
 }

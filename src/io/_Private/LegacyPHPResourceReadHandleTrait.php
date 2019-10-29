@@ -29,7 +29,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \stream_get_contents($this->impl, $max_bytes ?? -1);
     if ($result === false) {
-      throw new IO\ReadException(OS\_Private\errno() as nonnull);
+      OS\_Private\throw_errno(OS\_Private\errno() as nonnull, "stream_get_contents() failed");
     }
     return $result as string;
   }

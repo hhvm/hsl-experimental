@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS;
+namespace HH\Lib\Experimental\OS\_Private;
 
-use const HH\Lib\Experimental\OS\_Private\IS_MACOS;
+use namespace HH\Lib\Experimental\OS;
 
 // hackfmt-ignore
 /** OS-level error number constants from `errno.h`.
@@ -195,4 +195,10 @@ enum Errno: int {
   // 91: ENOMSG (42)
   // 92: EILSEQ (84)
   ENOATTR         = IS_MACOS ?   93 :  -93;
+}
+
+function throw_errno(Errno $errno, string $message): noreturn {
+  $name = Errno::getNames()[$errno];
+  $code = OS\ErrorCode::getValues()[$name];
+  throw new OS\Exception($code, $message);
 }

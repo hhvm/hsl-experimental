@@ -11,8 +11,8 @@
 namespace HH\Lib\Experimental\Network\_Private;
 
 use const HH\Lib\Experimental\OS\_Private\IS_MACOS;
+use type HH\Lib\Experimental\OS\_Private\Errno;
 use type HH\Lib\_Private\PHPWarningSuppressor;
-use type HH\Lib\Experimental\OS\Errno;
 
 /** Asynchronously connect to a socket.
  *

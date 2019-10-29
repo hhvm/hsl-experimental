@@ -8,7 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS;
+namespace HH\Lib\Experimental\OS\_Private;
+
+use namespace HH\Lib\Experimental\OS;
 
 // hackfmt-ignore
 /** OS-level host error number constants from `netdb.h`.
@@ -19,7 +21,7 @@ namespace HH\Lib\Experimental\OS;
  * - on Linux, it is an alias for `NO_DATA`
  * - on MacOS, it is undefined.
  */
-enum HErrno: int {
+enum HError: int {
   HOST_NOT_FOUND = 1;
   TRY_AGAIN      = 2;
   NO_RECOVERY    = 3;

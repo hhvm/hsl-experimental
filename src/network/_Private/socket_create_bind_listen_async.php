@@ -11,7 +11,7 @@
 namespace HH\Lib\Experimental\Network\_Private;
 
 use namespace HH\Lib\Experimental\Network;
-use type HH\Lib\Experimental\OS\Errno;
+use type HH\Lib\Experimental\OS\_Private\Errno;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 async function socket_create_bind_listen_async(
@@ -29,7 +29,8 @@ async function socket_create_bind_listen_async(
     /* HH_IGNORE_ERROR[2049] PHPStdLib */
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     $err = \socket_last_error($sock) as int;
-    throw_socket_error('creating socket', $err);
+    // using POSIX function naming instead of PHP
+    throw_socket_error($err, "socket() failed");
   }
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
@@ -41,7 +42,7 @@ async function socket_create_bind_listen_async(
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     $err = \socket_last_error($sock) as int;
     if ($err !== Errno::EINPROGRESS) {
-      throw_socket_error('binding socket', $err);
+      throw_socket_error($err, 'bind() failed');
     }
   }
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
@@ -55,14 +56,14 @@ async function socket_create_bind_listen_async(
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $err = \socket_get_option($sock, \SOL_SOCKET, \SO_ERROR);
   }
-  maybe_throw_socket_error('binding socket', $err);
+  maybe_throw_socket_error($err, 'non-blocking bind() failed asynchronously');
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   if (!\socket_listen($sock)) {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $err = \socket_last_error($sock) as int;
-    throw_socket_error('listening on socket', $err);
+    throw_socket_error($err, 'listen() failed');
   }
 
   return $sock;

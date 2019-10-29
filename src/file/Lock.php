@@ -36,7 +36,7 @@ final class Lock implements \IDisposable {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $flock_result = \flock($this->resource, $lock_type, inout $_wouldblock);
     if (!$flock_result) {
-      throw new LockAcquisitionException(OS\_Private\errno() as nonnull);
+      OS\_Private\throw_errno(OS\_Private\errno() as nonnull, "flock failed");
     }
   }
 

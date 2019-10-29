@@ -10,6 +10,8 @@
 
 namespace HH\Lib\Experimental\IO;
 
+use namespace HH\Lib\Experimental\OS;
+
 /** Return STDOUT for the server process.
  *
  * This is usually not the same thing as request output.
@@ -61,8 +63,9 @@ function request_error(): NonDisposableWriteHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {
-    throw new InvalidHandleException(
-      'requestError is not supported in the current execution mode',
+    OS\_Private\throw_errno(
+      OS\_Private\Errno::ENOENT,
+      "There is no request_error() handle",
     );
   }
   return server_error() as NonDisposableWriteHandle;
