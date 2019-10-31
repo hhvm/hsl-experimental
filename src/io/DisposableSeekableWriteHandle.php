@@ -10,6 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
-interface DisposableReadWriteHandle
-  extends ReadWriteHandle, DisposableReadHandle, DisposableWriteHandle {
+interface DisposableSeekableWriteHandle
+  extends DisposableSeekableHandle, SeekableWriteHandle, DisposableWriteHandle {
 }

@@ -17,6 +17,8 @@ use type HH\Lib\_Private\PHPWarningSuppressor;
 abstract class NonDisposableFileHandle
   extends IO\_Private\LegacyPHPResourceHandle
   implements File\Handle, IO\NonDisposableHandle {
+  use IO\_Private\LegacyPHPResourceSeekableHandleTrait;
+
   protected string $filename;
 
   final protected function __construct(string $path, string $mode) {
@@ -53,14 +55,6 @@ abstract class NonDisposableFileHandle
   <<__ReturnDisposable>>
   final public function lock(File\LockType $type): File\Lock {
     return new File\Lock($this, $type);
-  }
-
-  final public async function seekAsync(int $offset): Awaitable<void> {
-    await $this->queuedAsync(async () ==> {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      \fseek($this->impl, $offset);
-    });
   }
 
   final public function __getResource_DO_NOT_USE(): resource {
