@@ -53,8 +53,33 @@ abstract class NonDisposableFileHandle
 
   <<__ReturnDisposable>>
   final public function lock(File\LockType $type): File\Lock {
-    return new File\Lock($this, $type);
+    $impl = $this->__getResource_DO_NOT_USE();
+    $would_block = false;
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $success = \flock($impl, $type, inout $would_block);
+    if ($success) {
+      return new File\Lock($impl);
+    }
+    OS\_Private\throw_errno(OS\_Private\errnox('flock'), 'flock() failed');
   }
+
+  <<__ReturnDisposable>>
+  final public function tryLockx(File\LockType $type): File\Lock {
+    $impl = $this->__getResource_DO_NOT_USE();
+    $would_block = false;
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $success = \flock($impl, $type | \LOCK_NB, inout $would_block);
+    if ($success) {
+      return new File\Lock($impl);
+    }
+    if ($would_block) {
+      throw new File\AlreadyLockedException();
+    }
+    OS\_Private\throw_errno(OS\_Private\errnox('flock'), 'flock() failed');
+  }
+
 
   final public function __getResource_DO_NOT_USE(): resource {
     return $this->impl;
