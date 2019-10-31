@@ -26,9 +26,8 @@ abstract class NonDisposableFileHandle
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $f = \fopen($path, $mode);
-    $err = OS\_Private\errno();
     if ($f === false) {
-      OS\_Private\throw_errno($err as nonnull, 'fopen failed');
+      OS\_Private\throw_errno(OS\_Private\errnox('fopen'), 'fopen failed');
     }
     $this->filename = $path;
     parent::__construct($f);

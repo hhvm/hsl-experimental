@@ -20,3 +20,13 @@ function errno(): ?Errno {
   $errno = \posix_get_last_error() as int;
   return $errno === 0 ? null : Errno::assert($errno);
 }
+
+function errnox(string $caller): Errno {
+  $errno = errno();
+  invariant(
+    $errno is nonnull,
+    '%s() indicated failure, but errno indicated success',
+    $caller,
+  );
+  return $errno;
+}
