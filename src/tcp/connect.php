@@ -43,6 +43,8 @@ async function connect_nd_async(
   }
 
   $err = 0;
+  $err_message = '';
+  // TODO: refactor so that socket_connect_async() throws, and we catch and retry
   foreach ($afs as $af) {
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
@@ -54,15 +56,17 @@ async function connect_nd_async(
     // block
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
-    $err = \posix_get_last_error() as int;
+    $err = \socket_last_error();
+    $err_message = "socket() failed";
     if ($sock is resource) {
       $err = await Network\_Private\socket_connect_async($sock, $host, $port, $timeout);
       if ($err === 0) {
         return new namespace\_Private\NonDisposableTCPSocket($sock);
       }
+      $err_message = 'connect() failed';
     }
   }
-  Network\_Private\throw_socket_error('connecting to socket', $err);
+  Network\_Private\throw_socket_error($err, $err_message);
 }
 
 /** Connect to a socket asynchronously, returning a disposable handle.

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Network\_Private;
 
-use type HH\Lib\Experimental\OS\Errno;
+use type HH\Lib\Experimental\OS\_Private\Errno;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 async function socket_accept_async(resource $server): Awaitable<resource> {
@@ -32,7 +32,7 @@ async function socket_accept_async(resource $server): Awaitable<resource> {
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $err = \socket_last_error($server) as int;
     if ($retry === false || ($err !== 0 && $err !== Errno::EAGAIN)) {
-      throw_socket_error('accepting connection', $err);
+      throw_socket_error($err, "accept() failed");
     }
     // accept (3P) defines select() as indicating the FD ready for read when there's a connection
     /* HH_IGNORE_ERROR[2049] PHP stdlib */

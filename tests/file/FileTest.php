@@ -27,8 +27,8 @@ final class FileTest extends HackTest {
     await $f1->flushAsync();
     $e = expect(
       () ==> File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE),
-    )->toThrow(File\OpenException::class);
-    expect($e->getErrno())->toEqual(OS\Errno::EEXIST);
+    )->toThrow(OS\Exception::class);
+    expect($e->getErrorCode())->toEqual(OS\ErrorCode::EEXIST);
     await $f1->closeAsync();
 
     await using $f2 = File\open_read_only($filename);

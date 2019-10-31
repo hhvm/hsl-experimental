@@ -14,24 +14,9 @@ use namespace HH\Lib\Experimental\OS;
 
 const bool IS_MACOS = \PHP_OS === 'Darwin';
 
-function errno(): ?OS\Errno {
+function errno(): ?Errno {
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
   $errno = \posix_get_last_error() as int;
-  return $errno === 0 ? null : OS\Errno::assert($errno);
-}
-
-trait ExceptionWithErrnoTrait<T as ?OS\Errno> {
-  require extends \Exception;
-
-  private T $errno;
-
-  final public function __construct(T $errno) {
-    $this->errno = $errno;
-    parent::__construct();
-  }
-
-  public function getErrno(): T {
-    return $this->errno;
-  }
+  return $errno === 0 ? null : Errno::assert($errno);
 }

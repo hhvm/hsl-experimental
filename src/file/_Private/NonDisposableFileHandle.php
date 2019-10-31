@@ -26,7 +26,7 @@ abstract class NonDisposableFileHandle
     $f = \fopen($path, $mode);
     $err = OS\_Private\errno();
     if ($f === false) {
-      throw new File\OpenException($err as nonnull);
+      OS\_Private\throw_errno($err as nonnull, 'fopen failed');
     }
     $this->filename = $path;
     parent::__construct($f);

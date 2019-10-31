@@ -36,7 +36,7 @@ async function connect_nd_async(
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     $err = \socket_last_error() as int;
   }
-  Network\_Private\throw_socket_error('connecting to socket', $err);
+  Network\_Private\throw_socket_error($err, 'connect() failed');
 }
 
 <<__ReturnDisposable>>
