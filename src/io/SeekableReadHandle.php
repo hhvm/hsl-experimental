@@ -10,8 +10,5 @@
 
 namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\Experimental\Fileystem;
-use namespace HH\Lib\_Private;
-
 interface SeekableReadHandle extends ReadHandle, SeekableHandle {
 }

@@ -29,4 +29,10 @@ trait LegacyPHPResourceSeekableHandleTrait implements IO\SeekableHandle {
       \fseek($this->impl, $offset);
     });
   }
+
+  final public function tell(): int {
+    using new PHPWarningSuppressor();
+
+    return \ftell($this->impl);
+  }
 }

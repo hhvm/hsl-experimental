@@ -20,4 +20,8 @@ trait DisposableSeekableHandleWrapperTrait<T as IO\NonDisposableSeekableHandle>
   final public function seekAsync(int $offset): Awaitable<void> {
     return $this->impl->seekAsync($offset);
   }
+
+  final public function tell(): int {
+    return $this->impl->tell();
+  }
 }
