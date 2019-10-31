@@ -10,12 +10,8 @@
 
 namespace HH\Lib\Experimental\OS;
 
-// todo: extend for common cases; consider sealing vs leaving fully open.
-final class Exception extends \Exception {
-  public function __construct(
-    private ErrorCode $errorCode,
-    string $message,
-  ) {
+class Exception extends \Exception {
+  public function __construct(private ErrorCode $errorCode, string $message) {
     parent::__construct($message);
   }
 

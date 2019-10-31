@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\File\_Private;
 
+use namespace HH\Lib\Str;
 use namespace HH\Lib\Experimental\{IO, File, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
@@ -26,8 +27,11 @@ abstract class NonDisposableFileHandle
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $f = \fopen($path, $mode);
+    /* HH_IGNORE_ERROR[2049] PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] PHPStdLib */
+    $errno = \posix_get_last_error() as int;
     if ($f === false) {
-      OS\_Private\throw_errno(OS\_Private\errnox('fopen'), 'fopen failed');
+      OS\_Private\throw_errno($errno, 'fopen');
     }
     $this->filename = $path;
     parent::__construct($f);
@@ -58,10 +62,13 @@ abstract class NonDisposableFileHandle
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $success = \flock($impl, $type, inout $would_block);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
     if ($success) {
       return new File\Lock($impl);
     }
-    OS\_Private\throw_errno(OS\_Private\errnox('flock'), 'flock() failed');
+    OS\_Private\throw_errno($errno as int, 'flock');
   }
 
   <<__ReturnDisposable>>
@@ -71,13 +78,16 @@ abstract class NonDisposableFileHandle
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $success = \flock($impl, $type | \LOCK_NB, inout $would_block);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
     if ($success) {
       return new File\Lock($impl);
     }
     if ($would_block) {
       throw new File\AlreadyLockedException();
     }
-    OS\_Private\throw_errno(OS\_Private\errnox('flock'), 'flock() failed');
+    OS\_Private\throw_errno($errno as int, 'flock');
   }
 
 

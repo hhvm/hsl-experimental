@@ -28,11 +28,11 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \stream_get_contents($this->impl, $max_bytes ?? -1);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
     if ($result === false) {
-      OS\_Private\throw_errno(
-        OS\_Private\errnox('stream_get_contents'),
-        'stream_get_contents() failed',
-      );
+      OS\_Private\throw_errno($errno as int, 'stream_get_contents');
     }
     return $result as string;
   }

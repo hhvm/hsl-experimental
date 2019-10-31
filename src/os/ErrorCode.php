@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\OS;
 
-enum ErrorCode : string {
+enum ErrorCode: string as string {
   ///// errno values /////
   EPERM = "EPERM";
   ENOENT = "ENOENT";
@@ -43,7 +43,7 @@ enum ErrorCode : string {
   ESPIPE = "ESPIPE";
   EROFS = "EROFS";
   EMLINK = "EMLINK";
-  EMPIPE = "EMPIPE";
+  EPIPE = "EPIPE";
   EDOM = "EDOM";
   ERANGE = "ERANGE";
   EDEADLK = "EDEADLK";

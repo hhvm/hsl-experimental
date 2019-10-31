@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\OS\_Private;
 
+use namespace HH\Lib\{C, Str};
 use namespace HH\Lib\Experimental\OS;
 
 // hackfmt-ignore
@@ -32,7 +33,7 @@ use namespace HH\Lib\Experimental\OS;
  * Negative values indicate that the constant is not defined on the current
  * operating system; for example, `ECHRNG` is not defined on MacOS.
  */
-enum Errno: int {
+enum Errno: int as int {
   /* SUCCESS = 0 */
   EPERM           = 1;
   ENOENT          = 2;
@@ -65,7 +66,7 @@ enum Errno: int {
   ESPIPE          = 29;
   EROFS           = 30;
   EMLINK          = 31;
-  EMPIPE          = 32;
+  EPIPE           = 32;
   EDOM            = 33;
   ERANGE          = 34;
   EDEADLK         = IS_MACOS ?   11 :   35;
@@ -197,8 +198,77 @@ enum Errno: int {
   ENOATTR         = IS_MACOS ?   93 :  -93;
 }
 
-function throw_errno(Errno $errno, string $message): noreturn {
-  $name = Errno::getNames()[$errno];
+<<__Memoize>>
+function get_throw_errorcode_impl(
+): (function(OS\ErrorCode, string): noreturn) {
+  $single_code = keyset[
+    OS\ChildProcessException::class,
+    OS\ConnectionAbortedException::class,
+    OS\ConnectionRefusedException::class,
+    OS\ConnectionResetException::class,
+    OS\AlreadyExistsException::class,
+    OS\NotFoundException::class,
+    OS\IsADirectoryException::class,
+    OS\IsNotADirectoryException::class,
+    OS\ProcessLookupException::class,
+    OS\TimeoutError::class,
+  ];
+  $multiple_codes = keyset[
+    OS\BrokenPipeException::class,
+    OS\PermissionException::class,
+  ];
+
+  $throws = new \HH\Lib\Ref(dict[]);
+  $add_code = (
+    OS\ErrorCode $code,
+    $class,
+    (function(string): noreturn) $impl,
+  ) ==> {
+    invariant(
+      !C\contains_key($throws->value, $code),
+      '%s has multiple exception implementations',
+      $code,
+    );
+    $throws->value[$code] = $impl;
+  };
+
+  foreach ($single_code as $class) {
+    $code = $class::_getValidErrorCode();
+    $add_code($code, $class, $msg ==> {
+      throw new $class($msg);
+    });
+  }
+  foreach ($multiple_codes as $class) {
+    foreach ($class::_getValidErrorCodes() as $code) {
+      $add_code($code, $class, $msg ==> {
+        throw new $class($code, $msg);
+      });
+    }
+  }
+
+  $throws = $throws->value;
+
+  return ($code, $message) ==> {
+    $override = $throws[$code] ?? null;
+    if ($override) {
+      $override($message);
+    }
+    throw new OS\Exception($code, $message);
+  };
+}
+
+function throw_errorcode(OS\ErrorCode $code, string $message): noreturn {
+  $impl = get_throw_errorcode_impl();
+  $impl($code, $message);
+}
+
+function throw_errno(int $errno, string $caller): noreturn {
+  invariant(
+    $errno !== 0,
+    "Asked to throw an errno after %s(), but errno indicates success",
+    $caller,
+  );
+  $name = Errno::getNames()[$errno as Errno];
   $code = OS\ErrorCode::getValues()[$name];
-  throw new OS\Exception($code, $message);
+  throw_errorcode($code, Str\format("%s() failed with %s", $caller, $name));
 }

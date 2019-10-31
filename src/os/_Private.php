@@ -13,20 +13,3 @@ namespace HH\Lib\Experimental\OS\_Private;
 use namespace HH\Lib\Experimental\OS;
 
 const bool IS_MACOS = \PHP_OS === 'Darwin';
-
-function errno(): ?Errno {
-  /* HH_IGNORE_ERROR[2049] PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] PHPStdLib */
-  $errno = \posix_get_last_error() as int;
-  return $errno === 0 ? null : Errno::assert($errno);
-}
-
-function errnox(string $caller): Errno {
-  $errno = errno();
-  invariant(
-    $errno is nonnull,
-    '%s() indicated failure, but errno indicated success',
-    $caller,
-  );
-  return $errno;
-}
