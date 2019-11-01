@@ -17,7 +17,7 @@ namespace HH\Lib\C;
  *
  * If no $comparator is provided, the `<=>` operator will be used. 
  * This will sort numbers by value, strings by alphabetical order
- * or by the numeric value, if the strings are well-formed numbers.
+ * or by the numeric value, if the strings are well-formed numbers,
  * and DateTime/DateTimeImmutable by their unixtime.
  *
  * To check the order of other types or mixtures of the
@@ -63,7 +63,7 @@ function is_sorted<Tv>(
  *
  * If no $comparator is provided, the `<=>` operator will be used. 
  * This will sort numbers by value, strings by alphabetical order
- * or by the numeric value, if the strings are well-formed numbers
+ * or by the numeric value, if the strings are well-formed numbers,
  * and DateTime/DateTimeImmutable by their unixtime.
  *
  * To check the order without a mapping function,
