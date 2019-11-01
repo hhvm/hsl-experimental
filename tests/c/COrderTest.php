@@ -167,6 +167,12 @@ final class COrderTest extends HackTest {
     }
   }
 
+  public function testIsSortedByUsesComparatorWhenProvided(): void {
+    expect(
+      C\is_sorted_by(vec[0, 1], $x ==> $x, (int $a, int $b) ==> -($a <=> $b)),
+    )->toBeFalse();
+  }
+
   private static function vecToAllTraversableTypes<Tv>(
     vec<Tv> $vec,
   ): vec<Traversable<Tv>> {
