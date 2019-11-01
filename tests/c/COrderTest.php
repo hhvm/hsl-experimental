@@ -1,3 +1,5 @@
+<?hh // strict
+
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
