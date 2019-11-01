@@ -16,6 +16,9 @@ use type Facebook\HackTest\{DataProvider, HackTest};
 // @oss-disable: <<Oncalls('hack')>>
 final class COrderTest extends HackTest {
 
+  const type TCubeDimentions =
+    shape('height' => int, 'width' => int, 'depth' => int);
+
   public function provideSortableVecs(): vec<(vec<mixed>, bool)> {
     return vec[
       // Empty containers are sorted
@@ -111,6 +114,33 @@ final class COrderTest extends HackTest {
         is_object($t) ? get_class($t) : gettype($t),
       );
     }
+  }
+
+  public function provideSortableVecsOfCubes(
+  ): vec<(vec<self::TCubeDimentions>, bool)> {
+    $make_cube = (int $h, int $w, int $d) ==>
+      shape('height' => $h, 'width' => $w, 'depth' => $d);
+
+    return vec[
+      tuple(vec[], true),
+      tuple(vec[$make_cube(0, 0, 0)], true),
+      tuple(vec[$make_cube(10, 10, 10), $make_cube(11, 11, 11)], true),
+      tuple(vec[$make_cube(100, 1, 1), $make_cube(10, 10, 10)], true),
+      tuple(
+        vec[$make_cube(100, 1, 1), $make_cube(10, 10, 10), $make_cube(0, 0, 0)],
+        false,
+      ),
+    ];
+  }
+
+  <<DataProvider('provideSortableVecsOfCubes')>>
+  public function testSortingCubes(
+    vec<self::TCubeDimentions> $cubes,
+    bool $expect,
+  ): void {
+    $cube_to_volume = (self::TCubeDimentions $cube) ==>
+      $cube['height'] * $cube['width'] * $cube['depth'];
+    expect(C\is_sorted_by($cubes, $cube_to_volume))->toBeSame($expect);
   }
 
   private static function vecToAllTraversableTypes<Tv>(
