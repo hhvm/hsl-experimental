@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\IO\_Private;
 
 use namespace HH\Lib\{Experimental\IO, Str};
+use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceSeekableHandleTrait implements IO\SeekableHandle {
   require extends LegacyPHPResourceHandle;
@@ -28,5 +29,13 @@ trait LegacyPHPResourceSeekableHandleTrait implements IO\SeekableHandle {
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       \fseek($this->impl, $offset);
     });
+  }
+
+  final public function tell(): int {
+    using new PHPWarningSuppressor();
+
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    return \ftell($this->impl);
   }
 }

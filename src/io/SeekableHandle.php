@@ -20,4 +20,9 @@ interface SeekableHandle extends Handle {
    * Any other pending operations (such as writes) will complete first.
    */
   public function seekAsync(int $offset): Awaitable<void>;
+
+  /**
+   * Get the current pointer position within a handle.
+   */
+  public function tell(): int;
 }

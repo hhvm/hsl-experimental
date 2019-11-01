@@ -36,4 +36,8 @@ abstract class DisposableFileHandle<T as NonDisposableFileHandle>
   final public async function seekAsync(int $offset): Awaitable<void> {
     await $this->impl->seekAsync($offset);
   }
+
+  final public function tell(): int {
+    return $this->impl->tell();
+  }
 }
