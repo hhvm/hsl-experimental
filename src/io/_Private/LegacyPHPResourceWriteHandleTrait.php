@@ -22,8 +22,11 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \fwrite($this->impl, $bytes);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
     if ($result === false) {
-      OS\_Private\throw_errno(OS\_Private\errnox('fwrite'), "fwrite() failed");
+      OS\_Private\throw_errno($errno, 'fwrite');
     }
     return $result as int;
   }
