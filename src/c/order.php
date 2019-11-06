@@ -15,7 +15,7 @@ namespace HH\Lib\C;
  * Returns true if the given Traversable<Tv> is sorted in ascending order.
  * If two neighbouring elements compare equal, this will be considered sorted.
  *
- * If no $comparator is provided, the `<=>` operator will be used. 
+ * If no $comparator is provided, the `<=>` operator will be used.
  * This will sort numbers by value, strings by alphabetical order
  * or by the numeric value, if the strings are well-formed numbers,
  * and DateTime/DateTimeImmutable by their unixtime.
@@ -61,7 +61,7 @@ function is_sorted<Tv>(
  * after having been `Vec\map`ed with $scalar_func sorted in ascending order.
  * If two neighbouring elements compare equal, this will be considered sorted.
  *
- * If no $comparator is provided, the `<=>` operator will be used. 
+ * If no $comparator is provided, the `<=>` operator will be used.
  * This will sort numbers by value, strings by alphabetical order
  * or by the numeric value, if the strings are well-formed numbers,
  * and DateTime/DateTimeImmutable by their unixtime.
