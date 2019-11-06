@@ -10,8 +10,6 @@
 
 use namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\Tuple;
-
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: use type HackTest;
@@ -82,23 +80,23 @@ final class PipeTest extends HackTest {
     list($cr, $sw) = IO\pipe_nd();
     list($sr, $cw) = IO\pipe_nd();
 
-    await Tuple\from_async(
-      async { // client
+    concurrent {
+      await async { // client
         await $cw->writeAsync("Herp\n");
         $response = await $cr->readLineAsync();
         expect($response)->toEqual("Derp\n");
         await $cw->writeAsync("Foo\n");
         $response = await $cr->readLineAsync();
         expect($response)->toEqual("Bar\n");
-      },
-      async { // server
+      };
+      await async { // server
         $request = await $sr->readLineAsync();
         expect($request)->toEqual("Herp\n");
         await $sw->writeAsync("Derp\n");
         $request = await $sr->readLineAsync();
         expect($request)->toEqual("Foo\n");
         await $sw->writeAsync("Bar\n");
-      },
-    );
+      };
+    }
   }
 }

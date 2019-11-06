@@ -8,9 +8,8 @@
  *
  */
 
-use namespace HH\Lib\Experimental\File;
-use namespace HH\Lib\{Str, Tuple};
-use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\Str;
+use namespace HH\Lib\Experimental\{File, OS};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -61,11 +60,11 @@ final class FileTest extends HackTest {
       await $tf->flushAsync();
 
       await using ($tfr = File\open_read_only($tf->getPath()->toString())) {
-        list($r1, $r2, $r3) = await Tuple\from_async(
-          $tfr->readAsync(10 * 1024 * 1024),
-          $tfr->readAsync(10 * 1024 * 1024),
-          $tfr->readAsync(10 * 1024 * 1024),
-        );
+        concurrent {
+          $r1 = await $tfr->readAsync(10 * 1024 * 1024);
+          $r2 = await $tfr->readAsync(10 * 1024 * 1024);
+          $r3 = await $tfr->readAsync(10 * 1024 * 1024);
+        }
       }
       // Strong guarantees:
       expect($r1 === $a || $r2 === $a || $r3 === $a)->toBeTrue();
