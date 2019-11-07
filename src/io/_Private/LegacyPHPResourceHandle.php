@@ -35,7 +35,10 @@ abstract class LegacyPHPResourceHandle implements IO\NonDisposableHandle {
   }
 
 
-  final protected async function selectAsync(int $flags): Awaitable<void> {
+  final protected async function selectAsync(
+    int $flags,
+    ?float $timeout_seconds,
+  ): Awaitable<void> {
     if (!$this->isAwaitable) {
       return;
     }
@@ -45,7 +48,7 @@ abstract class LegacyPHPResourceHandle implements IO\NonDisposableHandle {
     try {
       /* HH_FIXME[2049] *not* PHP stdlib */
       /* HH_FIXME[4107] *not* PHP stdlib */
-      await \stream_await($this->impl, $flags);
+      await \stream_await($this->impl, $flags, $timeout_seconds ?? 0.0);
     } catch (\InvalidOperationException $_) {
       // e.g. real files on Linux when using epoll
       $this->isAwaitable = false;

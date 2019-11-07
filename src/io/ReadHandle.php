@@ -17,7 +17,14 @@ interface ReadHandle extends Handle {
   public function rawReadBlocking(?int $max_bytes = null): string;
 
   /** Read until we reach `$max_bytes`, or the end of the file. */
-  public function readAsync(?int $max_bytes = null): Awaitable<string>;
+  public function readAsync(
+    ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
+  ): Awaitable<string>;
+
   /** Read until we reach `$max_bytes`, or the end of the line. */
-  public function readLineAsync(?int $max_bytes = null): Awaitable<string>;
+  public function readLineAsync(
+    ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
+  ): Awaitable<string>;
 }

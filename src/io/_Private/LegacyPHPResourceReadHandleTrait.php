@@ -39,20 +39,37 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
 
   final public async function readAsync(
     ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
   ): Awaitable<string> {
     if ($max_bytes is int && $max_bytes < 0) {
       throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
     }
+    if ($timeout_seconds is float && $timeout_seconds < 0.0) {
+      throw new \InvalidArgumentException('$timeout_seconds be null, or >= 0');
+    }
 
     $data = '';
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $start = \microtime(true);
     while (($max_bytes === null || $max_bytes > 0) && !$this->isEndOfFile()) {
       $chunk = $this->rawReadBlocking($max_bytes);
       $data .= $chunk;
       if ($max_bytes !== null) {
         $max_bytes -= Str\length($chunk);
       }
+      if ($timeout_seconds is float) {
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+        $now = \microtime(true);
+        $timeout_seconds -= ($now - $start);
+        if ($timeout_seconds < 0) {
+          OS\_Private\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+        }
+        $start = $now;
+      }
       if ($max_bytes === null || $max_bytes > 0) {
-        await $this->selectAsync(\STREAM_AWAIT_READ);
+        await $this->selectAsync(\STREAM_AWAIT_READ, $timeout_seconds);
       }
     }
     return $data;
@@ -60,9 +77,15 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
 
   final public async function readLineAsync(
     ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
   ): Awaitable<string> {
     if ($max_bytes is int && $max_bytes < 0) {
       throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
+    }
+    if ($timeout_seconds is float && $timeout_seconds < 0) {
+      throw new \InvalidArgumentException(
+        '$timeout_seconds must be null, or >= 0',
+      );
     }
 
     if ($max_bytes === null) {
@@ -77,8 +100,21 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
       $impl = () ==> \fgets($this->impl, $max_bytes + 1);
     }
     $data = $impl();
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $start = \microtime(true);
     while ($data === false && !$this->isEndOfFile()) {
-      await $this->selectAsync(\STREAM_AWAIT_READ);
+      if ($timeout_seconds is float) {
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+        $now = \microtime(true);
+        $timeout_seconds -= ($now - $start);
+        if ($timeout_seconds < 0.0) {
+          OS\_Private\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+        }
+        $start = $now;
+      }
+      await $this->selectAsync(\STREAM_AWAIT_READ, $timeout_seconds);
       $data = $impl();
     }
     return $data === false ? '' : $data;

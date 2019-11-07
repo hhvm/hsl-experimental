@@ -23,13 +23,15 @@ trait DisposableReadHandleWrapperTrait<T as IO\NonDisposableReadHandle>
 
   final public async function readAsync(
     ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
   ): Awaitable<string> {
-    return await $this->impl->readAsync($max_bytes);
+    return await $this->impl->readAsync($max_bytes, $timeout_seconds);
   }
 
   final public async function readLineAsync(
     ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
   ): Awaitable<string> {
-    return await $this->impl->readLineAsync($max_bytes);
+    return await $this->impl->readLineAsync($max_bytes, $timeout_seconds);
   }
 }
