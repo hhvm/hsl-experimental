@@ -21,8 +21,11 @@ trait DisposableWriteHandleWrapperTrait<T as IO\NonDisposableWriteHandle>
     return $this->impl->rawWriteBlocking($bytes);
   }
 
-  final public async function writeAsync(string $bytes): Awaitable<void> {
-    await $this->impl->writeAsync($bytes);
+  final public async function writeAsync(
+    string $bytes,
+    ?float $timeout_seconds = null,
+  ): Awaitable<void> {
+    await $this->impl->writeAsync($bytes, $timeout_seconds);
   }
 
   final public async function flushAsync(): Awaitable<void> {

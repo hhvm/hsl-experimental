@@ -26,7 +26,10 @@ interface WriteHandle extends Handle {
    */
   public function rawWriteBlocking(string $bytes): int;
 
-  public function writeAsync(string $bytes): Awaitable<void>;
+  public function writeAsync(
+    string $bytes,
+    ?float $timeout_seconds = null,
+  ): Awaitable<void>;
 
   public function flushAsync(): Awaitable<void>;
 }
