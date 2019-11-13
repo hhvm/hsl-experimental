@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\File\_Private;
 
+use namespace HH\Lib\Str;
 use namespace HH\Lib\Experimental\{IO, File, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
@@ -26,9 +27,11 @@ abstract class NonDisposableFileHandle
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $f = \fopen($path, $mode);
-    $err = OS\_Private\errno();
+    /* HH_IGNORE_ERROR[2049] PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] PHPStdLib */
+    $errno = \posix_get_last_error() as int;
     if ($f === false) {
-      OS\_Private\throw_errno($err as nonnull, 'fopen failed');
+      OS\_Private\throw_errno($errno, 'fopen');
     }
     $this->filename = $path;
     parent::__construct($f);
@@ -54,8 +57,39 @@ abstract class NonDisposableFileHandle
 
   <<__ReturnDisposable>>
   final public function lock(File\LockType $type): File\Lock {
-    return new File\Lock($this, $type);
+    $impl = $this->__getResource_DO_NOT_USE();
+    $would_block = false;
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $success = \flock($impl, $type, inout $would_block);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
+    if ($success) {
+      return new File\Lock($impl);
+    }
+    OS\_Private\throw_errno($errno as int, 'flock');
   }
+
+  <<__ReturnDisposable>>
+  final public function tryLockx(File\LockType $type): File\Lock {
+    $impl = $this->__getResource_DO_NOT_USE();
+    $would_block = false;
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $success = \flock($impl, $type | \LOCK_NB, inout $would_block);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
+    if ($success) {
+      return new File\Lock($impl);
+    }
+    if ($would_block) {
+      throw new File\AlreadyLockedException();
+    }
+    OS\_Private\throw_errno($errno as int, 'flock');
+  }
+
 
   final public function __getResource_DO_NOT_USE(): resource {
     return $this->impl;

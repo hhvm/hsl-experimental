@@ -29,8 +29,26 @@ interface Handle extends IO\SeekableHandle {
    */
   public function getSize(): int;
 
+  /**
+   * Get a shared or exclusive lock on the file.
+   *
+   * This will block until it acquires the lock, which may be forever.
+   *
+   * This involves a blocking syscall; async code will not execute while
+   * waiting for a lock.
+   */
   <<__ReturnDisposable>>
   public function lock(LockType $mode): Lock;
+
+  /**
+   * Immediately get a shared or exclusive lock on a file, or throw.
+   *
+   * @throws `File\AlreadyLockedException` if `lock()` would block. **This
+   *   is not a subclass of `OS\Exception`**.
+   * @throws `OS\Exception` in any other case.
+   */
+  <<__ReturnDisposable>>
+  public function tryLockx(LockType $mode): Lock;
 }
 
 <<__Sealed(

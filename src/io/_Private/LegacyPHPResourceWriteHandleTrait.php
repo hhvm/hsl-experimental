@@ -22,21 +22,40 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $result = \fwrite($this->impl, $bytes);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $errno = \posix_get_last_error();
     if ($result === false) {
-      OS\_Private\throw_errno(OS\_Private\errno() as nonnull, "fwrite() failed");
+      OS\_Private\throw_errno($errno, 'fwrite');
     }
     return $result as int;
   }
 
-  final public function writeAsync(string $bytes): Awaitable<void> {
+  final public function writeAsync(
+    string $bytes,
+    ?float $timeout_seconds = null,
+  ): Awaitable<void> {
     return $this->queuedAsync(async () ==> {
+      /* HH_IGNORE_ERROR[2049] */
+      /* HH_IGNORE_ERROR[4107] */
+      $start = \microtime(true);
       while (true) {
         $written = $this->rawWriteBlocking($bytes);
         $bytes = Str\slice($bytes, $written);
         if ($bytes === '') {
           break;
         }
-        await $this->selectAsync(\STREAM_AWAIT_WRITE);
+        if ($timeout_seconds is float) {
+          /* HH_IGNORE_ERROR[2049] */
+          /* HH_IGNORE_ERROR[4107] */
+          $now = \microtime(true);
+          $timeout_seconds -= ($now - $start);
+          if ($timeout_seconds < 0.0) {
+            OS\_Private\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+          }
+          $start = $now;
+        }
+        await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_seconds);
       }
     });
   }

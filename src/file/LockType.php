@@ -19,22 +19,8 @@ enum LockType: int as int {
   SHARED = \LOCK_SH;
 
   /**
-   * Like a shared lock, but the creation of a Lock will throw a
-   * `LockAcquisitionException` if the lock was not acquired instead of
-   * blocking.
-   */
-  SHARED_NON_BLOCKING = \LOCK_SH | \LOCK_NB;
-
-  /**
    * Only a single process may possess an exclusive lock to a given file at a
    * time. The creation of a Lock will block until the lock is acquired.
    */
   EXCLUSIVE = \LOCK_EX;
-
-  /**
-   * Like an exclusive lock, but the creation of a Lock will throw a
-   * `LockAcquisitionException` if the lock was not acquired instead of
-   * blocking.
-   */
-  EXCLUSIVE_NON_BLOCKING = \LOCK_EX | \LOCK_NB;
 }

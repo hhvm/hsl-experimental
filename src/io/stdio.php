@@ -53,13 +53,32 @@ function request_output(): NonDisposableWriteHandle {
 
 /** Return the error output handle for the current request.
  *
- * This is usually only available for CLI scripts; it will throw an
- * `UnsupportedHandleException` in most other contexts, including HTTP
- * requests.
+ * This is usually only available for CLI scripts; it will return null in most
+ * other contexts, including HTTP requests.
+ *
+ * For a throwing version, use `request_error(x)`.
  *
  * In CLI mode, this is usually the process STDERR.
  */
-function request_error(): NonDisposableWriteHandle {
+function request_error(): ?NonDisposableWriteHandle {
+  try {
+    return request_errorx();
+  } catch (OS\NotFoundException $_) {
+    return null;
+  }
+}
+
+/** Return the error output handle for the current request.
+ *
+ * This is usually only available for CLI scripts; it will throw an
+ * `NotFoundException` in most other contexts, including HTTP
+ * requests.
+ *
+ * For a non-throwing version, use `request_error()`.
+ *
+ * In CLI mode, this is usually the process STDERR.
+ */
+function request_errorx(): NonDisposableWriteHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {

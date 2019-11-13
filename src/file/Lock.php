@@ -21,29 +21,14 @@ use namespace HH\Lib\Experimental\{IO, OS};
  * is not desired behavior it should be guarded against.
  */
 final class Lock implements \IDisposable {
-  private resource $resource;
 
-  public function __construct(
-    <<__AcceptDisposable>> Handle $handle,
-    LockType $lock_type,
-  ) {
-    $this->resource =
-      /* HH_IGNORE_ERROR[4179] doing dodgy things to disposables */
-      /* HH_IGNORE_ERROR[4188] doing dodgy things to disposables */
-      ($handle as _Private\NonDisposableFileHandle)->__getResource_DO_NOT_USE();
-    $_wouldblock = null;
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $flock_result = \flock($this->resource, $lock_type, inout $_wouldblock);
-    if (!$flock_result) {
-      OS\_Private\throw_errno(OS\_Private\errno() as nonnull, "flock failed");
-    }
+  public function __construct(private resource $handle) {
   }
 
   final public function __dispose(): void {
     $_wouldblock = null;
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    \flock($this->resource, \LOCK_UN, inout $_wouldblock);
+    \flock($this->handle, \LOCK_UN, inout $_wouldblock);
   }
 }
