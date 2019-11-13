@@ -9,9 +9,9 @@
  *
  */
 
-use namespace HH\Lib\{C, Str, Vec};
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{C, Str, Vec}; // @oss-enable
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class COrderTest extends HackTest {
@@ -19,7 +19,7 @@ final class COrderTest extends HackTest {
   const type TCubeDimentions =
     shape('height' => int, 'width' => int, 'depth' => int);
 
-  public function provideSortableVecs(): vec<(vec<mixed>, bool)> {
+  public static function provideSortableVecs(): vec<(vec<mixed>, bool)> {
     return vec[
       // Empty containers are sorted
       tuple(vec[], true),
@@ -46,16 +46,16 @@ final class COrderTest extends HackTest {
 
   <<DataProvider('provideSortableVecs')>>
   public function testSortingWithoutComparator(
-    Traversable<mixed> $t,
+    vec<mixed> $t,
     bool $expect,
   ): void {
-    expect(C\is_sorted($t))->toBeSame($expect);
+    expect(C\is_sorted($t))->toEqual($expect);
   }
 
-  public function provideSortableTraversables(
+  public static function provideSortableTraversables(
   ): vec<(vec<Traversable<mixed>>, bool)> {
     return Vec\map(
-      $this->provideSortableVecs(),
+      self::provideSortableVecs(),
       $tuple ==> tuple(self::vecToAllTraversableTypes($tuple[0]), $tuple[1]),
     );
   }
@@ -66,15 +66,17 @@ final class COrderTest extends HackTest {
     bool $expect,
   ): void {
     foreach ($ts as $t) {
-      expect(C\is_sorted($t))->toBeSame(
+      expect(C\is_sorted($t))->toEqual(
         $expect,
         'Sorting failed for a Traversable of type %s',
-        is_object($t) ? get_class($t) : gettype($t),
+        is_object($t)
+          ? get_class($t)
+          : /* HH_FIXME[2049] */ /* HH_FIXME[4107] */ gettype($t),
       );
     }
   }
 
-  public function provideNonSortableVecs(
+  public static function provideNonSortableVecs(
   ): vec<(vec<string>, (function(string, string): int), bool)> {
     $str_len_cmp = (string $a, string $b) ==> Str\length($a) <=> Str\length($b);
     return vec[
@@ -84,18 +86,18 @@ final class COrderTest extends HackTest {
   }
 
   <<DataProvider('provideNonSortableVecs')>>
-  public function testSortingWithComparator<Tv>(
-    Traversable<Tv> $t,
-    (function(Tv, Tv): int) $comparator,
+  public function testSortingWithComparator(
+    vec<string> $t,
+    (function(string, string): int) $comparator,
     bool $expect,
   ): void {
-    expect(C\is_sorted($t, $comparator))->toBeSame($expect);
+    expect(C\is_sorted($t, $comparator))->toEqual($expect);
   }
 
-  public function provideNonSortableTraversables(
+  public static function provideNonSortableTraversables(
   ): vec<(vec<Traversable<string>>, (function(string, string): int), bool)> {
     return Vec\map(
-      $this->provideNonSortableVecs(),
+      self::provideNonSortableVecs(),
       $tuple ==>
         tuple(self::vecToAllTraversableTypes($tuple[0]), $tuple[1], $tuple[2]),
     );
@@ -108,15 +110,17 @@ final class COrderTest extends HackTest {
     bool $expect,
   ): void {
     foreach ($ts as $t) {
-      expect(C\is_sorted($t, $cmp))->toBeSame(
+      expect(C\is_sorted($t, $cmp))->toEqual(
         $expect,
         'Sorting failed for a Traversable of type %s',
-        is_object($t) ? get_class($t) : gettype($t),
+        is_object($t)
+          ? get_class($t)
+          : /* HH_FIXME[2049] */ /* HH_FIXME[4107] */ gettype($t),
       );
     }
   }
 
-  public function provideSortableVecsOfCubes(
+  public static function provideSortableVecsOfCubes(
   ): vec<(vec<self::TCubeDimentions>, bool)> {
     $make_cube = (int $h, int $w, int $d) ==>
       shape('height' => $h, 'width' => $w, 'depth' => $d);
@@ -140,13 +144,13 @@ final class COrderTest extends HackTest {
   ): void {
     $cube_to_volume = (self::TCubeDimentions $cube) ==>
       $cube['height'] * $cube['width'] * $cube['depth'];
-    expect(C\is_sorted_by($cubes, $cube_to_volume))->toBeSame($expect);
+    expect(C\is_sorted_by($cubes, $cube_to_volume))->toEqual($expect);
   }
 
-  public function provideSortableTraversablesOfCubes(
+  public static function provideSortableTraversablesOfCubes(
   ): vec<(vec<Traversable<self::TCubeDimentions>>, bool)> {
     return Vec\map(
-      $this->provideSortableVecsOfCubes(),
+      self::provideSortableVecsOfCubes(),
       $tuple ==> tuple(self::vecToAllTraversableTypes($tuple[0]), $tuple[1]),
     );
   }
@@ -159,10 +163,12 @@ final class COrderTest extends HackTest {
     $cube_to_volume = (self::TCubeDimentions $cube) ==>
       $cube['height'] * $cube['width'] * $cube['depth'];
     foreach ($cubes_traversable as $cubes) {
-      expect(C\is_sorted_by($cubes, $cube_to_volume))->toBeSame(
+      expect(C\is_sorted_by($cubes, $cube_to_volume))->toEqual(
         $expect,
         'Sorting failed for a Traversable of type %s',
-        is_object($cubes) ? get_class($cubes) : gettype($cubes),
+        is_object($cubes)
+          ? get_class($cubes)
+          : /* HH_FIXME[2049] */ /* HH_FIXME[4107] */ gettype($cubes),
       );
     }
   }
@@ -176,7 +182,7 @@ final class COrderTest extends HackTest {
   private static function vecToAllTraversableTypes<Tv>(
     vec<Tv> $vec,
   ): vec<Traversable<Tv>> {
-    $traversable_to_generator = $traversable ==> {
+    $traversable_to_generator = (vec<Tv> $traversable) ==> {
       foreach ($traversable as $value) {
         yield $value;
       }

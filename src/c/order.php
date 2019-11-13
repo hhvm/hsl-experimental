@@ -42,7 +42,7 @@ function is_sorted<Tv>(
     return true;
   }
 
-  $comparator ??= ($a, $b) ==>
+  $comparator ??= (Tv $a, Tv $b) ==>
     /*HH_IGNORE_ERROR[4240] Comparison may not be useful on Tv*/$a <=> $b;
 
   $previous = firstx($vec);
@@ -89,7 +89,7 @@ function is_sorted_by<Tv, Ts>(
     return true;
   }
 
-  $comparator ??= ($a, $b) ==>
+  $comparator ??= (Ts $a, Ts $b) ==>
     /*HH_IGNORE_ERROR[4240] Comparison may not be useful on Ts*/$a <=> $b;
 
   $previous = $scalar_func(firstx($vec));
