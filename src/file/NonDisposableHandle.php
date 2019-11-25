@@ -12,12 +12,18 @@ namespace HH\Lib\Experimental\File;
 
 use namespace HH\Lib\Experimental\IO;
 
+interface NonDisposableHandle extends IO\NonDisposableSeekableHandle, Handle {
+}
+
 interface NonDisposableReadHandle
-  extends IO\NonDisposableSeekableReadHandle, ReadHandle {
+  extends IO\NonDisposableSeekableReadHandle, NonDisposableHandle, ReadHandle {
 }
 
 interface NonDisposableWriteHandle
-  extends IO\NonDisposableSeekableWriteHandle, WriteHandle {
+  extends
+    IO\NonDisposableSeekableWriteHandle,
+    NonDisposableHandle,
+    WriteHandle {
 }
 
 interface NonDisposableReadWriteHandle
