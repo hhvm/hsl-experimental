@@ -22,7 +22,7 @@ abstract class NonDisposableFileHandle
 
   protected string $filename;
 
-  final protected function __construct(string $path, string $mode) {
+  final public function __construct(string $path, string $mode) {
     using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
@@ -35,13 +35,6 @@ abstract class NonDisposableFileHandle
     }
     $this->filename = $path;
     parent::__construct($f);
-  }
-
-  final public static function __createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
-    string $path,
-    string $mode,
-  ): this {
-    return new static($path, $mode);
   }
 
   <<__Memoize>>
