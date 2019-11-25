@@ -56,7 +56,7 @@ interface Handle extends IO\SeekableHandle {
   ReadWriteHandle::class,
   NonDisposableReadHandle::class,
 )>>
-interface ReadHandle extends Handle, IO\ReadHandle {
+interface ReadHandle extends Handle, IO\SeekableReadHandle {
 }
 
 <<__Sealed(
@@ -64,12 +64,12 @@ interface ReadHandle extends Handle, IO\ReadHandle {
   ReadWriteHandle::class,
   NonDisposableWriteHandle::class,
 )>>
-interface WriteHandle extends Handle, IO\WriteHandle {
+interface WriteHandle extends Handle, IO\SeekableWriteHandle {
 }
 
 <<__Sealed(
   NonDisposableReadWriteHandle::class,
   DisposableReadWriteHandle::class,
 )>>
-interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\ReadWriteHandle {
+interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\SeekableReadWriteHandle {
 }
