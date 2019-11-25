@@ -12,12 +12,6 @@ namespace HH\Lib\Experimental\File;
 
 use namespace HH\Lib\Experimental\IO;
 
-<<__Sealed(
-  _Private\DisposableFileHandle::class,
-  _Private\NonDisposableFileHandle::class,
-  ReadHandle::class,
-  WriteHandle::class,
-)>>
 interface Handle extends IO\SeekableHandle {
   /**
    * Get the name of this file.
@@ -51,25 +45,11 @@ interface Handle extends IO\SeekableHandle {
   public function tryLockx(LockType $mode): Lock;
 }
 
-<<__Sealed(
-  DisposableReadHandle::class,
-  ReadWriteHandle::class,
-  NonDisposableReadHandle::class,
-)>>
 interface ReadHandle extends Handle, IO\SeekableReadHandle {
 }
 
-<<__Sealed(
-  DisposableWriteHandle::class,
-  ReadWriteHandle::class,
-  NonDisposableWriteHandle::class,
-)>>
 interface WriteHandle extends Handle, IO\SeekableWriteHandle {
 }
 
-<<__Sealed(
-  NonDisposableReadWriteHandle::class,
-  DisposableReadWriteHandle::class,
-)>>
 interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\SeekableReadWriteHandle {
 }
