@@ -8,12 +8,12 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\Experimental\File\_Private;
 
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\Experimental\{File, IO};
 
 final class NonDisposableReadHandle
-  extends _Private\NonDisposableFileHandle
-  implements ReadHandle, IO\NonDisposableSeekableReadHandle {
+  extends NonDisposableFileHandle
+  implements File\ReadHandle, IO\NonDisposableSeekableReadHandle {
   use IO\_Private\LegacyPHPResourceReadHandleTrait;
 }
