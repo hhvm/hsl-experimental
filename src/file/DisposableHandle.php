@@ -10,6 +10,12 @@
 
 namespace HH\Lib\Experimental\File;
 
+interface DisposableReadHandle extends \IAsyncDisposable, ReadHandle {
+}
+
+interface DisposableWriteHandle extends \IAsyncDisposable, WriteHandle {
+}
+
 interface DisposableReadWriteHandle
   extends
     \IAsyncDisposable,
