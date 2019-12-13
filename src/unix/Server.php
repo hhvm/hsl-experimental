@@ -14,11 +14,13 @@ use namespace HH\Lib\Experimental\Network;
 
 final class Server
   implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
+  /** Path */
   const type TAddress = string;
 
   private function __construct(private resource $impl) {
   }
 
+  /** Create a bound and listening instance */
   public static async function createAsync(string $path): Awaitable<this> {
     return await Network\_Private\socket_create_bind_listen_async(
       \AF_UNIX,
