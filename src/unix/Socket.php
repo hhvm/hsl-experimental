@@ -12,6 +12,12 @@ namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\{IO, Network};
 
+/** A Unix socket for a server or client connection.
+ *
+ * @see `Unix\Server` to accept new connections
+ * @see `Unix\connect_async()` and `Unix\connect_nd_async()` to conenct to an
+ *   existing server.
+ */
 <<__Sealed(DisposableSocket::class, CloseableSocket::class)>>
 interface Socket extends Network\Socket {
   /** A file path */

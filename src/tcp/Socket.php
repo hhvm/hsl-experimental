@@ -12,6 +12,13 @@ namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\Experimental\{IO, Network};
 
+/**
+ * A TCP client or server socket.
+ *
+ * @see `TCP\Server` to create a server
+ * @see `TCP\connect_async()` and `TCP\connect_nd_async()` to connect to an
+ *   existing server
+ */
 <<__Sealed(DisposableSocket::class, CloseableSocket::class)>>
 interface Socket extends Network\Socket {
   /** A host and port number */

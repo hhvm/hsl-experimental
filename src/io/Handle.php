@@ -40,6 +40,18 @@ use namespace HH\Lib\Experimental\{File, Network};
  *
  * Some types of handle imply these behaviors; for example, all `File\Handle`s
  * are `IO\SeekableHandle`s.
+ *
+ * You probably want to start with one of:
+ * - `File\open_read_only()`, `File\open_write_only()`, or
+ *   `File\open_read_write()`
+ * - `IO\pipe()`
+ * - `IO\request_input()`, `IO\request_input()`, or `IO\request_error()`; these
+ *   used for all kinds of requests, including both HTTP and CLI requests.
+ * - `IO\server_output()`, `IO\server_error()`
+ * - `TCP\connect_async()` or `TCP\Server`
+ * - `Unix\connect_async()`, or `Unix\Server`
+ * - the `_nd()` or `_nd_async()` variants of the above functions if a
+ *   non-disposable is required.
  */
 interface Handle {
   public function isEndOfFile(): bool;
