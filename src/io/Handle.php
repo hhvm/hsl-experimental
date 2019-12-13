@@ -52,6 +52,20 @@ use namespace HH\Lib\Experimental\{File, Network};
  * - `Unix\connect_async()`, or `Unix\Server`
  * - the `_nd()` or `_nd_async()` variants of the above functions if a
  *   non-disposable is required.
+ *
+ * All concrete instances of `IO\Handle`s` should either have a managed
+ * lifecycle, or be instances of `IO\CloseableHandle`, and explicitly
+ * closed by code using it.
+ *
+ * Handles with a managed lifecycle can not be closed manually, and take
+ * several forms; for example:
+ * - Disposable handles will be closed at the end of their scope.
+ *   Socket peers may close a connection before this point.
+ * - `IO\request_*` handles are open until the end of the request; an
+ *   attached process may close them earlier - e.g. a user may close
+ *   `IO\request_input()` on a CLI process by typing Ctrl+D into their shell.
+ * - `IO\server_output()` is open for the lifetime of the HHVM process, unless
+ *   closed by an attached process, if any.
  */
 interface Handle {
   public function isEndOfFile(): bool;
