@@ -13,7 +13,7 @@ namespace HH\Lib\Experimental\File\_Private;
 use namespace HH\Lib\Experimental\{File, IO};
 
 <<__ConsistentConstruct>>
-abstract class DisposableFileHandle<T as NonDisposableFileHandle>
+abstract class DisposableFileHandle<T as File\NonDisposableHandle>
   extends IO\_Private\DisposableHandleWrapper<T>
   implements File\Handle {
   final public function __construct(T $impl) {
