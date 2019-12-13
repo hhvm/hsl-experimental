@@ -12,7 +12,7 @@ namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\Experimental\{IO, Network};
 
-<<__Sealed(DisposableSocket::class, NonDisposableSocket::class)>>
+<<__Sealed(DisposableSocket::class, CloseableSocket::class)>>
 interface Socket extends Network\Socket {
   /** A host and port number */
   const type TAddress = (string, int);

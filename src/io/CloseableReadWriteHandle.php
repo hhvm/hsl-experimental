@@ -8,10 +8,8 @@
  *
  */
 
-namespace HH\Lib\Experimental\Unix;
+namespace HH\Lib\Experimental\IO;
 
-use namespace HH\Lib\Experimental\Network;
-
-<<__Sealed(_Private\NonDisposableSocket::class)>>
-interface NonDisposableSocket extends Socket, Network\NonDisposableSocket {
+interface CloseableReadWriteHandle
+  extends ReadWriteHandle, CloseableReadHandle, CloseableWriteHandle {
 }

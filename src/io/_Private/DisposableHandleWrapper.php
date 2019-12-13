@@ -12,7 +12,7 @@ namespace HH\Lib\Experimental\IO\_Private;
 
 use namespace HH\Lib\{Experimental\Fileystem, Experimental\IO, Str};
 
-abstract class DisposableHandleWrapper<T as IO\NonDisposableHandle>
+abstract class DisposableHandleWrapper<T as IO\CloseableHandle>
   implements IO\Handle, \IAsyncDisposable {
   protected function __construct(protected T $impl) {
   }

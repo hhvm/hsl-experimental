@@ -13,7 +13,7 @@ namespace HH\Lib\Experimental\Unix;
 use namespace HH\Lib\Experimental\Network;
 
 final class Server
-  implements Network\Server<Socket, DisposableSocket, NonDisposableSocket> {
+  implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
   const type TAddress = string;
 
   private function __construct(private resource $impl) {
@@ -35,9 +35,9 @@ final class Server
     return new _Private\DisposableSocket(await $this->nextConnectionNDAsync());
   }
 
-  public async function nextConnectionNDAsync(): Awaitable<NonDisposableSocket> {
+  public async function nextConnectionNDAsync(): Awaitable<CloseableSocket> {
     return await Network\_Private\socket_accept_async($this->impl)
-      |> new _Private\NonDisposableSocket($$);
+      |> new _Private\CloseableSocket($$);
   }
 
   public function getLocalAddress(): string {

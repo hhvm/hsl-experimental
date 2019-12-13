@@ -19,7 +19,7 @@ use namespace HH\Lib\Experimental\{File, Network};
 <<__Sealed(
   File\Handle::class,
   Network\Socket::class,
-  NonDisposableHandle::class,
+  CloseableHandle::class,
   ReadHandle::class,
   UserspaceHandle::class,
   SeekableHandle::class,

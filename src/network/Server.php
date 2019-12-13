@@ -13,7 +13,7 @@ namespace HH\Lib\Experimental\Network;
 interface Server<
   TSock as Socket,
   TDSock as TSock as DisposableSocket,
-  TNDSock as TSock as NonDisposableSocket,
+  TNDSock as TSock as CloseableSocket,
 > {
   abstract const type TAddress;
 

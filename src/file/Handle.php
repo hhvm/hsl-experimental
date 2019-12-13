@@ -14,7 +14,7 @@ use namespace HH\Lib\Experimental\IO;
 
 <<__Sealed(
   _Private\DisposableFileHandle::class,
-  _Private\NonDisposableFileHandle::class,
+  _Private\CloseableFileHandle::class,
   ReadHandle::class,
   WriteHandle::class,
 )>>
@@ -54,7 +54,7 @@ interface Handle extends IO\SeekableHandle {
 <<__Sealed(
   DisposableReadHandle::class,
   ReadWriteHandle::class,
-  NonDisposableReadHandle::class,
+  CloseableReadHandle::class,
 )>>
 interface ReadHandle extends Handle, IO\SeekableReadHandle {
 }
@@ -62,13 +62,13 @@ interface ReadHandle extends Handle, IO\SeekableReadHandle {
 <<__Sealed(
   DisposableWriteHandle::class,
   ReadWriteHandle::class,
-  NonDisposableWriteHandle::class,
+  CloseableWriteHandle::class,
 )>>
 interface WriteHandle extends Handle, IO\SeekableWriteHandle {
 }
 
 <<__Sealed(
-  NonDisposableReadWriteHandle::class,
+  CloseableReadWriteHandle::class,
   DisposableReadWriteHandle::class,
 )>>
 interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\SeekableReadWriteHandle {

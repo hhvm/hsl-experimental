@@ -21,7 +21,7 @@ async function connect_nd_async(
   string $host,
   int $port,
   ConnectOptions $opts = shape(),
-): Awaitable<NonDisposableSocket> {
+): Awaitable<CloseableSocket> {
   $ipver = $opts['ip_version'] ?? Network\IPProtocolBehavior::PREFER_IPV6;
   $timeout = $opts['timeout'] ?? null;
   switch ($ipver) {
@@ -61,7 +61,7 @@ async function connect_nd_async(
     if ($sock is resource) {
       $err = await Network\_Private\socket_connect_async($sock, $host, $port, $timeout);
       if ($err === 0) {
-        return new namespace\_Private\NonDisposableTCPSocket($sock);
+        return new namespace\_Private\CloseableTCPSocket($sock);
       }
       $err_message = 'connect() failed';
     }

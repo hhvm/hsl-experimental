@@ -15,9 +15,9 @@ use namespace HH\Lib\Experimental\{IO, File, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 <<__ConsistentConstruct>>
-abstract class NonDisposableFileHandle
+abstract class CloseableFileHandle
   extends IO\_Private\LegacyPHPResourceHandle
-  implements File\Handle, IO\NonDisposableHandle {
+  implements File\Handle, IO\CloseableHandle {
   use IO\_Private\LegacyPHPResourceSeekableHandleTrait;
 
   protected string $filename;

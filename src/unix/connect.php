@@ -15,7 +15,7 @@ use namespace HH\Lib\Experimental\Network;
 async function connect_nd_async(
   string $path,
   ConnectOptions $opts = shape(),
-): Awaitable<NonDisposableSocket> {
+): Awaitable<CloseableSocket> {
   /* HH_IGNORE_ERROR[2049] PHP STDLib */
   /* HH_IGNORE_ERROR[4107] PHP STDLib */
   $sock = \socket_create(\AF_UNIX, \SOCK_STREAM, 0);
@@ -29,7 +29,7 @@ async function connect_nd_async(
       $opts['timeout'] ?? null,
     );
     if ($err === 0) {
-      return new _Private\NonDisposableSocket($sock);
+      return new _Private\CloseableSocket($sock);
     }
   } else {
     /* HH_IGNORE_ERROR[2049] PHP STDLib */

@@ -12,9 +12,9 @@ namespace HH\Lib\Experimental\Unix\_Private;
 
 use namespace HH\Lib\Experimental\{IO, Network, Unix};
 
-final class NonDisposableSocket
+final class CloseableSocket
   extends IO\_Private\LegacyPHPResourceHandle
-  implements Unix\NonDisposableSocket, IO\NonDisposableReadWriteHandle {
+  implements Unix\CloseableSocket, IO\CloseableReadWriteHandle {
   use IO\_Private\LegacyPHPResourceReadHandleTrait;
   use IO\_Private\LegacyPHPResourceWriteHandleTrait;
 

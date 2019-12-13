@@ -10,8 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
-interface NonDisposableSeekableReadHandle extends
-  SeekableReadHandle,
-  NonDisposableReadHandle,
-  NonDisposableSeekableHandle {
+interface CloseableHandle extends Handle {
+  public function closeAsync(): Awaitable<void>;
 }

@@ -10,9 +10,9 @@
 
 namespace HH\Lib\Experimental\File;
 
-function open_read_only_nd(string $path): NonDisposableReadHandle {
+function open_read_only_nd(string $path): CloseableReadHandle {
   return
-    NonDisposableReadHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
+    CloseableReadHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
       $path,
       'rb',
     );
@@ -21,9 +21,9 @@ function open_read_only_nd(string $path): NonDisposableReadHandle {
 function open_write_only_nd(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
-): NonDisposableWriteHandle {
+): CloseableWriteHandle {
   return
-    NonDisposableWriteHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
+    CloseableWriteHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
       $path,
       $mode as string,
     );
@@ -32,9 +32,9 @@ function open_write_only_nd(
 function open_read_write_nd(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
-): NonDisposableReadWriteHandle {
+): CloseableReadWriteHandle {
   return
-    NonDisposableReadWriteHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
+    CloseableReadWriteHandle::__createInstance_IMPLEMENTATION_DETAIL_DO_NOT_USE(
       $path,
       ($mode as string).'+',
     );
