@@ -10,6 +10,5 @@
 
 namespace HH\Lib\Experimental\IO;
 
-interface CloseableSeekableHandle
-  extends SeekableHandle, CloseableHandle {
+interface CloseableSeekableHandle extends SeekableHandle, CloseableHandle {
 }

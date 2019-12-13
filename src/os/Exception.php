@@ -10,6 +10,41 @@
 
 namespace HH\Lib\Experimental\OS;
 
+/** Base class for exceptions reported by primitive native operations.
+ *
+ * This is used for errors that are indicated by `errno`, `herror`, or
+ * similar interfaces covered by the `ErrorCode` enum.
+ *
+ * Subclasses exist for some specific `ErrorCode` values, such as:
+ * - `ChildProcessException` (`ECHILD`)
+ * - `ConnectionException` and its' subclasses, `BrokenPipeException`
+ *   (`EPIPE`, `ESHUTDOWN`), `ConnectionAbortedException` (`ECONNABORTED`),
+ *   `ConnectionRefusedException` (`ECONNREFUSED`), and
+ *   `ConnectionResetException` (`ECONNRESET`)
+ * - `AlreadyExistsException` (`EEXIST`)
+ * - `NotFoundException` (`ENOENT`)
+ * - `IsADirectoryException` (`EISDIR`)
+ * - `IsNotADirectoryException` (`ENOTDIR`)
+ * - `PermissionException` (`EACCESS`, `EPERM`)
+ * - `ProcessLookupException` (`ESRCH`)
+ * - `TimeoutError` (`ETIMEDOUT`)
+ *
+ * It is strongly recommended to catch subclasses instead of this class; for
+ * example:
+ *
+ * ```Hack
+ * // ANTIPATTERN:
+ * catch (OS\Exception $e) {
+ *   if ($e->getErrorCode() === OS\ErrorCode::ENOENT) {
+ *     do_stuff();
+ *   }
+ * }
+ * // RECOMMENDED:
+ * catch (OS\NotFoundException $_) {
+ *   do_stuff();
+ * }
+ * ```
+ */
 class Exception extends \Exception {
   public function __construct(private ErrorCode $errorCode, string $message) {
     parent::__construct($message);

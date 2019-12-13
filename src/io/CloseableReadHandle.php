@@ -10,5 +10,6 @@
 
 namespace HH\Lib\Experimental\IO;
 
+/** An `IO\Handle` that is both readable and explicitly closeable */
 interface CloseableReadHandle extends ReadHandle, CloseableHandle {
 }
