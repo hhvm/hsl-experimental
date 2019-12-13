@@ -13,20 +13,20 @@ namespace HH\Lib\Experimental\Unix\_Private;
 use namespace HH\Lib\Experimental\{IO, Unix};
 
 final class DisposableSocket
-  extends IO\_Private\DisposableHandleWrapper<Unix\NonDisposableSocket>
+  extends IO\_Private\DisposableHandleWrapper<Unix\CloseableSocket>
   implements
     \IAsyncDisposable,
     IO\DisposableReadWriteHandle,
     Unix\DisposableSocket {
 
   use IO\_Private\DisposableReadHandleWrapperTrait<
-    Unix\NonDisposableSocket,
+    Unix\CloseableSocket,
   >;
   use IO\_Private\DisposableWriteHandleWrapperTrait<
-    Unix\NonDisposableSocket,
+    Unix\CloseableSocket,
   >;
 
-  public function __construct(Unix\NonDisposableSocket $impl) {
+  public function __construct(Unix\CloseableSocket $impl) {
     parent::__construct($impl);
   }
 

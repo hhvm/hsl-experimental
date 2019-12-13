@@ -14,7 +14,7 @@ use namespace HH\Lib\Experimental\{IO, TCP, Unix};
 
 <<__Sealed(
   DisposableSocket::class,
-  NonDisposableSocket::class,
+  CloseableSocket::class,
   TCP\Socket::class,
   Unix\Socket::class,
 )>>

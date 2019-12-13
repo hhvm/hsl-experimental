@@ -13,7 +13,7 @@ namespace HH\Lib\Experimental\IO\_Private;
 use namespace HH\Lib\{Experimental\IO, Str};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
-abstract class LegacyPHPResourceHandle implements IO\NonDisposableHandle {
+abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
   protected bool $isAwaitable = true;
   protected function __construct(protected resource $impl) {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */

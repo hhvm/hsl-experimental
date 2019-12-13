@@ -40,13 +40,13 @@ function server_error(): WriteHandle {
  * @see requestOutput
  */
 <<__Memoize>>
-function request_output(): NonDisposableWriteHandle {
+function request_output(): CloseableWriteHandle {
   // php://output has differing eof behavior for interactive stdin - we need
   // the php://stdout for interactive usage (e.g. repls)
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() === "cli") {
-    return server_output() as NonDisposableWriteHandle;
+    return server_output() as CloseableWriteHandle;
   }
   return new _Private\StdioWriteHandle('php://output');
 }
@@ -60,7 +60,7 @@ function request_output(): NonDisposableWriteHandle {
  *
  * In CLI mode, this is usually the process STDERR.
  */
-function request_error(): ?NonDisposableWriteHandle {
+function request_error(): ?CloseableWriteHandle {
   try {
     return request_errorx();
   } catch (OS\NotFoundException $_) {
@@ -78,7 +78,7 @@ function request_error(): ?NonDisposableWriteHandle {
  *
  * In CLI mode, this is usually the process STDERR.
  */
-function request_errorx(): NonDisposableWriteHandle {
+function request_errorx(): CloseableWriteHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {
@@ -87,7 +87,7 @@ function request_errorx(): NonDisposableWriteHandle {
       "There is no request_error() handle",
     );
   }
-  return server_error() as NonDisposableWriteHandle;
+  return server_error() as CloseableWriteHandle;
 }
 
 /** Return the input handle for the current request.
@@ -96,7 +96,7 @@ function request_errorx(): NonDisposableWriteHandle {
  * POST data, if any.
  */
 <<__Memoize>>
-function request_input(): NonDisposableReadHandle {
+function request_input(): CloseableReadHandle {
   // php://input has differing eof behavior for interactive stdin - we need
   // the php://stdin for interactive usage (e.g. repls)
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */

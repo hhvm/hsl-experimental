@@ -14,9 +14,9 @@ use namespace HH\Lib\Experimental\{IO, TCP, Unix};
 
 <<
   __Sealed(
-    TCP\NonDisposableSocket::class,
-    Unix\NonDisposableSocket::class,
+    TCP\CloseableSocket::class,
+    Unix\CloseableSocket::class,
   ),
 >>
-interface NonDisposableSocket extends Socket, IO\NonDisposableReadWriteHandle {
+interface CloseableSocket extends Socket, IO\CloseableReadWriteHandle {
 }

@@ -14,7 +14,7 @@ use namespace HH\Lib\Experimental\IO;
 
 final class StdioWriteHandle
   extends LegacyPHPResourceHandle
-  implements IO\NonDisposableWriteHandle {
+  implements IO\CloseableWriteHandle {
   use LegacyPHPResourceWriteHandleTrait;
 
   public function __construct(string $php_uri) {

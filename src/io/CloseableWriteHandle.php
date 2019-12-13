@@ -10,5 +10,5 @@
 
 namespace HH\Lib\Experimental\IO;
 
-interface NonDisposableWriteHandle extends WriteHandle, NonDisposableHandle {
+interface CloseableWriteHandle extends WriteHandle, CloseableHandle {
 }

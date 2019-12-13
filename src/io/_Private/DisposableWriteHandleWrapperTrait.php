@@ -12,7 +12,7 @@ namespace HH\Lib\Experimental\IO\_Private;
 
 use namespace HH\Lib\{Experimental\Fileystem, Experimental\IO, Str};
 
-trait DisposableWriteHandleWrapperTrait<T as IO\NonDisposableWriteHandle>
+trait DisposableWriteHandleWrapperTrait<T as IO\CloseableWriteHandle>
   implements IO\DisposableWriteHandle {
   require extends DisposableHandleWrapper<T>;
   require implements \IAsyncDisposable;

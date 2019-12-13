@@ -12,8 +12,9 @@ namespace HH\Lib\Experimental\File\_Private;
 
 use namespace HH\Lib\Experimental\{File, IO};
 
-final class NonDisposableReadHandle
-  extends NonDisposableFileHandle
-  implements File\NonDisposableReadHandle {
+final class CloseableReadWriteHandle
+  extends CloseableFileHandle
+  implements File\CloseableReadWriteHandle {
   use IO\_Private\LegacyPHPResourceReadHandleTrait;
+  use IO\_Private\LegacyPHPResourceWriteHandleTrait;
 }

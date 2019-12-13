@@ -12,7 +12,7 @@ namespace HH\Lib\Experimental\IO\_Private;
 
 use namespace HH\Lib\Experimental\IO;
 
-trait DisposableSeekableHandleWrapperTrait<T as IO\NonDisposableSeekableHandle>
+trait DisposableSeekableHandleWrapperTrait<T as IO\CloseableSeekableHandle>
   implements IO\DisposableSeekableHandle {
   require extends DisposableHandleWrapper<T>;
   require implements \IAsyncDisposable;

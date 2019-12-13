@@ -8,8 +8,10 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\Experimental\Unix;
 
-interface NonDisposableHandle extends Handle {
-  public function closeAsync(): Awaitable<void>;
+use namespace HH\Lib\Experimental\Network;
+
+<<__Sealed(_Private\CloseableSocket::class)>>
+interface CloseableSocket extends Socket, Network\CloseableSocket {
 }
