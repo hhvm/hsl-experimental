@@ -10,6 +10,22 @@
 
 namespace HH\Lib\Experimental\OS;
 
+/** OS-level error codes.
+ *
+ * This contains the names of several different sets of C constants, such as:
+ * - `errno` values
+ * - `herror` values
+ * - values accepted by `gai_strerror()`
+ *
+ * Aliases are not included; for example, `EAGAIN` is defined, but the
+ * equivalent `EWOULDBLOCK` is not.
+ *
+ * While all values are always defined in Hack, they may be unused on some
+ * operating systems - for example, `EBADMACHO` is always defined here, used
+ * on MacOS, but is unused (and not defined in C) on Linux.
+ *
+ * @see Exception
+ */
 enum ErrorCode: string as string {
   ///// errno values /////
   EPERM = "EPERM";

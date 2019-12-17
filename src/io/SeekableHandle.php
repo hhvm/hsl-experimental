@@ -10,6 +10,7 @@
 
 namespace HH\Lib\Experimental\IO;
 
+/** A handle that can have its' position changed. */
 interface SeekableHandle extends Handle {
   /**
    * Move to a specific offset within a handle.
