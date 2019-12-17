@@ -41,16 +41,6 @@ use namespace HH\Lib\Experimental\{File, Network};
  * Some types of handle imply these behaviors; for example, all `File\Handle`s
  * are `IO\SeekableHandle`s.
  */
-<<__Sealed(
-  File\Handle::class,
-  Network\Socket::class,
-  CloseableHandle::class,
-  ReadHandle::class,
-  UserspaceHandle::class,
-  SeekableHandle::class,
-  WriteHandle::class,
-  _Private\DisposableHandleWrapper::class,
-)>>
 interface Handle {
   public function isEndOfFile(): bool;
 }

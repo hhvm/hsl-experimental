@@ -10,5 +10,8 @@
 
 namespace HH\Lib\Experimental\IO;
 
+<<__Deprecated(
+  'UserspaceHandle has been deprecated, use HH\Lib\Experimental\IO\Handle instead.',
+)>>
 interface UserspaceHandle extends Handle {
 }
