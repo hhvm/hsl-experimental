@@ -14,14 +14,16 @@ use namespace HH\Lib\Experimental\Network;
 
 final class Server
   implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
+  /** Host and port */
   const type TAddress = (string, int);
 
   private function __construct(private resource $impl) {
   }
 
+  /** Create a bound and listening instance */
   public static async function createAsync(
     Network\IPProtocolVersion $ipv,
-    string $address,
+    string $host,
     int $port,
   ): Awaitable<this> {
     switch ($ipv) {
@@ -36,7 +38,7 @@ final class Server
       $af,
       \SOCK_STREAM,
       \SOL_TCP,
-      $address,
+      $host,
       $port,
     )
       |> new self($$);
@@ -44,7 +46,9 @@ final class Server
 
   <<__ReturnDisposable>>
   public async function nextConnectionAsync(): Awaitable<DisposableSocket> {
-    return new _Private\DisposableTCPSocket(await $this->nextConnectionNDAsync());
+    return new _Private\DisposableTCPSocket(
+      await $this->nextConnectionNDAsync(),
+    );
   }
 
   public async function nextConnectionNDAsync(): Awaitable<CloseableSocket> {

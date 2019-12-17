@@ -12,6 +12,11 @@ namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\Network;
 
+/** Asynchronously connect to the specified unix socket, returning a
+ * non-disposable handle.
+ *
+ * @see connect_async()
+ */
 async function connect_nd_async(
   string $path,
   ConnectOptions $opts = shape(),
@@ -39,6 +44,11 @@ async function connect_nd_async(
   Network\_Private\throw_socket_error($err, 'connect() failed');
 }
 
+/** Asynchronously connect to the specified unix socket, returning a disposable
+ * handle.
+ *
+ * @see connect_nd_async()
+ */
 <<__ReturnDisposable>>
 async function connect_async(string $path): Awaitable<DisposableSocket> {
   $nd = await connect_nd_async($path);

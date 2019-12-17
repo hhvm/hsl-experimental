@@ -12,6 +12,8 @@ namespace HH\Lib\Experimental\IO;
 
 /** Create a pair of handles, where writes to the `WriteHandle` can be
  * read from the `ReadHandle`.
+ *
+ * @see `Network\Socket`
  */
 function pipe_nd(): (CloseableReadHandle, CloseableWriteHandle) {
   /* HH_IGNORE_ERROR[2049] intentionally not in HHI */

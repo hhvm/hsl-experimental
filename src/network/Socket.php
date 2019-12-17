@@ -12,6 +12,14 @@ namespace HH\Lib\Experimental\Network;
 
 use namespace HH\Lib\Experimental\{IO, TCP, Unix};
 
+/** A handle representing a connection between processes.
+ *
+ * It is possible for both ends to be connected to the same process,
+ * and to either be local or across a network.
+ *
+ * @see `TCP\Socket`
+ * @see `Unix\Socket`
+ */
 <<__Sealed(
   DisposableSocket::class,
   CloseableSocket::class,
@@ -26,8 +34,8 @@ interface Socket extends IO\ReadWriteHandle {
    */
   abstract const type TAddress;
 
-  /** Returns the local address and port */
+  /** Returns the address of the local side of the socket */
   public function getLocalAddress(): this::TAddress;
-  /** Returns the remote address and port */
+  /** Returns the address of the remote side of the socket */
   public function getPeerAddress(): this::TAddress;
 }
