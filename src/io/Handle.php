@@ -53,7 +53,7 @@ use namespace HH\Lib\Experimental\{File, Network};
  * - the `_nd()` or `_nd_async()` variants of the above functions if a
  *   non-disposable is required.
  *
- * All concrete instances of `IO\Handle`s` should either have a managed
+ * All concrete instances of `IO\Handle`s should either have a managed
  * lifecycle, or be instances of `IO\CloseableHandle`, and explicitly
  * closed by code using it.
  *
