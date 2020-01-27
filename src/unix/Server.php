@@ -45,4 +45,10 @@ final class Server
   public function getLocalAddress(): string {
     return Network\_Private\get_sock_name($this->impl)[0];
   }
+
+  public function stopListening(): void {
+    /* HH_IGNORE_ERROR[2049] PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] PHPStdLib */
+    \socket_close($this->impl);
+  }
 }
