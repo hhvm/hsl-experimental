@@ -23,7 +23,18 @@ interface ReadHandle extends Handle {
    */
   public function rawReadBlocking(?int $max_bytes = null): string;
 
-  /** Read until we reach `$max_bytes`, or the end of the file. */
+  /** Read until we reach `$max_bytes`, timeout, or the end of the file.
+   *
+   * By default, there is no limit to the size and no timeout, so the entire
+   * file will be read; if the handle represents an open pipe, socket, or
+   * similar, this means that the call will only return once the connection
+   * is closed.
+   *
+   * If `$max_bytes` is `null`, there is no limit - this method will read until
+   * end of file, or the timeout is reached.
+   *
+   * If `$max_bytes` is 0, the empty string will be returned.
+   */
   public function readAsync(
     ?int $max_bytes = null,
     ?float $timeout_seconds = null,
