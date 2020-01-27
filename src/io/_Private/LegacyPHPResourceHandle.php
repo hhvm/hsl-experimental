@@ -45,10 +45,16 @@ abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
     if ($this->isEndOfFile()) {
       return;
     }
+    $timeout_seconds ??= 0.0;
     try {
+      // 1ms is the minimum due to
+      // https://github.com/facebook/hhvm/blob/91be13e14afb076330bfc10ca179aae773921b9e/hphp/runtime/base/file-await.cpp#L30
+      if ($timeout_seconds > 0.0 && $timeout_seconds < 0.001) {
+        $timeout_seconds = 0.001;
+      }
       /* HH_FIXME[2049] *not* PHP stdlib */
       /* HH_FIXME[4107] *not* PHP stdlib */
-      await \stream_await($this->impl, $flags, $timeout_seconds ?? 0.0);
+      await \stream_await($this->impl, $flags, $timeout_seconds);
     } catch (\InvalidOperationException $_) {
       // e.g. real files on Linux when using epoll
       $this->isAwaitable = false;
