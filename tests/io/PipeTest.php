@@ -32,7 +32,7 @@ final class PipeTest extends HackTest {
 
     expect($r->isEndOfFile())->toBeFalse();
     await $w->closeAsync();
-    $s = await $r->readAsync();
+    $s = await $r->readAllAsync();
     expect($s)->toEqual('');
     expect($r->isEndOfFile())->toBeTrue();
   }
@@ -41,16 +41,16 @@ final class PipeTest extends HackTest {
     list($r, $w) = IO\pipe_nd();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
     await $w->closeAsync();
-    $s = await $r->readAsync();
+    $s = await $r->readAllAsync();
     expect($s)->toEqual("Hello, world!\nHerp derp\n");
   }
 
   public async function testPartialReadAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe_nd();
     await $w->writeAsync('1234567890');
-    $s = await $r->readAsync(5);
+    $s = await $r->readAllAsync(5);
     expect($s)->toEqual('12345');
-    $s = await $r->readAsync(5);
+    $s = await $r->readAllAsync(5);
     expect($s)->toEqual('67890');
   }
 
@@ -67,11 +67,39 @@ final class PipeTest extends HackTest {
     expect($s)->toEqual("12345\n");
   }
 
+  public async function testPartialRead(): Awaitable<void> {
+    list($r, $w) = IO\pipe_nd();
+    concurrent {
+      await async {
+        await $w->writeAsync('foo bar');
+        await \HH\Asio\later();
+        await $w->writeAsync('herp derp');
+      };
+      $read = await $r->readPartialAsync();
+    }
+    expect($read)->toEqual('foo bar');
+  }
+
+  public async function testFullRead(): Awaitable<void> {
+    list($r, $w) = IO\pipe_nd();
+    concurrent {
+      await async {
+        await $w->writeAsync('foo bar');
+        await \HH\Asio\later();
+        await $w->writeAsync('herp derp');
+        await $w->closeAsync();
+      };
+      $read = await $r->readAllAsync();
+    }
+    expect($read)->toEqual('foo barherp derp');
+  }
+
+
   public async function testReadTooManyAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe_nd();
     await $w->writeAsync('1234567890');
     await $w->closeAsync();
-    $s = await $r->readAsync(11);
+    $s = await $r->readAllAsync(11);
     expect($s)->toEqual('1234567890');
   }
 

@@ -37,7 +37,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     return $result as string;
   }
 
-  final public async function readAsync(
+  final public async function readAllAsync(
     ?int $max_bytes = null,
     ?float $timeout_seconds = null,
   ): Awaitable<string> {
@@ -74,6 +74,25 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     }
     return $data;
   }
+
+  final public async function readPartialAsync(
+    ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
+  ): Awaitable<string> {
+    if ($max_bytes is int && $max_bytes < 0) {
+      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
+    }
+    if ($timeout_seconds is float && $timeout_seconds < 0.0) {
+      throw new \InvalidArgumentException('$timeout_seconds be null, or >= 0');
+    }
+    if ($max_bytes === 0) {
+      return '';
+    }
+
+    await $this->selectAsync(\STREAM_AWAIT_READ, $timeout_seconds);
+    return $this->rawReadBlocking($max_bytes);
+  }
+
 
   final public async function readLineAsync(
     ?int $max_bytes = null,

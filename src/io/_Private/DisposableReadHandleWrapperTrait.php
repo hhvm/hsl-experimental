@@ -21,12 +21,20 @@ trait DisposableReadHandleWrapperTrait<T as IO\CloseableReadHandle>
     return $this->impl->rawReadBlocking($max_bytes);
   }
 
-  final public async function readAsync(
+  final public async function readAllAsync(
     ?int $max_bytes = null,
     ?float $timeout_seconds = null,
   ): Awaitable<string> {
-    return await $this->impl->readAsync($max_bytes, $timeout_seconds);
+    return await $this->impl->readAllAsync($max_bytes, $timeout_seconds);
   }
+
+  final public async function readPartialAsync(
+    ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
+  ): Awaitable<string> {
+    return await $this->impl->readAllAsync($max_bytes, $timeout_seconds);
+  }
+
 
   final public async function readLineAsync(
     ?int $max_bytes = null,

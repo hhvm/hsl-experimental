@@ -18,8 +18,8 @@ interface ReadHandle extends Handle {
   /** An immediate, unordered blocking read.
    *
    * You almost certainly don't want to call this; instead, use
-   * `readAsync()` or `readLineAsync()`, which are wrappers around
-   * this
+   * `readAllAsync()`, `readPartialAsync`, or `readLineAsync()`, which are
+   * wrappers around this.
    */
   public function rawReadBlocking(?int $max_bytes = null): string;
 
@@ -34,8 +34,25 @@ interface ReadHandle extends Handle {
    * end of file, or the timeout is reached.
    *
    * If `$max_bytes` is 0, the empty string will be returned.
+   *
+   * @see readPartialAsync
+   * @see readLineAsync
    */
-  public function readAsync(
+  public function readAllAsync(
+    ?int $max_bytes = null,
+    ?float $timeout_seconds = null,
+  ): Awaitable<string>;
+
+  /** Read the next readable chunk.
+   *
+   * This will wait until some data is available to read, end of file is
+   * reached, or the timeout is reached; it will then read until either there is
+   * no more data available to read, or `$max_bytes` is reached.
+   *
+   * @see readAllAsync
+   * @see readLineAsync
+   */
+  public function readPartialAsync(
     ?int $max_bytes = null,
     ?float $timeout_seconds = null,
   ): Awaitable<string>;

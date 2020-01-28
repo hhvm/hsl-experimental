@@ -31,7 +31,7 @@ final class FileTest extends HackTest {
     await $f1->closeAsync();
 
     await using $f2 = File\open_read_only($filename);
-    $content = await $f2->readAsync();
+    $content = await $f2->readAllAsync();
     expect($content)->toEqual('Hello, world!');
 
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
@@ -61,9 +61,9 @@ final class FileTest extends HackTest {
 
       await using ($tfr = File\open_read_only($tf->getPath()->toString())) {
         concurrent {
-          $r1 = await $tfr->readAsync(10 * 1024 * 1024);
-          $r2 = await $tfr->readAsync(10 * 1024 * 1024);
-          $r3 = await $tfr->readAsync(10 * 1024 * 1024);
+          $r1 = await $tfr->readAllAsync(10 * 1024 * 1024);
+          $r2 = await $tfr->readAllAsync(10 * 1024 * 1024);
+          $r3 = await $tfr->readAllAsync(10 * 1024 * 1024);
         }
       }
       // Strong guarantees:
@@ -89,7 +89,7 @@ final class FileTest extends HackTest {
 
     $path = $tf->getPath()->toString();
     await using ($tfr = File\open_read_only($path)) {
-      $content = await $tfr->readAsync();
+      $content = await $tfr->readAllAsync();
     }
     expect($content)->toEqual('Hello, world');
 
