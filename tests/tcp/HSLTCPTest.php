@@ -138,6 +138,10 @@ final class HSLTCPTest extends HackTest {
       IPProtocolVersion::IPV4,
       '127.0.0.1',
       0,
+      // Portability:
+      // - MacOS only requires SO_REUSEADDR to be set on the new socket
+      // - Linux requires SO_REUSEADDR on both the old and the new socket
+      shape('SO_REUSEADDR' => true),
     );
     $port = $s1->getLocalAddress()[1];
     concurrent {
