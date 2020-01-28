@@ -8,9 +8,8 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
-use namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\Experimental\Network;
 
-type ServerOptions = shape(
-  ?'socket_options' => Network\SocketOptions,
+type SocketOptions = shape(
+  ?'SO_REUSEADDR' => bool,
 );

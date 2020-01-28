@@ -20,7 +20,7 @@ async function socket_create_bind_listen_async(
   int $proto,
   string $host,
   int $port,
-  ?(function(resource): void) $pre_bind_callback = null,
+  Network\SocketOptions $socket_options = shape(),
 ): Awaitable<resource> {
   using new PHPWarningSuppressor();
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
@@ -33,12 +33,10 @@ async function socket_create_bind_listen_async(
     // using POSIX function naming instead of PHP
     throw_socket_error($err, "socket() failed");
   }
+  set_socket_options($sock, $socket_options);
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
   \socket_set_blocking($sock, false);
-  if ($pre_bind_callback) {
-    $pre_bind_callback($sock);
-  }
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
   if (!\socket_bind($sock, $host, $port)) {

@@ -27,15 +27,6 @@ final class Server
     int $port,
     ServerOptions $opts = shape(),
   ): Awaitable<this> {
-    $pre_bind_callback = null;
-    if ($opts['SO_REUSEADDR'] ?? null) {
-      $pre_bind_callback = $socket ==> {
-        /* HH_IGNORE_ERROR[2049] PHPStdLib */
-        /* HH_IGNORE_ERROR[4107] PHPStdLib */
-        \socket_set_option($socket, \SOL_SOCKET, \SO_REUSEADDR, 1);
-      };
-    }
-
     switch ($ipv) {
       case Network\IPProtocolVersion::IPV6:
         $af = \AF_INET6;
@@ -51,7 +42,7 @@ final class Server
       \SOL_TCP,
       $host,
       $port,
-      $pre_bind_callback,
+      $opts['socket_options'] ?? shape(),
     )
       |> new self($$);
   }
