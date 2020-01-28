@@ -70,7 +70,11 @@ final class HSLTCPTest extends HackTest {
     IPProtocolBehavior $client_protocol,
   ): Awaitable<void> {
     try {
-      $server = await TCP\Server::createAsync($server_protocol, $bind_address, 0);
+      $server = await TCP\Server::createAsync(
+        $server_protocol,
+        $bind_address,
+        0,
+      );
     } catch (OS\Exception $e) {
       expect($e->getErrorCode())->toEqual(OS\ErrorCode::EADDRNOTAVAIL);
       expect($server_protocol)->toEqual(IPProtocolVersion::IPV6);
@@ -125,8 +129,56 @@ final class HSLTCPTest extends HackTest {
   public async function testConnectingToInvalidPort(): Awaitable<void> {
     $ex = expect(async () ==> await TCP\connect_nd_async('localhost', 0))
       ->toThrow(OS\Exception::class);
-    expect(vec[OS\ErrorCode::EADDRNOTAVAIL, OS\ErrorCode::ECONNREFUSED])->toContain(
-      $ex->getErrorCode(),
+    expect(vec[OS\ErrorCode::EADDRNOTAVAIL, OS\ErrorCode::ECONNREFUSED])
+      ->toContain($ex->getErrorCode());
+  }
+
+  public async function testReuseAddress(): Awaitable<void> {
+    $s1 = await TCP\Server::createAsync(
+      IPProtocolVersion::IPV4,
+      '127.0.0.1',
+      0,
+      // Portability:
+      // - MacOS only requires SO_REUSEADDR to be set on the new socket
+      // - Linux requires SO_REUSEADDR on both the old and the new socket
+      shape('socket_options' => shape('SO_REUSEADDR' => true)),
     );
+    $port = $s1->getLocalAddress()[1];
+    concurrent {
+      $client = await TCP\connect_nd_async('127.0.0.1', $port);
+      $_ = await $s1->nextConnectionNDAsync();
+    }
+    await $client->writeAsync('hello, world');
+    $s1->stopListening();
+
+    $ex = expect(
+      async () ==> await TCP\Server::createAsync(
+        IPProtocolVersion::IPV4,
+        '127.0.0.1',
+        $port,
+      ),
+    )->toThrow(OS\Exception::class);
+    expect($ex->getErrorCode())->toEqual(OS\ErrorCode::EADDRINUSE);
+
+    $s2 = await TCP\Server::createAsync(
+      IPProtocolVersion::IPV4,
+      '127.0.0.1',
+      $port,
+      shape('socket_options' => shape('SO_REUSEADDR' => true)),
+    );
+    concurrent {
+      $client_recv = await async {
+        await using $client = await TCP\connect_async('127.0.0.1', $port);
+        await $client->writeAsync("hello, world!\n");
+        return await $client->readLineAsync();
+      };
+      $server_recv = await async {
+        await using $conn = await $s2->nextConnectionAsync();
+        await $conn->writeAsync("foo bar\n");
+        return await $conn->readLineAsync();
+      };
+    }
+    expect($client_recv)->toEqual("foo bar\n");
+    expect($server_recv)->toEqual("hello, world!\n");
   }
 }

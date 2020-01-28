@@ -44,4 +44,7 @@ interface Server<
 
   /** Return the local (listening) address for the server */
   public function getLocalAddress(): this::TAddress;
+
+  /** Stop listening; open connection are not closed */
+  public function stopListening(): void;
 }

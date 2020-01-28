@@ -25,6 +25,7 @@ final class Server
     Network\IPProtocolVersion $ipv,
     string $host,
     int $port,
+    ServerOptions $opts = shape(),
   ): Awaitable<this> {
     switch ($ipv) {
       case Network\IPProtocolVersion::IPV6:
@@ -34,12 +35,14 @@ final class Server
         $af = \AF_INET;
         break;
     }
+
     return await Network\_Private\socket_create_bind_listen_async(
       $af,
       \SOCK_STREAM,
       \SOL_TCP,
       $host,
       $port,
+      $opts['socket_options'] ?? shape(),
     )
       |> new self($$);
   }
@@ -58,5 +61,11 @@ final class Server
 
   public function getLocalAddress(): (string, int) {
     return Network\_Private\get_sock_name($this->impl);
+  }
+
+  public function stopListening(): void {
+    /* HH_IGNORE_ERROR[2049] PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] PHPStdLib */
+    \socket_close($this->impl);
   }
 }
