@@ -8,6 +8,17 @@ This repository contains functionality that may be added to
 It is only tested on nightly builds of HHVM, and there is no intent to provide
 API stability.
 
+## Installation
+
+```
+composer require hhvm/hsl-experimental
+```
+
+## Documentation
+
+- [input and output](https://docs.hhvm.com/hack/getting-started/input-and-output)
+- [API reference](https://docs.hhvm.com/hsl-experimental/reference/)
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
