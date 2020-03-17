@@ -11,7 +11,8 @@
 namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\_Unix;
 
-<<__Sealed(_Private\CloseableSocket::class)>>
+<<__Sealed(_Unix\CloseableSocket::class)>>
 interface CloseableSocket extends Socket, Network\CloseableSocket {
 }

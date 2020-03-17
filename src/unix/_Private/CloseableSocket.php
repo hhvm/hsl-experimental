@@ -8,25 +8,26 @@
  *
  */
 
-namespace HH\Lib\Experimental\Unix\_Private;
+namespace HH\Lib\_Private\_Unix;
 
 use namespace HH\Lib\Experimental\{IO, Network, Unix};
+use namespace HH\Lib\_Private\{_IO, _Network};
 
 final class CloseableSocket
-  extends IO\_Private\LegacyPHPResourceHandle
+  extends _IO\LegacyPHPResourceHandle
   implements Unix\CloseableSocket, IO\CloseableReadWriteHandle {
-  use IO\_Private\LegacyPHPResourceReadHandleTrait;
-  use IO\_Private\LegacyPHPResourceWriteHandleTrait;
+  use _IO\LegacyPHPResourceReadHandleTrait;
+  use _IO\LegacyPHPResourceWriteHandleTrait;
 
   public function __construct(resource $impl) {
     parent::__construct($impl);
   }
 
   public function getLocalAddress(): string {
-    return Network\_Private\get_sock_name($this->impl)[0];
+    return _Network\get_sock_name($this->impl)[0];
   }
 
   public function getPeerAddress(): string {
-    return Network\_Private\get_peer_name($this->impl)[0];
+    return _Network\get_peer_name($this->impl)[0];
   }
 }

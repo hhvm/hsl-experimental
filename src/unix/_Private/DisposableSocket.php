@@ -8,21 +8,22 @@
  *
  */
 
-namespace HH\Lib\Experimental\Unix\_Private;
+namespace HH\Lib\_Private\_Unix;
 
 use namespace HH\Lib\Experimental\{IO, Unix};
+use namespace HH\Lib\_Private\_IO;
 
 final class DisposableSocket
-  extends IO\_Private\DisposableHandleWrapper<Unix\CloseableSocket>
+  extends _IO\DisposableHandleWrapper<Unix\CloseableSocket>
   implements
     \IAsyncDisposable,
     IO\DisposableReadWriteHandle,
     Unix\DisposableSocket {
 
-  use IO\_Private\DisposableReadHandleWrapperTrait<
+  use _IO\DisposableReadHandleWrapperTrait<
     Unix\CloseableSocket,
   >;
-  use IO\_Private\DisposableWriteHandleWrapperTrait<
+  use _IO\DisposableWriteHandleWrapperTrait<
     Unix\CloseableSocket,
   >;
 

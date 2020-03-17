@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network\_Private;
+namespace HH\Lib\_Private\_Network;
 
 use type HH\Lib\Experimental\Network\SocketOptions;
 

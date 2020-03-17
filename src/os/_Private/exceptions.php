@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS\_Private;
+namespace HH\Lib\_Private\_OS;
 
 use namespace HH\Lib\C;
 use namespace HH\Lib\Experimental\OS;

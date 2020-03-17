@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\IO;
 
 use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\_Private\{_IO, _OS};
 
 /** Return STDOUT for the server process.
  *
@@ -20,7 +21,7 @@ use namespace HH\Lib\Experimental\OS;
  */
 <<__Memoize>>
 function server_output(): WriteHandle {
-  return new _Private\StdioWriteHandle('php://stdout');
+  return new _IO\StdioWriteHandle('php://stdout');
 }
 
 /** Return STDERR for the server process.
@@ -29,7 +30,7 @@ function server_output(): WriteHandle {
  */
 <<__Memoize>>
 function server_error(): WriteHandle {
-  return new _Private\StdioWriteHandle('php://stderr');
+  return new _IO\StdioWriteHandle('php://stderr');
 }
 
 /** Return the output handle for the current request.
@@ -48,7 +49,7 @@ function request_output(): CloseableWriteHandle {
   if (\php_sapi_name() === "cli") {
     return server_output() as CloseableWriteHandle;
   }
-  return new _Private\StdioWriteHandle('php://output');
+  return new _IO\StdioWriteHandle('php://output');
 }
 
 /** Return the error output handle for the current request.
@@ -82,8 +83,8 @@ function request_errorx(): CloseableWriteHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {
-    OS\_Private\throw_errno(
-      OS\_Private\Errno::ENOENT,
+    _OS\throw_errno(
+      _OS\Errno::ENOENT,
       "There is no request_error() handle",
     );
   }
@@ -102,7 +103,7 @@ function request_input(): CloseableReadHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() === "cli") {
-    return new _Private\StdioReadHandle('php://stdin');
+    return new _IO\StdioReadHandle('php://stdin');
   }
-  return new _Private\StdioReadHandle('php://input');
+  return new _IO\StdioReadHandle('php://input');
 }

@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\{_Network, _TCP};
 
 /** Connect to a socket asynchronously, returning a non-disposable handle.
  *
@@ -59,14 +60,14 @@ async function connect_nd_async(
     $err = \socket_last_error();
     $err_message = "socket() failed";
     if ($sock is resource) {
-      $err = await Network\_Private\socket_connect_async($sock, $host, $port, $timeout);
+      $err = await _Network\socket_connect_async($sock, $host, $port, $timeout);
       if ($err === 0) {
-        return new namespace\_Private\CloseableTCPSocket($sock);
+        return new _TCP\CloseableTCPSocket($sock);
       }
       $err_message = 'connect() failed';
     }
   }
-  Network\_Private\throw_socket_error($err, $err_message);
+  _Network\throw_socket_error($err, $err_message);
 }
 
 /** Connect to a socket asynchronously, returning a disposable handle.
@@ -81,5 +82,5 @@ async function connect_async(
   ConnectOptions $opts = shape(),
 ): Awaitable<DisposableSocket> {
   $nd = await connect_nd_async($host, $port, $opts);
-  return new _Private\DisposableTCPSocket($nd);
+  return new _TCP\DisposableTCPSocket($nd);
 }

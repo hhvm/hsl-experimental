@@ -8,13 +8,14 @@
  *
  */
 
-namespace HH\Lib\Experimental\File\_Private;
+namespace HH\Lib\_Private\_File;
 
 use namespace HH\Lib\Experimental\{File, IO};
+use namespace HH\Lib\_Private\_IO;
 
 final class DisposableFileReadWriteHandle
   extends DisposableFileHandle<File\CloseableReadWriteHandle>
   implements File\DisposableReadWriteHandle {
-  use IO\_Private\DisposableReadHandleWrapperTrait<File\CloseableReadWriteHandle>;
-  use IO\_Private\DisposableWriteHandleWrapperTrait<File\CloseableReadWriteHandle>;
+  use _IO\DisposableReadHandleWrapperTrait<File\CloseableReadWriteHandle>;
+  use _IO\DisposableWriteHandleWrapperTrait<File\CloseableReadWriteHandle>;
 }

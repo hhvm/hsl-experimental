@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS\_Private;
+namespace HH\Lib\_Private\_OS;
 
 // hackfmt-ignore
 enum GNU_GAIError : int {
