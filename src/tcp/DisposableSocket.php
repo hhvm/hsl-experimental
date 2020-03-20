@@ -11,8 +11,9 @@
 namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\_TCP;
 
-<<__Sealed(_Private\DisposableTCPSocket::class)>>
+<<__Sealed(_TCP\DisposableTCPSocket::class)>>
 interface DisposableSocket
   extends Socket, Network\DisposableSocket {
 }

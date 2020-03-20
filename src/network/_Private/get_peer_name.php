@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network\_Private;
+namespace HH\Lib\_Private\_Network;
 
-use type HH\Lib\Experimental\OS\_Private\Errno;
+use namespace HH\Lib\_Private\_OS;
 
 function get_peer_name(resource $sock): (string, int) {
   $addr = '';
@@ -28,7 +28,7 @@ function get_peer_name(resource $sock): (string, int) {
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
   $err = \socket_last_error($sock) as int;
   throw_socket_error(
-    $err === 0 ? Errno::EAFNOSUPPORT as int : $err,
+    $err === 0 ? _OS\Errno::EAFNOSUPPORT as int : $err,
     'retrieving peer address',
   );
 }

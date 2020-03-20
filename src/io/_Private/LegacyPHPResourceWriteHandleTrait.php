@@ -8,9 +8,10 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO\_Private;
+namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\Str;
+use namespace HH\Lib\_Private\_OS;
 use namespace HH\Lib\Experimental\{IO, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
@@ -26,7 +27,7 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $errno = \posix_get_last_error();
     if ($result === false) {
-      OS\_Private\throw_errno($errno, 'fwrite');
+      _OS\throw_errno($errno, 'fwrite');
     }
     return $result as int;
   }
@@ -51,7 +52,7 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
           $now = \microtime(true);
           $timeout_seconds -= ($now - $start);
           if ($timeout_seconds < 0.0) {
-            OS\_Private\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+            _OS\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
           }
           $start = $now;
         }

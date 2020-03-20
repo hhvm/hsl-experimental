@@ -8,17 +8,18 @@
  *
  */
 
-namespace HH\Lib\Experimental\File\_Private;
+namespace HH\Lib\_Private\_File;
 
 use namespace HH\Lib\Str;
+use namespace HH\Lib\_Private\{_IO, _OS};
 use namespace HH\Lib\Experimental\{IO, File, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 <<__ConsistentConstruct>>
 abstract class CloseableFileHandle
-  extends IO\_Private\LegacyPHPResourceHandle
+  extends _IO\LegacyPHPResourceHandle
   implements File\Handle, IO\CloseableHandle {
-  use IO\_Private\LegacyPHPResourceSeekableHandleTrait;
+  use _IO\LegacyPHPResourceSeekableHandleTrait;
 
   protected string $filename;
 
@@ -31,7 +32,7 @@ abstract class CloseableFileHandle
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     $errno = \posix_get_last_error() as int;
     if ($f === false) {
-      OS\_Private\throw_errno($errno, 'fopen');
+      _OS\throw_errno($errno, 'fopen');
     }
     $this->filename = $path;
     parent::__construct($f);
@@ -61,7 +62,7 @@ abstract class CloseableFileHandle
     if ($success) {
       return new File\Lock($impl);
     }
-    OS\_Private\throw_errno($errno as int, 'flock');
+    _OS\throw_errno($errno as int, 'flock');
   }
 
   <<__ReturnDisposable>>
@@ -80,7 +81,7 @@ abstract class CloseableFileHandle
     if ($would_block) {
       throw new File\AlreadyLockedException();
     }
-    OS\_Private\throw_errno($errno as int, 'flock');
+    _OS\throw_errno($errno as int, 'flock');
   }
 
 

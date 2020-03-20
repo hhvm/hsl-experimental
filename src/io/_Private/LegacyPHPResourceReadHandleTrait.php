@@ -8,10 +8,11 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO\_Private;
+namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\Str;
 use namespace HH\Lib\Experimental\{IO, OS};
+use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
@@ -32,7 +33,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     $errno = \posix_get_last_error();
     if ($result === false) {
-      OS\_Private\throw_errno($errno as int, 'stream_get_contents');
+      _OS\throw_errno($errno as int, 'stream_get_contents');
     }
     return $result as string;
   }
@@ -64,7 +65,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
         $now = \microtime(true);
         $timeout_seconds -= ($now - $start);
         if ($timeout_seconds < 0) {
-          OS\_Private\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+          _OS\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
         }
         $start = $now;
       }
@@ -110,7 +111,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
         $now = \microtime(true);
         $timeout_seconds -= ($now - $start);
         if ($timeout_seconds < 0.0) {
-          OS\_Private\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+          _OS\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
         }
         $start = $now;
       }

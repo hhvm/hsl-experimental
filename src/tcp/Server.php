@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\{_Network, _TCP};
 
 final class Server
   implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
@@ -36,7 +37,7 @@ final class Server
         break;
     }
 
-    return await Network\_Private\socket_create_bind_listen_async(
+    return await _Network\socket_create_bind_listen_async(
       $af,
       \SOCK_STREAM,
       \SOL_TCP,
@@ -49,18 +50,18 @@ final class Server
 
   <<__ReturnDisposable>>
   public async function nextConnectionAsync(): Awaitable<DisposableSocket> {
-    return new _Private\DisposableTCPSocket(
+    return new _TCP\DisposableTCPSocket(
       await $this->nextConnectionNDAsync(),
     );
   }
 
   public async function nextConnectionNDAsync(): Awaitable<CloseableSocket> {
-    return await Network\_Private\socket_accept_async($this->impl)
-      |> new _Private\CloseableTCPSocket($$);
+    return await _Network\socket_accept_async($this->impl)
+      |> new _TCP\CloseableTCPSocket($$);
   }
 
   public function getLocalAddress(): (string, int) {
-    return Network\_Private\get_sock_name($this->impl);
+    return _Network\get_sock_name($this->impl);
   }
 
   public function stopListening(): void {

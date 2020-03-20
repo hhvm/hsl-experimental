@@ -11,7 +11,8 @@
 namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\_Unix;
 
-<<__Sealed(_Private\DisposableSocket::class)>>
+<<__Sealed(_Unix\DisposableSocket::class)>>
 interface DisposableSocket extends Socket, Network\DisposableSocket {
 }

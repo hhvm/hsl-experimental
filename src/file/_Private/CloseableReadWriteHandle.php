@@ -8,13 +8,14 @@
  *
  */
 
-namespace HH\Lib\Experimental\File\_Private;
+namespace HH\Lib\_Private\_File;
 
 use namespace HH\Lib\Experimental\{File, IO};
+use namespace HH\Lib\_Private\_IO;
 
 final class CloseableReadWriteHandle
   extends CloseableFileHandle
   implements File\CloseableReadWriteHandle {
-  use IO\_Private\LegacyPHPResourceReadHandleTrait;
-  use IO\_Private\LegacyPHPResourceWriteHandleTrait;
+  use _IO\LegacyPHPResourceReadHandleTrait;
+  use _IO\LegacyPHPResourceWriteHandleTrait;
 }

@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\{_Network, _Unix};
 
 /** Asynchronously connect to the specified unix socket, returning a
  * non-disposable handle.
@@ -27,21 +28,21 @@ async function connect_nd_async(
   /* HH_IGNORE_ERROR[2049] PHP STDLib */
   /* HH_IGNORE_ERROR[4107] PHP STDLib */
   if ($sock is resource) {
-    $err = await Network\_Private\socket_connect_async(
+    $err = await _Network\socket_connect_async(
       $sock,
       $path,
       0,
       $opts['timeout'] ?? null,
     );
     if ($err === 0) {
-      return new _Private\CloseableSocket($sock);
+      return new _Unix\CloseableSocket($sock);
     }
   } else {
     /* HH_IGNORE_ERROR[2049] PHP STDLib */
     /* HH_IGNORE_ERROR[4107] PHP STDLib */
     $err = \socket_last_error() as int;
   }
-  Network\_Private\throw_socket_error($err, 'connect() failed');
+  _Network\throw_socket_error($err, 'connect() failed');
 }
 
 /** Asynchronously connect to the specified unix socket, returning a disposable
@@ -52,5 +53,5 @@ async function connect_nd_async(
 <<__ReturnDisposable>>
 async function connect_async(string $path): Awaitable<DisposableSocket> {
   $nd = await connect_nd_async($path);
-  return new _Private\DisposableSocket($nd);
+  return new _Unix\DisposableSocket($nd);
 }

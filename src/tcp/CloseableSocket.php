@@ -11,8 +11,9 @@
 namespace HH\Lib\Experimental\TCP;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\_TCP;
 
-<<__Sealed(_Private\CloseableTCPSocket::class)>>
+<<__Sealed(_TCP\CloseableTCPSocket::class)>>
 interface CloseableSocket
   extends Socket, Network\CloseableSocket {
 }

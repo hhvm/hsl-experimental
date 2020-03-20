@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network\_Private;
+namespace HH\Lib\_Private\_Network;
 
 function maybe_throw_socket_error(int $php_socket_error, string $message): void {
   if ($php_socket_error === 0) {

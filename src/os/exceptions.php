@@ -11,9 +11,10 @@
 namespace HH\Lib\Experimental\OS;
 
 use namespace HH\Lib\C;
+use namespace HH\Lib\_Private\_OS;
 
 final class ChildProcessException extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -25,7 +26,7 @@ abstract class ConnectionException extends Exception {
 }
 
 final class BrokenPipeException extends ConnectionException {
-  use _Private\ExceptionWithMultipleErrorCodesTrait;
+  use _OS\ExceptionWithMultipleErrorCodesTrait;
 
   <<__Override>>
   public static function _getValidErrorCodes(): keyset<ErrorCode> {
@@ -34,7 +35,7 @@ final class BrokenPipeException extends ConnectionException {
 }
 
 final class ConnectionAbortedException extends ConnectionException {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -43,7 +44,7 @@ final class ConnectionAbortedException extends ConnectionException {
 }
 
 final class ConnectionRefusedException extends ConnectionException {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -52,7 +53,7 @@ final class ConnectionRefusedException extends ConnectionException {
 }
 
 final class ConnectionResetException extends ConnectionException {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -61,7 +62,7 @@ final class ConnectionResetException extends ConnectionException {
 }
 
 final class AlreadyExistsException extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -70,7 +71,7 @@ final class AlreadyExistsException extends Exception {
 }
 
 final class NotFoundException extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -79,7 +80,7 @@ final class NotFoundException extends Exception {
 }
 
 final class IsADirectoryException extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -88,7 +89,7 @@ final class IsADirectoryException extends Exception {
 }
 
 final class IsNotADirectoryException extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -97,7 +98,7 @@ final class IsNotADirectoryException extends Exception {
 }
 
 final class PermissionException extends Exception {
-  use _Private\ExceptionWithMultipleErrorCodesTrait;
+  use _OS\ExceptionWithMultipleErrorCodesTrait;
 
   <<__Override>>
   public static function _getValidErrorCodes(): keyset<ErrorCode> {
@@ -109,7 +110,7 @@ final class PermissionException extends Exception {
 }
 
 final class ProcessLookupException extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {
@@ -118,7 +119,7 @@ final class ProcessLookupException extends Exception {
 }
 
 final class TimeoutError extends Exception {
-  use _Private\ExceptionWithSingleErrorCodeTrait;
+  use _OS\ExceptionWithSingleErrorCodeTrait;
 
   <<__Override>>
   public static function _getValidErrorCode(): ErrorCode {

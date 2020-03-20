@@ -8,13 +8,14 @@
  *
  */
 
-namespace HH\Lib\Experimental\File\_Private;
+namespace HH\Lib\_Private\_File;
 
 use namespace HH\Lib\Experimental\{File, IO};
+use namespace HH\Lib\_Private\_IO;
 
 <<__ConsistentConstruct>>
 abstract class DisposableFileHandle<T as File\CloseableHandle>
-  extends IO\_Private\DisposableHandleWrapper<T>
+  extends _IO\DisposableHandleWrapper<T>
   implements File\Handle {
   final public function __construct(T $impl) {
     parent::__construct($impl);

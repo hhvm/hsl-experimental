@@ -9,23 +9,24 @@
  */
 
 namespace HH\Lib\Experimental\File;
+use namespace HH\Lib\_Private\_File;
 
 function open_read_only_nd(string $path): CloseableReadHandle {
-  return new _Private\CloseableReadHandle($path, 'rb');
+  return new _File\CloseableReadHandle($path, 'rb');
 }
 
 function open_write_only_nd(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
 ): CloseableWriteHandle {
-  return new _Private\CloseableWriteHandle($path, $mode as string);
+  return new _File\CloseableWriteHandle($path, $mode as string);
 }
 
 function open_read_write_nd(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
 ): CloseableReadWriteHandle {
-  return new _Private\CloseableReadWriteHandle(
+  return new _File\CloseableReadWriteHandle(
     $path,
     ($mode as string).'+',
   );
@@ -33,7 +34,7 @@ function open_read_write_nd(
 
 <<__ReturnDisposable>>
 function open_read_only(string $path): DisposableReadHandle {
-  return new _Private\DisposableFileReadHandle(open_read_only_nd($path));
+  return new _File\DisposableFileReadHandle(open_read_only_nd($path));
 }
 
 <<__ReturnDisposable>>
@@ -41,7 +42,7 @@ function open_write_only(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
 ): DisposableWriteHandle {
-  return new _Private\DisposableFileWriteHandle(
+  return new _File\DisposableFileWriteHandle(
     open_write_only_nd($path, $mode),
   );
 }
@@ -51,7 +52,7 @@ function open_read_write(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
 ): DisposableReadWriteHandle {
-  return new _Private\DisposableFileReadWriteHandle(
+  return new _File\DisposableFileReadWriteHandle(
     open_read_write_nd($path, $mode),
   );
 }

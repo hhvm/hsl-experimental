@@ -11,6 +11,7 @@
 namespace HH\Lib\Experimental\Unix;
 
 use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\_Private\{_Network, _Unix};
 
 final class Server
   implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
@@ -22,7 +23,7 @@ final class Server
 
   /** Create a bound and listening instance */
   public static async function createAsync(string $path): Awaitable<this> {
-    return await Network\_Private\socket_create_bind_listen_async(
+    return await _Network\socket_create_bind_listen_async(
       \AF_UNIX,
       \SOCK_STREAM,
       /* proto = */ 0,
@@ -34,16 +35,16 @@ final class Server
 
   <<__ReturnDisposable>>
   public async function nextConnectionAsync(): Awaitable<DisposableSocket> {
-    return new _Private\DisposableSocket(await $this->nextConnectionNDAsync());
+    return new _Unix\DisposableSocket(await $this->nextConnectionNDAsync());
   }
 
   public async function nextConnectionNDAsync(): Awaitable<CloseableSocket> {
-    return await Network\_Private\socket_accept_async($this->impl)
-      |> new _Private\CloseableSocket($$);
+    return await _Network\socket_accept_async($this->impl)
+      |> new _Unix\CloseableSocket($$);
   }
 
   public function getLocalAddress(): string {
-    return Network\_Private\get_sock_name($this->impl)[0];
+    return _Network\get_sock_name($this->impl)[0];
   }
 
   public function stopListening(): void {
