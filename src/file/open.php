@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\File;
 use namespace HH\Lib\_Private\_File;
 
 function open_read_only_nd(string $path): CloseableReadHandle {

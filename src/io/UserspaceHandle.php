@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
 // @deprecated UserspaceHandle has been deprecated, use
-// HH\Lib\Experimental\IO\Handle instead.
+// HH\Lib\IO\Handle instead.
 interface UserspaceHandle extends Handle {
 }

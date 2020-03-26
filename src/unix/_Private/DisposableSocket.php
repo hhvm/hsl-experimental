@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Unix;
 
-use namespace HH\Lib\Experimental\{IO, Unix};
+use namespace HH\Lib\{IO, Unix};
 use namespace HH\Lib\_Private\_IO;
 
 final class DisposableSocket

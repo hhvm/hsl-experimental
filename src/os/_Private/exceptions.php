@@ -11,7 +11,7 @@
 namespace HH\Lib\_Private\_OS;
 
 use namespace HH\Lib\C;
-use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\OS;
 
 trait ExceptionWithMultipleErrorCodesTrait {
   require extends OS\Exception;

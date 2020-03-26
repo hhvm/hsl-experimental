@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\Experimental\{IO, Network, OS};
+use namespace HH\Lib\{IO, Network, OS};
 use namespace HH\Lib\_Private\_OS;
 use namespace HH\Lib\Str;
 

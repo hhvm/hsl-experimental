@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\Network;
 
-use namespace HH\Lib\Experimental\{IO, TCP, Unix};
+use namespace HH\Lib\{IO, TCP, Unix};
 
 <<
   __Sealed(

@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS;
+namespace HH\Lib\OS;
 
 /** OS-level error codes.
  *

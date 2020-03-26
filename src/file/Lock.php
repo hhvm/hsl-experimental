@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\File;
 
-use namespace HH\Lib\Experimental\{IO, OS};
+use namespace HH\Lib\{IO, OS};
 
 /**
  * A File Lock, which is unlocked as a disposable. To acquire one, call `lock`

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use type HH\Lib\Experimental\Network\SocketOptions;
+use type HH\Lib\Network\SocketOptions;
 
 function set_socket_options(resource $sock, SocketOptions $opts): void {
   if ($opts['SO_REUSEADDR'] ?? false) {

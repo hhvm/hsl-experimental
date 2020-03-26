@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\File;
 
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 interface CloseableHandle extends IO\CloseableSeekableHandle, Handle {
 }

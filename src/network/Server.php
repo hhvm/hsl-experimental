@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\Network;
 
 /** Generic interface for a class able to accept socket connections.
  *

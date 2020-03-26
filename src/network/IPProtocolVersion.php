@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\Network;
 
 /** A specific version of IP.
  *

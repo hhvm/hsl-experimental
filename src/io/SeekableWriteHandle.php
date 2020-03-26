@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
 interface SeekableWriteHandle extends SeekableHandle, WriteHandle {
 }

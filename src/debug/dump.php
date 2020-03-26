@@ -10,7 +10,7 @@
 
 namespace HH\Lib\Experimental\Debug;
 
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 /** Return a human-readable string representation of a value */
 function dump_s(<<__AcceptDisposable>> mixed $value): string {

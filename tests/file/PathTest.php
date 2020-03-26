@@ -9,7 +9,7 @@
  */
 
 
-use namespace HH\Lib\Experimental\File;
+use namespace HH\Lib\File;
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
