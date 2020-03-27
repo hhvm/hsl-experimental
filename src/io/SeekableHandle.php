@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
 /** A handle that can have its' position changed. */
 interface SeekableHandle extends Handle {

@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\Network;
 
 /** General behavior for selecting which IP version to use.
  *

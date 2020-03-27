@@ -11,7 +11,7 @@
 namespace HH\Lib\_Private\_OS;
 
 use namespace HH\Lib\{C, Str};
-use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\OS;
 
 // hackfmt-ignore
 /** OS-level error number constants from `errno.h`.

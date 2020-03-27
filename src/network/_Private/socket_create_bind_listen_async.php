@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\Network;
 use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 

@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\Unix;
+namespace HH\Lib\Unix;
 
-use namespace HH\Lib\Experimental\{IO, Network};
+use namespace HH\Lib\{IO, Network};
 
 /** A Unix socket for a server or client connection.
  *

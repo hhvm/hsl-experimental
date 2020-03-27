@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\Network;
 
 type SocketOptions = shape(
   ?'SO_REUSEADDR' => bool,

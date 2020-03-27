@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\OS;
+namespace HH\Lib\OS;
 
 /**
  * Base class for exceptions reported by primitive native operations.

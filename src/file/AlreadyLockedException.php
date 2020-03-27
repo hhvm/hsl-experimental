@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\File;
 
 /**
  * Indicates that a lock failed, because the file is already locked.

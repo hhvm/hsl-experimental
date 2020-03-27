@@ -8,7 +8,7 @@
  *
  */
 
-use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\OS;
 
 use namespace HH\Lib\Keyset;
 use namespace HH\Lib\_Private\_OS;

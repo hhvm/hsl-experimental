@@ -12,7 +12,7 @@ namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\Str;
 use namespace HH\Lib\_Private\_OS;
-use namespace HH\Lib\Experimental\{IO, OS};
+use namespace HH\Lib\{IO, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {

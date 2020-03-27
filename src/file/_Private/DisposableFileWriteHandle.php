@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_File;
 
-use namespace HH\Lib\Experimental\{File, IO};
+use namespace HH\Lib\{File, IO};
 use namespace HH\Lib\_Private\_IO;
 
 final class DisposableFileWriteHandle

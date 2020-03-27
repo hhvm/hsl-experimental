@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\{Experimental\IO, Str};
+use namespace HH\Lib\{IO, Str};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {

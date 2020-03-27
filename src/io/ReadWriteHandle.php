@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
 /**
  * An interface for read and write handles.

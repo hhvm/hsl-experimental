@@ -8,8 +8,8 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
-use namespace HH\Lib\Experimental\Network;
+namespace HH\Lib\TCP;
+use namespace HH\Lib\Network;
 
 type ConnectOptions = shape(
   ?'timeout' => ?float,

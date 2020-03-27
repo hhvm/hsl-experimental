@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
-use namespace HH\Lib\Experimental\OS;
+use namespace HH\Lib\OS;
 use namespace HH\Lib\_Private\{_IO, _OS};
 
 /** Return STDOUT for the server process.

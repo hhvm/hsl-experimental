@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
+namespace HH\Lib\TCP;
 
-use namespace HH\Lib\Experimental\{IO, Network};
+use namespace HH\Lib\{IO, Network};
 
 /**
  * A TCP client or server socket.

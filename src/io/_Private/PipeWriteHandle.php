@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 final class PipeWriteHandle
   extends LegacyPHPResourceHandle

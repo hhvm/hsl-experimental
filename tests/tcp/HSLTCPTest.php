@@ -9,13 +9,13 @@
  */
 
 use namespace HH\Lib\Vec;
-use namespace HH\Lib\Experimental\{IO, Network, OS, TCP};
+use namespace HH\Lib\{IO, Network, OS, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use type HackTest;
-use type HH\Lib\Experimental\Network\{IPProtocolBehavior, IPProtocolVersion};
+use type HH\Lib\Network\{IPProtocolBehavior, IPProtocolVersion};
 use type HH\Lib\Ref;
 
 // @oss-disable: <<Oncalls('hf')>>

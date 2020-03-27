@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\File;
 
 use namespace HH\Lib\{Str, Vec};
 

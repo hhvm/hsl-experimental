@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
-use namespace HH\Lib\Experimental\Fileystem;
+use namespace HH\Lib\Fileystem;
 use namespace HH\Lib\_Private;
 
 /** An interface for a writable Handle.

@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\TCP;
+namespace HH\Lib\TCP;
 
-use namespace HH\Lib\Experimental\Network;
+use namespace HH\Lib\Network;
 use namespace HH\Lib\_Private\{_Network, _TCP};
 
 final class Server

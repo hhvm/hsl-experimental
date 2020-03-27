@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\Experimental\File;
+namespace HH\Lib\File;
 
 interface DisposableReadHandle extends \IAsyncDisposable, ReadHandle {
 }

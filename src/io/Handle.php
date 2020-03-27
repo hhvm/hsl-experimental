@@ -8,9 +8,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\IO;
+namespace HH\Lib\IO;
 
-use namespace HH\Lib\Experimental\{File, Network};
+use namespace HH\Lib\{File, Network};
 
 /** An interface for an IO stream.
  *
