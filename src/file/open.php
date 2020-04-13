@@ -9,27 +9,37 @@
  */
 
 namespace HH\Lib\File;
-use namespace HH\Lib\_Private\_File;
+use namespace HH\Lib\{OS, _Private\_File};
 
 function open_read_only_nd(string $path): CloseableReadHandle {
-  return new _File\CloseableReadHandle($path, 'rb');
+  return OS\open($path, OS\O_RDONLY)
+    |> new _File\CloseableReadHandle($$, $path);
 }
 
 function open_write_only_nd(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
+  int $create_file_permissions = 0644,
 ): CloseableWriteHandle {
-  return new _File\CloseableWriteHandle($path, $mode as string);
+  return OS\open(
+    $path,
+    OS\O_WRONLY | $mode as int,
+    ($mode & OS\O_CREAT) ? $create_file_permissions : null,
+  )
+    |> new _File\CloseableWriteHandle($$, $path);
 }
 
 function open_read_write_nd(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
+  int $create_file_permissions = 0644,
 ): CloseableReadWriteHandle {
-  return new _File\CloseableReadWriteHandle(
+  return OS\open(
     $path,
-    ($mode as string).'+',
-  );
+    OS\O_RDWR | $mode as int,
+    ($mode & OS\O_CREAT) ? $create_file_permissions : null,
+  )
+    |> new _File\CloseableReadWriteHandle($$, $path);
 }
 
 <<__ReturnDisposable>>
@@ -41,9 +51,10 @@ function open_read_only(string $path): DisposableReadHandle {
 function open_write_only(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
+  int $create_file_permissions = 0644,
 ): DisposableWriteHandle {
   return new _File\DisposableFileWriteHandle(
-    open_write_only_nd($path, $mode),
+    open_write_only_nd($path, $mode, $create_file_permissions),
   );
 }
 
@@ -51,8 +62,9 @@ function open_write_only(
 function open_read_write(
   string $path,
   WriteMode $mode = WriteMode::OPEN_OR_CREATE,
+  int $create_file_permissions = 0644,
 ): DisposableReadWriteHandle {
   return new _File\DisposableFileReadWriteHandle(
-    open_read_write_nd($path, $mode),
+    open_read_write_nd($path, $mode, $create_file_permissions),
   );
 }

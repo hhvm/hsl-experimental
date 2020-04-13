@@ -45,11 +45,11 @@ interface Handle extends IO\SeekableHandle {
   public function tryLockx(LockType $mode): Lock;
 }
 
-interface ReadHandle extends Handle, IO\SeekableReadHandle {
+interface ReadHandle extends Handle, IO\ReadHandle {
 }
 
-interface WriteHandle extends Handle, IO\SeekableWriteHandle {
+interface WriteHandle extends Handle, IO\WriteHandle {
 }
 
-interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\SeekableReadWriteHandle {
+interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\ReadWriteHandle {
 }
