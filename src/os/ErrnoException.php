@@ -59,6 +59,19 @@ class ErrnoException extends \Exception {
   }
 }
 
+final class BlockingIOException extends ErrnoException {
+  use _OS\ErrnoExceptionWithMultipleErrnosTrait;
+
+  <<__Override>>
+  public static function _getValidErrnos(): keyset<Errno> {
+    return keyset[
+      Errno::EAGAIN,
+      Errno::EALREADY,
+      Errno::EINPROGRESS,
+    ];
+  }
+}
+
 final class ChildProcessException extends ErrnoException {
   use _OS\ErrnoExceptionWithSingleErrnoTrait;
 

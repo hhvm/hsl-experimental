@@ -20,8 +20,4 @@ abstract class DisposableHandleWrapper<T as IO\CloseableHandle>
   public async function __disposeAsync(): Awaitable<void> {
     await $this->impl->closeAsync();
   }
-
-  final public function isEndOfFile(): bool {
-    return $this->impl->isEndOfFile();
-  }
 }

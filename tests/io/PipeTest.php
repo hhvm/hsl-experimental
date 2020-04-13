@@ -30,11 +30,9 @@ final class PipeTest extends HackTest {
     $read = await $r->readLineAsync();
     expect($read)->toEqual("Herp derp\n");
 
-    expect($r->isEndOfFile())->toBeFalse();
     await $w->closeAsync();
     $s = await $r->readAsync();
     expect($s)->toEqual('');
-    expect($r->isEndOfFile())->toBeTrue();
   }
 
   public async function testReadAllAsync(): Awaitable<void> {
