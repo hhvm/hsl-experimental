@@ -75,8 +75,8 @@ final class HSLTCPTest extends HackTest {
         $bind_address,
         0,
       );
-    } catch (OS\Exception $e) {
-      expect($e->getErrorCode())->toEqual(OS\ErrorCode::EADDRNOTAVAIL);
+    } catch (OS\ErrnoException $e) {
+      expect($e->getErrno())->toEqual(OS\Errno::EADDRNOTAVAIL);
       expect($server_protocol)->toEqual(IPProtocolVersion::IPV6);
       self::markTestSkipped("IPv6 not supported on this host");
       return;
@@ -128,9 +128,9 @@ final class HSLTCPTest extends HackTest {
 
   public async function testConnectingToInvalidPort(): Awaitable<void> {
     $ex = expect(async () ==> await TCP\connect_nd_async('localhost', 0))
-      ->toThrow(OS\Exception::class);
-    expect(vec[OS\ErrorCode::EADDRNOTAVAIL, OS\ErrorCode::ECONNREFUSED])
-      ->toContain($ex->getErrorCode());
+      ->toThrow(OS\ErrnoException::class);
+    expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])
+      ->toContain($ex->getErrno());
   }
 
   public async function testReuseAddress(): Awaitable<void> {
@@ -157,8 +157,8 @@ final class HSLTCPTest extends HackTest {
         '127.0.0.1',
         $port,
       ),
-    )->toThrow(OS\Exception::class);
-    expect($ex->getErrorCode())->toEqual(OS\ErrorCode::EADDRINUSE);
+    )->toThrow(OS\ErrnoException::class);
+    expect($ex->getErrno())->toEqual(OS\Errno::EADDRINUSE);
 
     $s2 = await TCP\Server::createAsync(
       IPProtocolVersion::IPV4,

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\Network;
+use namespace HH\Lib\{Network, OS};
 use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
@@ -43,14 +43,14 @@ async function socket_create_bind_listen_async(
     /* HH_IGNORE_ERROR[2049] PHPStdLib */
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     $err = \socket_last_error($sock) as int;
-    if ($err !== _OS\Errno::EINPROGRESS) {
+    if ($err !== OS\Errno::EINPROGRESS) {
       throw_socket_error($err, 'bind() failed');
     }
   }
   /* HH_IGNORE_ERROR[2049] PHPStdLib */
   /* HH_IGNORE_ERROR[4107] PHPStdLib */
   $err = \socket_last_error($sock) as int;
-  if ($err === _OS\Errno::EINPROGRESS) {
+  if ($err === OS\Errno::EINPROGRESS) {
     /* HH_IGNORE_ERROR[2049] PHPStdLib */
     /* HH_IGNORE_ERROR[4107] PHPStdLib */
     await \stream_await($sock, \STREAM_AWAIT_READ_WRITE);
