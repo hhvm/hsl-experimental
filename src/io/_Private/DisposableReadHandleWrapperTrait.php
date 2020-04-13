@@ -17,21 +17,14 @@ trait DisposableReadHandleWrapperTrait<T as IO\CloseableReadHandle>
   require implements \IAsyncDisposable;
   require extends DisposableHandleWrapper<T>;
 
-  final public function rawReadBlocking(?int $max_bytes = null): string {
-    return $this->impl->rawReadBlocking($max_bytes);
+  final public function read(?int $max_bytes = null): string {
+    return $this->impl->read($max_bytes);
   }
 
   final public async function readAsync(
     ?int $max_bytes = null,
-    ?float $timeout_seconds = null,
+    ?int $timeout_ns = null,
   ): Awaitable<string> {
-    return await $this->impl->readAsync($max_bytes, $timeout_seconds);
-  }
-
-  final public async function readLineAsync(
-    ?int $max_bytes = null,
-    ?float $timeout_seconds = null,
-  ): Awaitable<string> {
-    return await $this->impl->readLineAsync($max_bytes, $timeout_seconds);
+    return await $this->impl->readAsync($max_bytes, $timeout_ns);
   }
 }

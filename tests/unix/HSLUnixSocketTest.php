@@ -36,7 +36,7 @@ final class HSLUnixSocketTest extends HackTest {
             expect($client->getLocalAddress())->toEqual($path);
             expect($client->getPeerAddress())->toEqual('');
 
-            $server_recv->value = await $client->readLineAsync();
+            $server_recv->value = await $client->readAsync();
             await $client->writeAsync("foo\n");
           }
           ;
@@ -50,7 +50,7 @@ final class HSLUnixSocketTest extends HackTest {
             expect($conn->getPeerAddress())->toEqual($path);
 
             await $conn->writeAsync("bar\n");
-            $client_recv->value = await $conn->readLineAsync();
+            $client_recv->value = await $conn->readAsync();
           }
         };
       }

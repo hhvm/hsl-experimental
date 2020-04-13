@@ -15,39 +15,39 @@ use namespace HH\Lib\_Private;
 
 /** An `IO\Handle` that is readable. */
 interface ReadHandle extends Handle {
-  /** An immediate, unordered blocking read.
+  /** An immediate, unordered read.
    *
    * You almost certainly don't want to call this; instead, use
    * `readAsync()` or `readLineAsync()`, which are wrappers around
-   * this
+   * this.
+   *
+   * This is likely to fail with `EWOULDBLOCK` and throw an
+   * `OS\BlockingIOException`.
+   *
+   * @param max_bytes the maximum number of bytes to read
+   *   - if `null`, an internal default will be used.
+   *   - if 0, an `InvalidArgumentException` will be raised.
+   * @returns
+   *   - the read data on success
+   *   - the empty string if the end of file is reached.
    */
-  public function rawReadBlocking(?int $max_bytes = null): string;
+  public function read(?int $max_bytes = null): string;
 
-  /** Read until we reach `$max_bytes`, timeout, or the end of the file.
+  /** Read from the handle, waiting for data if neccessary.
    *
-   * By default, there is no limit to the size and no timeout, so the entire
-   * file will be read; if the handle represents an open pipe, socket, or
-   * similar, this means that the call will only return once the connection
-   * is closed.
+   * A wrapper around `read()` that will wait for more data if there is none
+   * available at present.
    *
-   * If `$max_bytes` is `null`, there is no limit - this method will read until
-   * end of file, or the timeout is reached.
-   *
-   * If `$max_bytes` is 0, the empty string will be returned.
+	 * @param max_bytes the maximum number of bytes to read
+	 *   - if `null`, an internal default will be used.
+	 *   - if 0, an `InvalidArgumentException` will be raised.
+	 * @returns
+	 *   - the read data on success
+	 *   - the empty string if the end of file is reached.
+
    */
   public function readAsync(
     ?int $max_bytes = null,
-    ?float $timeout_seconds = null,
-  ): Awaitable<string>;
-
-  /** Read until we reach `$max_bytes`, the end of the file, or the
-   * end of the line.
-   *
-   * 'End of line' is platform-specific, and matches the C `fgets()`
-   * function; the newline character/characters are included in the
-   * return value. */
-  public function readLineAsync(
-    ?int $max_bytes = null,
-    ?float $timeout_seconds = null,
+    ?int $timeout_ns = null,
   ): Awaitable<string>;
 }
