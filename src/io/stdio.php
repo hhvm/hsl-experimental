@@ -84,7 +84,7 @@ function request_errorx(): CloseableWriteHandle {
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {
     _OS\throw_errno(
-      _OS\Errno::ENOENT,
+      OS\Errno::ENOENT,
       "There is no request_error() handle",
     );
   }

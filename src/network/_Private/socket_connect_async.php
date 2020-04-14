@@ -10,6 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
+use namespace HH\Lib\OS;
 use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
@@ -69,10 +70,10 @@ async function socket_connect_async(
     //   printf("Error: %d\n", errno);
     // }
     // ```
-    return (_OS\IS_MACOS ? _OS\Errno::EADDRNOTAVAIL : _OS\Errno::ECONNREFUSED) as int;
+    return (_OS\IS_MACOS ? OS\Errno::EADDRNOTAVAIL : OS\Errno::ECONNREFUSED) as int;
   }
 
-  if ($err !== _OS\Errno::EINPROGRESS) {
+  if ($err !== OS\Errno::EINPROGRESS) {
     return $err;
   }
   /* HH_IGNORE_ERROR[2049] PHP stdlib */
@@ -85,13 +86,13 @@ async function socket_connect_async(
   /* HH_IGNORE_ERROR[4107] PHP stdlib */
   $res = await \stream_await($sock, \STREAM_AWAIT_WRITE, $timeout_seconds ?? 0.0);
   if ($res === \STREAM_AWAIT_CLOSED) {
-    return _OS\Errno::ECONNRESET as int;
+    return OS\Errno::ECONNRESET as int;
   }
   if ($res === \STREAM_AWAIT_TIMEOUT) {
     /* HH_IGNORE_ERROR[2049] PHP stdlib */
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     \fclose($sock);
-    return _OS\Errno::ETIMEDOUT as int;
+    return OS\Errno::ETIMEDOUT as int;
   }
   // \socket_last_error() is not populated by async socket failures: it's
   // effectively a cache of the C errno constant after the last socket_*

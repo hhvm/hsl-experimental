@@ -38,8 +38,8 @@ interface Handle extends IO\SeekableHandle {
    * Immediately get a shared or exclusive lock on a file, or throw.
    *
    * @throws `File\AlreadyLockedException` if `lock()` would block. **This
-   *   is not a subclass of `OS\Exception`**.
-   * @throws `OS\Exception` in any other case.
+   *   is not a subclass of `OS\ErrnoException`**.
+   * @throws `OS\ErrnoException` in any other case.
    */
   <<__ReturnDisposable>>
   public function tryLockx(LockType $mode): Lock;

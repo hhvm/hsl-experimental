@@ -65,7 +65,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
         $now = \microtime(true);
         $timeout_seconds -= ($now - $start);
         if ($timeout_seconds < 0) {
-          _OS\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+          _OS\throw_errno(OS\Errno::ETIMEDOUT, __METHOD__);
         }
         $start = $now;
       }
@@ -111,7 +111,7 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
         $now = \microtime(true);
         $timeout_seconds -= ($now - $start);
         if ($timeout_seconds < 0.0) {
-          _OS\throw_errorcode(OS\ErrorCode::ETIMEDOUT, __METHOD__);
+          _OS\throw_errno(OS\Errno::ETIMEDOUT, __METHOD__);
         }
         $start = $now;
       }
