@@ -118,5 +118,33 @@ final class FileTest extends HackTest {
     );
   }
 
+  public async function testLock(): Awaitable<void> {
+    await using $tf = File\temporary_file();
+    $path = $tf->getPath()->toString();
 
+    // With a shared lock held open...
+    using ($tf->tryLockx(File\LockType::SHARED)) {
+      await using ($f = File\open_read_only($path)) {
+        using ($f->tryLockx(File\LockType::SHARED)) {
+        }
+      }
+      // Non-disposable as we need to put it in a lambda
+      $f = File\open_read_only_nd($path);
+      expect(() ==> {
+        using ($f->tryLockx(File\LockType::EXCLUSIVE)) {
+        }
+      })->toThrow(File\AlreadyLockedException::class);
+      await $f->closeAsync();
+    }
+
+    // With an exclusive lock held open...
+    using ($tf->tryLockx(File\LockType::EXCLUSIVE)) {
+      $f = File\open_read_only_nd($path);
+      expect(() ==> {
+        using ($f->tryLockx(File\LockType::SHARED)) {
+        }
+      })->toThrow(File\AlreadyLockedException::class);
+      await $f->closeAsync();
+    }
+  }
 }
