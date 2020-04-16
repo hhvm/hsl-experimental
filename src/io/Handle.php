@@ -68,5 +68,4 @@ use namespace HH\Lib\{File, Network};
  *   closed by an attached process, if any.
  */
 interface Handle {
-  public function isEndOfFile(): bool;
 }

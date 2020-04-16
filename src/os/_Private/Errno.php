@@ -13,8 +13,7 @@ namespace HH\Lib\_Private\_OS;
 use namespace HH\Lib\{C, OS, Str};
 
 <<__Memoize>>
-function get_throw_errno_impl(
-): (function(OS\Errno, string): noreturn) {
+function get_throw_errno_impl(): (function(OS\Errno, string): noreturn) {
   $single_code = keyset[
     OS\ChildProcessException::class,
     OS\ConnectionAbortedException::class,
@@ -28,6 +27,7 @@ function get_throw_errno_impl(
     OS\TimeoutError::class,
   ];
   $multiple_codes = keyset[
+    OS\BlockingIOException::class,
     OS\BrokenPipeException::class,
     OS\PermissionException::class,
   ];
@@ -67,13 +67,13 @@ function get_throw_errno_impl(
   };
 }
 
-function throw_errno(OS\Errno $errno, string $caller): noreturn {
+function throw_errno(OS\Errno $errno, string $message): noreturn {
   invariant(
     $errno !== 0,
     "Asked to throw an errno after %s(), but errno indicates success",
-    $caller,
+    $message,
   );
   $name = C\firstx(get_errno_names()[$errno]);
   $impl = get_throw_errno_impl();
-  $impl($errno, Str\format("%s() failed with %s", $caller, $name));
+  $impl($errno, Str\format("%s(%d): %s", $name, $errno, $message));
 }
