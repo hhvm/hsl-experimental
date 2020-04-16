@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\{IO, Str};
+use namespace HH\Lib\{IO, OS, Str};
+use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
 abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
@@ -39,6 +40,7 @@ abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
     int $flags,
     ?float $timeout_seconds,
   ): Awaitable<void> {
+    $this->checkIsValid();
     if (!$this->isAwaitable) {
       return;
     }
@@ -54,20 +56,36 @@ abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
       }
       /* HH_FIXME[2049] *not* PHP stdlib */
       /* HH_FIXME[4107] *not* PHP stdlib */
-      await \stream_await($this->impl, $flags, $timeout_seconds);
+      $res = await \stream_await($this->impl, $flags, $timeout_seconds);
+      if ($res === \STREAM_AWAIT_ERROR) {
+        _OS\throw_errno(
+          OS\Errno::EBADF,
+          "Awaiting resource failed"
+        );
+      }
     } catch (\InvalidOperationException $_) {
       // e.g. real files on Linux when using epoll
       $this->isAwaitable = false;
     }
   }
 
+  final protected function checkIsValid(): void {
+    /* HH_FIXME[2049] PHP StdLib */
+    /* HH_FIXME[4107] PHP StdLib */
+    if (!\is_resource($this->impl)) {
+      _OS\throw_errno(OS\Errno::EBADF, "Resource is not valid (already closed?)");
+    }
+  }
+
   final public function isEndOfFile(): bool {
+    $this->checkIsValid();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return \feof($this->impl);
   }
 
   final public async function closeAsync(): Awaitable<void> {
+    $this->checkIsValid();
     if ($this is IO\WriteHandle) {
       await $this->flushAsync();
     }
