@@ -24,11 +24,8 @@ final class PipeTest extends HackTest {
     list($r, $w) = IO\pipe_nd();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
 
-    $read = await $r->readLineAsync();
-    expect($read)->toEqual("Hello, world!\n");
-
-    $read = await $r->readLineAsync();
-    expect($read)->toEqual("Herp derp\n");
+    $read = await $r->readAsync();
+    expect($read)->toEqual("Hello, world!\nHerp derp\n");
 
     await $w->closeAsync();
     $s = await $r->readAsync();
@@ -52,19 +49,6 @@ final class PipeTest extends HackTest {
     expect($s)->toEqual('67890');
   }
 
-  public async function testPartialReadLineAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
-    await $w->writeAsync("1234567890\n12345\n67890\n");
-    $s = await $r->readLineAsync(5);
-    expect($s)->toEqual('12345');
-    $s = await $r->readLineAsync(5);
-    expect($s)->toEqual('67890');
-    $s = await $r->readLineAsync();
-    expect($s)->toEqual("\n");
-    $s = await $r->readLineAsync(10);
-    expect($s)->toEqual("12345\n");
-  }
-
   public async function testReadTooManyAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe_nd();
     await $w->writeAsync('1234567890');
@@ -81,17 +65,17 @@ final class PipeTest extends HackTest {
     concurrent {
       await async { // client
         await $cw->writeAsync("Herp\n");
-        $response = await $cr->readLineAsync();
+        $response = await $cr->readAsync();
         expect($response)->toEqual("Derp\n");
         await $cw->writeAsync("Foo\n");
-        $response = await $cr->readLineAsync();
+        $response = await $cr->readAsync();
         expect($response)->toEqual("Bar\n");
       };
       await async { // server
-        $request = await $sr->readLineAsync();
+        $request = await $sr->readAsync();
         expect($request)->toEqual("Herp\n");
         await $sw->writeAsync("Derp\n");
-        $request = await $sr->readLineAsync();
+        $request = await $sr->readAsync();
         expect($request)->toEqual("Foo\n");
         await $sw->writeAsync("Bar\n");
       };
