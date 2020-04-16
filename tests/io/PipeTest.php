@@ -8,7 +8,7 @@
  *
  */
 
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{IO, OS};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -98,5 +98,26 @@ final class PipeTest extends HackTest {
         await $sw->writeAsync("Bar\n");
       };
     }
+  }
+
+  public async function testReadFromClosedPipe(): Awaitable<void> {
+    // Intent is to:
+    // - make sure we throw the expected errno
+    // - make sure there isn't an infinite loop
+    list($r, $w) = IO\pipe_nd();
+    await $r->closeAsync();
+    await $w->closeAsync();
+    $ex = expect(async () ==> await $r->readAsync())->toThrow(
+      OS\ErrnoException::class,
+    );
+    expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
+  }
+
+  public async function testReadFromPipeClosedOnOtherEnd(): Awaitable<void> {
+    list($r, $w) = IO\pipe_nd();
+    await $w->closeAsync();
+    // Standard behavior for `read(fd)` with "no more data is coming" rather
+    // than "no more available now"
+    expect(await $r->readAsync())->toEqual('');
   }
 }
