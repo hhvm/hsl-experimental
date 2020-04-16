@@ -10,13 +10,13 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{IO, OS};
 
 final class PipeReadHandle
-  extends LegacyPHPResourceHandle
+  extends FileDescriptorHandle
   implements IO\CloseableReadHandle {
-  use LegacyPHPResourceReadHandleTrait;
-  public function __construct(resource $r) {
+  use FileDescriptorReadHandleTrait;
+  public function __construct(OS\FileDescriptor $r) {
     parent::__construct($r);
   }
 }

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\_Private\_IO;
+use namespace HH\Lib\{_Private\_IO, OS};
 
 /** Create a pair of handles, where writes to the `WriteHandle` can be
  * read from the `ReadHandle`.
@@ -18,9 +18,7 @@ use namespace HH\Lib\_Private\_IO;
  * @see `Network\Socket`
  */
 function pipe_nd(): (CloseableReadHandle, CloseableWriteHandle) {
-  /* HH_IGNORE_ERROR[2049] intentionally not in HHI */
-  /* HH_IGNORE_ERROR[4107] intentionally not in HHI */
-  list($r, $w) = \HH\Lib\_Private\Native\pipe() as (resource, resource);
+  list($r, $w) = \HH\Lib\OS\pipe();
   return tuple(
     new _IO\PipeReadHandle($r),
     new _IO\PipeWriteHandle($w),
