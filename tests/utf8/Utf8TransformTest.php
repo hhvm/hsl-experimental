@@ -79,8 +79,8 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideConvertKana(): varray<mixed> {
-    return varray[
+  public static function provideConvertKana(): vec<(string, string)> {
+    return vec[
       tuple('', ''),
       tuple(
         '開発第１-ローカライゼーション',
@@ -101,8 +101,8 @@ final class Utf8TransformTest extends \Facebook\HackTest\HackTest {
       ->toEqual($expected);
   }
 
-  public static function provideEncoding(): varray<mixed> {
-    return varray[
+  public static function provideEncoding(): vec<(string, Encoding, string)> {
+    return vec[
       tuple('', Encoding::ASCII, ''),
       tuple(
         "\006E\0061\006-\006(\006'\000 \0069\006'\006D\006E",
