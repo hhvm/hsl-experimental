@@ -10,7 +10,7 @@
 
 namespace HH\Lib\File;
 
-use namespace HH\Lib\{IO, OS};
+use namespace HH\Lib\{OS, _Private\_OS};
 
 /**
  * A File Lock, which is unlocked as a disposable. To acquire one, call `lock`
@@ -22,13 +22,10 @@ use namespace HH\Lib\{IO, OS};
  */
 final class Lock implements \IDisposable {
 
-  public function __construct(private resource $handle) {
+  public function __construct(private OS\FileDescriptor $fd) {
   }
 
   final public function __dispose(): void {
-    $_wouldblock = null;
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    \flock($this->handle, \LOCK_UN, inout $_wouldblock);
+    _OS\flock($this->fd, _OS\LOCK_UN);
   }
 }

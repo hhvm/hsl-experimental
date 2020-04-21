@@ -16,6 +16,6 @@ use namespace HH\Lib\_Private\_IO;
 final class CloseableReadWriteHandle
   extends CloseableFileHandle
   implements File\CloseableReadWriteHandle {
-  use _IO\LegacyPHPResourceReadHandleTrait;
-  use _IO\LegacyPHPResourceWriteHandleTrait;
+  use _IO\FileDescriptorReadHandleTrait;
+  use _IO\FileDescriptorWriteHandleTrait;
 }

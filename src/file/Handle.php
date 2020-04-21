@@ -32,7 +32,7 @@ interface Handle extends IO\SeekableHandle {
    * waiting for a lock.
    */
   <<__ReturnDisposable>>
-  public function lock(LockType $mode): Lock;
+  public function lock(LockType $type): Lock;
 
   /**
    * Immediately get a shared or exclusive lock on a file, or throw.
@@ -42,7 +42,7 @@ interface Handle extends IO\SeekableHandle {
    * @throws `OS\ErrnoException` in any other case.
    */
   <<__ReturnDisposable>>
-  public function tryLockx(LockType $mode): Lock;
+  public function tryLockx(LockType $type): Lock;
 }
 
 interface ReadHandle extends Handle, IO\SeekableReadHandle {

@@ -13,29 +13,17 @@ namespace HH\Lib\_Private\_File;
 use namespace HH\Lib\Str;
 use namespace HH\Lib\_Private\{_IO, _OS};
 use namespace HH\Lib\{IO, File, OS};
-use type HH\Lib\_Private\PHPWarningSuppressor;
 
 <<__ConsistentConstruct>>
 abstract class CloseableFileHandle
-  extends _IO\LegacyPHPResourceHandle
+  extends _IO\FileDescriptorHandle
   implements File\Handle, IO\CloseableHandle {
-  use _IO\LegacyPHPResourceSeekableHandleTrait;
 
-  protected string $filename;
-
-  final public function __construct(string $path, string $mode) {
-    using new PHPWarningSuppressor();
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $f = \fopen($path, $mode);
-    /* HH_IGNORE_ERROR[2049] PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] PHPStdLib */
-    $errno = \posix_get_last_error() as int;
-    if ($f === false) {
-      _OS\throw_errno($errno, 'fopen');
-    }
-    $this->filename = $path;
-    parent::__construct($f);
+  final public function __construct(
+    OS\FileDescriptor $fd,
+    protected string $filename,
+  ) {
+    parent::__construct($fd);
   }
 
   <<__Memoize>>
@@ -44,48 +32,39 @@ abstract class CloseableFileHandle
   }
 
   final public function getSize(): int {
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    return \filesize($this->filename);
+    $pos = OS\lseek($this->impl, 0, OS\SeekWhence::SEEK_CUR);
+    $size = OS\lseek($this->impl, 0, OS\SeekWhence::SEEK_END);
+    OS\lseek($this->impl, $pos, OS\SeekWhence::SEEK_SET);
+
+    return $size;
+  }
+
+  final public async function seekAsync(int $offset): Awaitable<void> {
+    await $this->queuedAsync(async () ==> {
+      OS\lseek($this->impl, $offset, OS\SeekWhence::SEEK_SET);
+    });
+  }
+
+  final public function tell(): int {
+    return OS\lseek($this->impl, 0, OS\SeekWhence::SEEK_CUR);
   }
 
   <<__ReturnDisposable>>
   final public function lock(File\LockType $type): File\Lock {
-    $impl = $this->__getResource_DO_NOT_USE();
-    $would_block = false;
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $success = \flock($impl, $type, inout $would_block);
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $errno = \posix_get_last_error();
-    if ($success) {
-      return new File\Lock($impl);
-    }
-    _OS\throw_errno($errno as int, 'flock');
+    OS\flock($this->impl, $type);
+    return new File\Lock($this->impl);
   }
 
   <<__ReturnDisposable>>
   final public function tryLockx(File\LockType $type): File\Lock {
-    $impl = $this->__getResource_DO_NOT_USE();
-    $would_block = false;
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $success = \flock($impl, $type | \LOCK_NB, inout $would_block);
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    $errno = \posix_get_last_error();
-    if ($success) {
-      return new File\Lock($impl);
+    try {
+      OS\flock($this->impl, $type | OS\LOCK_NB);
+      return new File\Lock($this->impl);
+    } catch (OS\BlockingIOException $e) {
+      if ($e->getErrno() === OS\Errno::EAGAIN) {
+        throw new File\AlreadyLockedException();
+      }
+      throw $e;
     }
-    if ($would_block) {
-      throw new File\AlreadyLockedException();
-    }
-    _OS\throw_errno($errno as int, 'flock');
-  }
-
-
-  final public function __getResource_DO_NOT_USE(): resource {
-    return $this->impl;
   }
 }

@@ -30,20 +30,20 @@ abstract class DisposableFileHandle<T as File\CloseableHandle>
   }
 
   <<__ReturnDisposable>>
-  final public function lock(File\LockType $type): File\Lock {
+  public function lock(File\LockType $type): File\Lock {
     return $this->impl->lock($type);
   }
 
   <<__ReturnDisposable>>
-  final public function tryLockx(File\LockType $type): File\Lock {
+  public function tryLockx(File\LockType $type): File\Lock {
     return $this->impl->tryLockx($type);
   }
 
-  final public async function seekAsync(int $offset): Awaitable<void> {
-    await $this->impl->seekAsync($offset);
+  public async function seekAsync(int $offset): Awaitable<void> {
+    return await $this->impl->seekAsync($offset);
   }
 
-  final public function tell(): int {
+  public function tell(): int {
     return $this->impl->tell();
   }
 }
