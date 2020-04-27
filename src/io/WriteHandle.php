@@ -35,8 +35,8 @@ interface WriteHandle extends Handle {
    * A wrapper around `write()` that will wait if `write()` would throw
    * an `OS\BlockingIOException`
    *
-   * It is possible for the write to succeed - check the return value and call
-   * again in  this case.
+   * It is possible for the write to *partially* succeed - check the return
+   * value and call again if needed.
    *
    * @returns the number of bytes written, which may be less than the length of
    *   input string.
