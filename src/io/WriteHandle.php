@@ -19,17 +19,32 @@ use namespace HH\Lib\_Private;
  * `rawWriteBlocking()` will immediately try to write to the handle.
  */
 interface WriteHandle extends Handle {
-
-  /** Possibly write some of the string.
+  /** An immediate unordered write.
+   *
+   * @see `genWrite()`
+   * @throws `OS\BlockingIOException` if the handle is a socket or similar,
+   *   and the write would block.
+   * @returns the number of bytes written on success
    *
    * Returns the number of bytes written, which may be 0.
    */
-  public function rawWriteBlocking(string $bytes): int;
+  public function write(string $bytes): int;
 
+  /** Write data, waiting if necessary.
+   *
+   * A wrapper around `write()` that will wait if `write()` would throw
+   * an `OS\BlockingIOException`
+   *
+   * It is possible for the write to succeed - check the return value and call
+   * again in  this case.
+   *
+   * @returns the number of bytes written, which may be less than the length of
+   *   input string.
+   */
   public function writeAsync(
     string $bytes,
-    ?float $timeout_seconds = null,
-  ): Awaitable<void>;
+    ?int $timeout_ns = null,
+  ): Awaitable<int>;
 
   public function flushAsync(): Awaitable<void>;
 }

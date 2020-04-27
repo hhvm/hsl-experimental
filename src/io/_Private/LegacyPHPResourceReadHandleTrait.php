@@ -59,7 +59,6 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
     }
     $timeout_secs = $timeout_ns * 1.0E-9;
     await $this->selectAsync(\STREAM_AWAIT_READ, $timeout_secs);
-    $chunk = $this->read($max_bytes);
-    return $chunk;
+    return $this->read($max_bytes);
   }
 }

@@ -16,39 +16,27 @@ use namespace HH\Lib\_Private\_OS;
 trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
   require extends FileDescriptorHandle;
 
-  final public function rawWriteBlocking(string $bytes): int {
+  final public function write(string $bytes): int {
     return OS\write($this->impl, $bytes);
   }
 
-  final public function writeAsync(
+  final public async function writeAsync(
     string $bytes,
-    ?float $timeout_seconds = null,
-  ): Awaitable<void> {
-    $timeout_nanos = $timeout_seconds is null
-      ? 0
-      : (int) Math\ceil($timeout_seconds * 1000 * 1000 * 1000);
-    return $this->queuedAsync(async () ==> {
-      /* HH_IGNORE_ERROR[2049] PHP stdlib */
-      /* HH_IGNORE_ERROR[4107] PHP stdlib */
-      $start = \clock_gettime_ns(\CLOCK_MONOTONIC);
-      while (true) {
-        $written = $this->rawWriteBlocking($bytes);
-        $bytes = Str\slice($bytes, $written);
-        if ($bytes === '') {
-          break;
-        }
-        if ($timeout_nanos > 0) {
-          /* HH_IGNORE_ERROR[2049] PHP stdlib */
-          /* HH_IGNORE_ERROR[4107] PHP stdlib */
-          $now = \clock_gettime_ns(\CLOCK_MONOTONIC);
-          $timeout_nanos -= ($now - $start);
-          if ($timeout_nanos < 0) {
-            _OS\throw_errno(OS\Errno::ETIMEDOUT, __METHOD__);
-          }
-          $start = $now;
-        }
-        await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_nanos);
+    ?int $timeout_ns = null,
+  ): Awaitable<int> {
+    if ($timeout_ns is int && $timeout_ns <= 0) {
+      throw new \InvalidArgumentException('$timeout_ns must be null, or >= 0');
+    }
+    $timeout_ns ??= 0;
+
+    return await $this->queuedAsync(async () ==> {
+      try {
+        return $this->write($bytes);
+      } catch (OS\BlockingIOException $_) {
+        // We need to wait, which we do below...
       }
+      await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_ns);
+      return $this->write($bytes);
     });
   }
 
