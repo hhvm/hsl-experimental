@@ -18,7 +18,7 @@ use type HH\Lib\_Private\PHPWarningSuppressor;
 trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
   require extends LegacyPHPResourceHandle;
 
-  final public function rawWriteBlocking(string $bytes): int {
+  final public function write(string $bytes): int {
     using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
@@ -32,32 +32,24 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
     return $result as int;
   }
 
-  final public function writeAsync(
+  final public async function writeAsync(
     string $bytes,
-    ?float $timeout_seconds = null,
-  ): Awaitable<void> {
-    return $this->queuedAsync(async () ==> {
-      /* HH_IGNORE_ERROR[2049] */
-      /* HH_IGNORE_ERROR[4107] */
-      $start = \microtime(true);
-      while (true) {
-        $written = $this->rawWriteBlocking($bytes);
-        $bytes = Str\slice($bytes, $written);
-        if ($bytes === '') {
-          break;
-        }
-        if ($timeout_seconds is float) {
-          /* HH_IGNORE_ERROR[2049] */
-          /* HH_IGNORE_ERROR[4107] */
-          $now = \microtime(true);
-          $timeout_seconds -= ($now - $start);
-          if ($timeout_seconds < 0.0) {
-            _OS\throw_errno(OS\Errno::ETIMEDOUT, __METHOD__);
-          }
-          $start = $now;
-        }
-        await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_seconds);
+    ?int $timeout_ns = null,
+  ): Awaitable<int> {
+    if ($timeout_ns is int && $timeout_ns <= 0) {
+      throw new \InvalidArgumentException('$timeout_ns must be null, or >= 0');
+    }
+    $timeout_ns ??= 0;
+    $timeout_secs = $timeout_ns * 1.0E-9;
+
+    return await $this->queuedAsync(async () ==> {
+      try {
+        return $this->write($bytes);
+      } catch (OS\BlockingIOException $_) {
+        // need to wait
       }
+      await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_secs);
+      return $this->write($bytes);
     });
   }
 

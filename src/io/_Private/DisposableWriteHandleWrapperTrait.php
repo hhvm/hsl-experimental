@@ -17,15 +17,15 @@ trait DisposableWriteHandleWrapperTrait<T as IO\CloseableWriteHandle>
   require extends DisposableHandleWrapper<T>;
   require implements \IAsyncDisposable;
 
-  final public function rawWriteBlocking(string $bytes): int {
-    return $this->impl->rawWriteBlocking($bytes);
+  final public function write(string $bytes): int {
+    return $this->impl->write($bytes);
   }
 
   final public async function writeAsync(
     string $bytes,
-    ?float $timeout_seconds = null,
-  ): Awaitable<void> {
-    await $this->impl->writeAsync($bytes, $timeout_seconds);
+    ?int $timeout_ns = null,
+  ): Awaitable<int> {
+    return await $this->impl->writeAsync($bytes, $timeout_ns);
   }
 
   final public async function flushAsync(): Awaitable<void> {

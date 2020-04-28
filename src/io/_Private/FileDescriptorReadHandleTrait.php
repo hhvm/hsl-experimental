@@ -40,8 +40,7 @@ trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
     $timeout_ns ??= 0;
 
     try {
-      $chunk = $this->read($max_bytes);
-      return $chunk;
+      return $this->read($max_bytes);
     } catch (OS\BlockingIOException $_) {
       // this means we need to wait for data, which we do below...
     }
