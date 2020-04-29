@@ -10,24 +10,24 @@
 
 namespace HH\Lib\_Private\_Unix;
 
-use namespace HH\Lib\{IO, Network, Unix};
+use namespace HH\Lib\{IO, Network, OS, Unix};
 use namespace HH\Lib\_Private\{_IO, _Network};
 
 final class CloseableSocket
-  extends _IO\LegacyPHPResourceHandle
+  extends _IO\FileDescriptorHandle
   implements Unix\CloseableSocket, IO\CloseableReadWriteHandle {
-  use _IO\LegacyPHPResourceReadHandleTrait;
-  use _IO\LegacyPHPResourceWriteHandleTrait;
+  use _IO\FileDescriptorReadHandleTrait;
+  use _IO\FileDescriptorWriteHandleTrait;
 
-  public function __construct(resource $impl) {
+  public function __construct(OS\FileDescriptor $impl) {
     parent::__construct($impl);
   }
 
-  public function getLocalAddress(): string {
-    return _Network\get_sock_name($this->impl)[0];
+  public function getLocalAddress(): ?string {
+    return (OS\getsockname($this->impl) as OS\sockaddr_un)->getPath();
   }
 
-  public function getPeerAddress(): string {
-    return _Network\get_peer_name($this->impl)[0];
+  public function getPeerAddress(): ?string {
+    return null;
   }
 }

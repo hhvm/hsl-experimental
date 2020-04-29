@@ -11,5 +11,7 @@
 namespace HH\Lib\Network;
 
 type SocketOptions = shape(
-  ?'SO_REUSEADDR' => bool,
+  // FIXME: temporarily not supported, until we have
+  // OS\setsockopt and OS\getsockopt
+  //?'SO_REUSEADDR' => bool,
 );

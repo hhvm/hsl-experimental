@@ -9,7 +9,7 @@
  */
 
 use namespace HH\Lib\Vec;
-use namespace HH\Lib\{IO, Network, OS, TCP};
+use namespace HH\Lib\{IO, Network, OS, Str, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -76,7 +76,10 @@ final class HSLTCPTest extends HackTest {
         0,
       );
     } catch (OS\ErrnoException $e) {
-      expect($e->getErrno())->toEqual(OS\Errno::EADDRNOTAVAIL);
+      expect($e->getErrno())->toEqual(
+        OS\Errno::EADDRNOTAVAIL,
+        'Expected EADDRNOTAVAIL, got '.$e->getMessage(),
+      );
       expect($server_protocol)->toEqual(IPProtocolVersion::IPV6);
       self::markTestSkipped("IPv6 not supported on this host");
       return;
@@ -134,51 +137,8 @@ final class HSLTCPTest extends HackTest {
   }
 
   public async function testReuseAddress(): Awaitable<void> {
-    $s1 = await TCP\Server::createAsync(
-      IPProtocolVersion::IPV4,
-      '127.0.0.1',
-      0,
-      // Portability:
-      // - MacOS only requires SO_REUSEADDR to be set on the new socket
-      // - Linux requires SO_REUSEADDR on both the old and the new socket
-      shape('socket_options' => shape('SO_REUSEADDR' => true)),
-    );
-    $port = $s1->getLocalAddress()[1];
-    concurrent {
-      $client = await TCP\connect_nd_async('127.0.0.1', $port);
-      $_ = await $s1->nextConnectionNDAsync();
-    }
-    await $client->writeAsync('hello, world');
-    $s1->stopListening();
-
-    $ex = expect(
-      async () ==> await TCP\Server::createAsync(
-        IPProtocolVersion::IPV4,
-        '127.0.0.1',
-        $port,
-      ),
-    )->toThrow(OS\ErrnoException::class);
-    expect($ex->getErrno())->toEqual(OS\Errno::EADDRINUSE);
-
-    $s2 = await TCP\Server::createAsync(
-      IPProtocolVersion::IPV4,
-      '127.0.0.1',
-      $port,
-      shape('socket_options' => shape('SO_REUSEADDR' => true)),
-    );
-    concurrent {
-      $client_recv = await async {
-        await using $client = await TCP\connect_async('127.0.0.1', $port);
-        await $client->writeAsync("hello, world!\n");
-        return await $client->readAsync();
-      };
-      $server_recv = await async {
-        await using $conn = await $s2->nextConnectionAsync();
-        await $conn->writeAsync("foo bar\n");
-        return await $conn->readAsync();
-      };
-    }
-    expect($client_recv)->toEqual("foo bar\n");
-    expect($server_recv)->toEqual("hello, world!\n");
+    self::markTestSkipped('FIXME: setsockopt currently not supported');
+    // Test deleted because it doesn't type-check. Re-add from source control
+    // when we have setsockopt again :)
   }
 }

@@ -10,24 +10,32 @@
 
 namespace HH\Lib\_Private\_TCP;
 
-use namespace HH\Lib\{IO, Network, TCP};
+use namespace HH\Lib\{IO, Network, OS, TCP};
 use namespace HH\Lib\_Private\{_IO, _Network};
 
 final class CloseableTCPSocket
-  extends _IO\LegacyPHPResourceHandle
+  extends _IO\FileDescriptorHandle
   implements TCP\CloseableSocket, IO\CloseableReadWriteHandle {
-  use _IO\LegacyPHPResourceReadHandleTrait;
-  use _IO\LegacyPHPResourceWriteHandleTrait;
+  use _IO\FileDescriptorReadHandleTrait;
+  use _IO\FileDescriptorWriteHandleTrait;
 
-  public function __construct(resource $impl) {
+  public function __construct(OS\FileDescriptor $impl) {
     parent::__construct($impl);
   }
 
   public function getLocalAddress(): (string, int) {
-    return _Network\get_sock_name($this->impl);
+    $sa = OS\getsockname($this->impl) as OS\sockaddr_in;
+    return tuple(
+      OS\inet_ntop(OS\AddressFamily::AF_INET, $sa->getAddress()),
+      OS\ntohs($sa->getPort()),
+    );
   }
 
   public function getPeerAddress(): (string, int) {
-    return _Network\get_peer_name($this->impl);
+    $sa = OS\getpeername($this->impl) as OS\sockaddr_in;
+    return tuple(
+      OS\inet_ntop(OS\AddressFamily::AF_INET, $sa->getAddress()),
+      OS\ntohs($sa->getPort()),
+    );
   }
 }

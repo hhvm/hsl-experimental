@@ -31,11 +31,11 @@ final class DisposableSocket
     parent::__construct($impl);
   }
 
-  public function getLocalAddress(): string {
+  public function getLocalAddress(): ?string {
     return $this->impl->getLocalAddress();
   }
 
-  public function getPeerAddress(): string {
+  public function getPeerAddress(): ?string {
     return $this->impl->getPeerAddress();
   }
 }
