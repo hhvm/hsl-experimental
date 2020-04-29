@@ -8,10 +8,12 @@
  *
  */
 
-namespace HH\Lib\TCP;
-use namespace HH\Lib\Network;
+namespace HH\Lib\OS;
 
-type ServerOptions = shape(
-  ?'backlog' => int,
-  ?'socket_options' => Network\SocketOptions,
-);
+use namespace HH\Lib\_Private\_OS;
+
+enum SocketType: int {
+  SOCK_STREAM = _OS\SOCK_STREAM;
+  SOCK_DGRAM = _OS\SOCK_DGRAM;
+  SOCK_RAW = _OS\SOCK_RAW;
+}

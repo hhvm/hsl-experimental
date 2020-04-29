@@ -9,7 +9,7 @@
  */
 
 use namespace HH\Lib\Vec;
-use namespace HH\Lib\{IO, Network, OS, TCP};
+use namespace HH\Lib\{IO, Network, OS, Str, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -72,7 +72,10 @@ final class HSLTCPTest extends HackTest {
     try {
       $server = await TCP\Server::createAsync($server_protocol, $bind_address, 0);
     } catch (OS\ErrnoException $e) {
-      expect($e->getErrno())->toEqual(OS\Errno::EADDRNOTAVAIL);
+      expect($e->getErrno())->toEqual(
+        OS\Errno::EADDRNOTAVAIL,
+        'Expected EADDRNOTAVAIL, got '.$e->getMessage(),
+      );
       expect($server_protocol)->toEqual(IPProtocolVersion::IPV6);
       self::markTestSkipped("IPv6 not supported on this host");
       return;

@@ -11,33 +11,19 @@
 namespace HH\Lib\_Private\_Network;
 
 use namespace HH\Lib\OS;
-use type HH\Lib\_Private\PHPWarningSuppressor;
+use namespace HH\Lib\_Private\_OS;
 
-async function socket_accept_async(resource $server): Awaitable<resource> {
-  using new PHPWarningSuppressor();
-
-  $retry = true;
-  while (true) {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
-    $sock = \socket_accept($server);
-    if ($sock is resource) {
-      return $sock;
-    }
-    invariant(
-      $sock === false,
-      'socket_accept() returned neither `false` nor a `resource`',
-    );
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
-    $err = \socket_last_error($server) as int;
-    if ($retry === false || ($err !== 0 && $err !== OS\Errno::EAGAIN)) {
-      throw_socket_error($err, "accept() failed");
-    }
+/** Accept a socket connection, waiting if necessary */
+async function socket_accept_async(
+  OS\FileDescriptor $server,
+): Awaitable<OS\FileDescriptor> {
+  try {
+    list($fd, $_addr) = OS\accept($server);
+    return $fd;
+  } catch (OS\BlockingIOException $_) {
     // accept (3P) defines select() as indicating the FD ready for read when there's a connection
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
-    await \stream_await($server, \STREAM_AWAIT_READ);
-    $retry = false;
+    await _OS\poll_async($server, \STREAM_AWAIT_READ, /* timeout = */ 0);
+    list($fd, $_addr) = OS\accept($server);
+    return $fd;
   }
 }

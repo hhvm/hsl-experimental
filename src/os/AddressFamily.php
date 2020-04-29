@@ -8,10 +8,12 @@
  *
  */
 
-namespace HH\Lib\TCP;
-use namespace HH\Lib\Network;
+namespace HH\Lib\OS;
 
-type ServerOptions = shape(
-  ?'backlog' => int,
-  ?'socket_options' => Network\SocketOptions,
-);
+use namespace HH\Lib\_Private\_OS;
+
+enum AddressFamily: int {
+  AF_UNIX = _OS\AF_UNIX;
+  AF_INET = _OS\AF_INET;
+  AF_INET6 = _OS\AF_INET6;
+}
