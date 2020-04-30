@@ -21,17 +21,17 @@ function sockaddr_from_native_sockaddr(namespace\sockaddr $sa): OS\sockaddr {
 
   if ($sa is namespace\sockaddr_in) {
     return new OS\sockaddr_in(
-      native_to_netshort_FIXME($sa->sin_port),
-      native_to_netlong_FIXME($sa->sin_addr),
+      $sa->sin_port,
+      $sa->sin_addr,
     );
   }
 
   if ($sa is namespace\sockaddr_in6) {
     return new OS\sockaddr_in6(
-      native_to_netshort_FIXME($sa->sin6_port),
-      native_to_netlong_FIXME($sa->sin6_flowinfo),
+      $sa->sin6_port,
+      $sa->sin6_flowinfo,
       string_as_in6_addr_UNSAFE($sa->sin6_addr),
-      native_to_netlong_FIXME($sa->sin6_scope_id),
+      $sa->sin6_scope_id,
     );
   }
 

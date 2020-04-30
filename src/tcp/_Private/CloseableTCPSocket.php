@@ -26,16 +26,16 @@ final class CloseableTCPSocket
   public function getLocalAddress(): (string, int) {
     $sa = OS\getsockname($this->impl) as OS\sockaddr_in;
     return tuple(
-      OS\inet_ntop(OS\AddressFamily::AF_INET, $sa->getAddress()),
-      OS\ntohs($sa->getPort()),
+      OS\inet_ntop_inet($sa->getAddress()),
+      $sa->getPort(),
     );
   }
 
   public function getPeerAddress(): (string, int) {
     $sa = OS\getpeername($this->impl) as OS\sockaddr_in;
     return tuple(
-      OS\inet_ntop(OS\AddressFamily::AF_INET, $sa->getAddress()),
-      OS\ntohs($sa->getPort()),
+      OS\inet_ntop_inet($sa->getAddress()),
+      $sa->getPort(),
     );
   }
 }

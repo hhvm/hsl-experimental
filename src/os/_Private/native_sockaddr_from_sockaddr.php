@@ -22,13 +22,22 @@ function native_sockaddr_from_sockaddr(OS\sockaddr $sa): namespace\sockaddr {
 
   if ($sa is OS\sockaddr_in) {
     return new namespace\sockaddr_in(
-      netshort_to_native_FIXME($sa->getPort()),
-      netlong_to_native_FIXME($sa->getAddress()),
+      $sa->getPort(),
+      $sa->getAddress(),
+    );
+  }
+
+  if ($sa is OS\sockaddr_in6) {
+    return new namespace\sockaddr_in6(
+      $sa->getPort(),
+      $sa->getFlowInfo(),
+      $sa->getAddress() as string,
+      $sa->getScopeID(),
     );
   }
 
   throw_errno(
-    OS\Errno::EOPNOTSUPP,
+    OS\Errno::EAFNOSUPPORT,
     "Unhandled sockaddr class %s",
     \get_class($sa),
   );

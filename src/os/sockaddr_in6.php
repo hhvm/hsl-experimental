@@ -19,16 +19,13 @@ namespace HH\Lib\OS;
 final class sockaddr_in6 extends sockaddr {
   /** Construct an instance.
    *
-   * @param $port is the port to connect to, in network byte order - see
-   *   `htons()`.
-   * @param $address is the IP address to connect to, as a 32-bit integer, in
-   *   network byte order - see `htonl()`.
+   * Unlike the C API, all integers are in host byte order.
    */
   public function __construct(
-    private NetShort $port,
-    private NetLong $flowInfo,
+    private int $port,
+    private int $flowInfo,
     private in6_addr $address,
-    private NetLong $scopeID,
+    private int $scopeID,
   ) {
   }
 
@@ -37,11 +34,8 @@ final class sockaddr_in6 extends sockaddr {
     return AddressFamily::AF_INET6;
   }
 
-  /** Get the port, in network byte order.
-   *
-   * @see `ntohs()`
-  **/
-  final public function getPort(): NetShort {
+  /** Get the port, in host byte order. */
+  final public function getPort(): int{
     return $this->port;
   }
 
@@ -49,25 +43,30 @@ final class sockaddr_in6 extends sockaddr {
     return $this->address;
   }
 
-  final public function getFlowInfo(): NetLong {
+  /** Get the flow ID.
+   *
+   * See `man ip6` for details.
+   */
+  final public function getFlowInfo(): int {
     return $this->flowInfo;
   }
 
-  final public function getScopeID(): NetLong {
+  /** Get the scope ID.
+   *
+   * See `man ip6` for details.
+   */
+  final public function getScopeID(): int {
     return $this->scopeID;
   }
 
   final public function __debugInfo(): darray<string, mixed> {
     return darray[
-      'port (network byte order)' => $this->port,
-      'port (host byte order)' => ntohs($this->port),
-      'flow info (network byte order)' => $this->flowInfo,
-      'flow info (host byte order)' => ntohl($this->flowInfo),
-      'scope ID (network byte order)' => $this->scopeID,
-      'scope ID (host byte order)' => ntohl($this->scopeID),
+      'port (host byte order)' => $this->port,
+      'flow info (host byte order)' => $this->flowInfo,
+      'scope ID (host byte order)' => $this->scopeID,
       'address (network format)' => $this->address,
       'address (presentation format)' =>
-        inet_ntop(AddressFamily::AF_INET6, $this->address),
+        inet_ntop_inet6($this->address),
     ];
   }
 }

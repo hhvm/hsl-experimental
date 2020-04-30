@@ -49,7 +49,7 @@ async function connect_nd_async(
         );
         if ($ipv4_host is nonnull) {
           $sa = new OS\sockaddr_in(
-            OS\htons($port),
+            $port,
             OS\inet_pton_inet($ipv4_host),
           );
         }
@@ -62,10 +62,10 @@ async function connect_nd_async(
 
         if ($ipv6_host !== null) {
           $sa = new OS\sockaddr_in6(
-            OS\htons($port),
-            /* flowinfo = */ OS\htonl(0),
+            $port,
+            /* flowinfo = */ 0,
             OS\inet_pton_inet6($ipv6_host),
-            /* scope id = */ OS\htonl(0),
+            /* scope id = */ 0,
           );
         }
         break;

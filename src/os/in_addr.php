@@ -10,14 +10,10 @@
 
 namespace HH\Lib\OS;
 
-/** The type of the network form of an INET (IPv4) address.
+/** The type of the network form of an INET (IPv4) address, in host byte order.
  *
- * This type is primarily here for consistency with IPv6, where an opaque type
- * is used.
- *
- * this type is not opaque, as standard practice is to use `htonl()` to create
- * IPv4 addresses.
+ * Note that this differs from the C API, which uses network byte order.
  *
  * @see `in6_addr`
  */
-type in_addr = NetLong;
+type in_addr = int;

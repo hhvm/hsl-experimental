@@ -56,10 +56,10 @@ final class Server
         }
         $sd = OS\SocketDomain::PF_INET6;
         $sa = new OS\sockaddr_in6(
-          OS\htons($port),
-          OS\htonl(0),
+          $port,
+          /* flowInfo = */ 0,
           $in6_addr,
-          OS\htonl(0),
+          /* scopeID = */ 0,
         );
         break;
       case Network\IPProtocolVersion::IPV4:
@@ -91,7 +91,7 @@ final class Server
           $in_addr = OS\inet_pton_inet($host);
         }
         $sd = OS\SocketDomain::PF_INET;
-        $sa = new OS\sockaddr_in(OS\htons($port), $in_addr);
+        $sa = new OS\sockaddr_in($port, $in_addr);
         break;
     }
 
@@ -121,13 +121,13 @@ final class Server
     if ($sa is OS\sockaddr_in) {
       return tuple(
         OS\inet_ntop_inet($sa->getAddress()),
-        OS\ntohs($sa->getPort()),
+        $sa->getPort(),
       );
     }
     if ($sa is OS\sockaddr_in6) {
       return tuple(
         OS\inet_ntop_inet6($sa->getAddress()),
-        OS\ntohs($sa->getPort()),
+        $sa->getPort(),
       );
     }
     _OS\throw_errno(

@@ -55,17 +55,17 @@ function inet_ntop(AddressFamily $af, mixed $addr): string {
       if (!$addr is int) {
         _OS\throw_errno(
           Errno::EINVAL,
-          "AF_INET address must be an OS\\NetLong",
+          "AF_INET address must be an int",
         );
       }
       // NetLongs are always uint32
       if ($addr < 0 || $addr >= (1 << 32)) {
         _OS\throw_errno(
           Errno::EINVAL,
-          "AF_INET address must be an OS\\NetLong, not an arbitrary integer",
+          "AF_INET address must fit in a uint32",
         );
       }
-      return inet_ntop_inet(_OS\int_as_netlong_UNSAFE($addr));
+      return inet_ntop_inet($addr);
     case AddressFamily::AF_INET6:
       if (
         !(

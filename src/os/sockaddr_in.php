@@ -19,14 +19,12 @@ namespace HH\Lib\OS;
 final class sockaddr_in extends sockaddr {
   /** Construct a `sockaddr_in`.
    *
-   * @param $port is the port to connect to, in network byte order - see
-   *   `htons()`.
-   * @param $address is the IP address to connect to, as a 32-bit integer, in
-   *   network byte order - see `htonl()`.
+   * Unlike the C API, all integers are in host byte order, not network byte
+   * order.
    */
   public function __construct(
-    private NetShort $port,
-    private NetLong $address,
+    private int $port,
+    private in_addr $address,
   ) {
   }
 
@@ -35,31 +33,22 @@ final class sockaddr_in extends sockaddr {
     return AddressFamily::AF_INET;
   }
 
-  /** Get the port, in network byte order.
-   *
-   * @see `ntohs()`
-  **/
-  final public function getPort(): NetShort {
+  /** Get the port, in host byte order. */
+  final public function getPort(): int{
     return $this->port;
   }
 
-  /** Get the IP address, as a 32-bit integer, in network byte order.
-   *
-   * `in_addr` is an alias for `NetLong`.
-   *
-   * @see `ntohl()`
-   */
+  /** Get the IP address, as a 32-bit integer, in host byte order. */
   final public function getAddress(): in_addr {
     return $this->address;
   }
 
   final public function __debugInfo(): darray<string, mixed> {
     return darray[
-      'port (network byte order)' => $this->port,
-      'port (host byte order)' => ntohs($this->port),
-      'address (network byte order uint32)' => $this->address,
+      'port (host byte order)' => $this->port,
+      'address (uint32)' => $this->address,
       'address (presentation format)' =>
-        inet_ntop(AddressFamily::AF_INET, $this->address),
+        inet_ntop_inet($this->address),
     ];
   }
 }

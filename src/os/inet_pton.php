@@ -29,7 +29,7 @@ function inet_pton_inet(string $addr): in_addr {
       $addr,
     );
   }
-  return namespace\htonl(\ip2long($addr));
+  return \ip2long($addr);
 }
 
 /** Convert a presentation-format (colon-separated) INET6 (IPv6) address to
