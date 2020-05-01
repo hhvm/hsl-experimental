@@ -13,7 +13,12 @@ namespace HH\Lib\IO;
 use namespace HH\Lib\Fileystem;
 use namespace HH\Lib\_Private;
 
-/** An `IO\Handle` that is readable. */
+/** An `IO\Handle` that is readable.
+ *
+ * If implementing this interface, you may wish to use
+ * `ReadHandleConvenienceAccessorTrait`, which implements `readAllAsync()` and
+ * `readFixedSizeAsync()` on top of `readAsync`.
+ */
 interface ReadHandle extends Handle {
   /** An immediate, unordered read.
    *
@@ -46,4 +51,30 @@ interface ReadHandle extends Handle {
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string>;
+
+  /** Read until there is no more data to read.
+   *
+   * It is possible for this to never return, e.g. if called on a pipe or
+   * or socket which the other end keeps open forever. Set a timeout if you
+   * do not want this to happen.
+   */
+  public function readAllAsync(
+    ?int $max_bytes = null,
+    ?int $timeout_ns = null,
+  ): Awaitable<string>;
+
+  /** Read a fixed amount of data.
+   *
+   * Will fail with `EPIPE` if the file is closed before that much data is
+   * available.
+   *
+   * It is possible for this to never return, e.g. if called on a pipe or
+   * or socket which the other end keeps open forever. Set a timeout if you
+   * do not want this to happen.
+   */
+  public function readFixedSizeAsync(
+    int $size,
+    ?int $timeout_ns = null,
+  ): Awaitable<string>;
+
 }

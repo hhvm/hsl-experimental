@@ -48,6 +48,7 @@ abstract class FileDescriptorHandle implements IO\CloseableHandle {
       if ($result === \STREAM_AWAIT_CLOSED) {
         _OS\throw_errno(OS\Errno::EBADFD, "Can't await a closed FD");
       }
+
     } catch (_OS\ErrnoException $e) {
       if ($e->getCode() === OS\Errno::ENOTSUP) {
         // e.g. real files on Linux when using epoll

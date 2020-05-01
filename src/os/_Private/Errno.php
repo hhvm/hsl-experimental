@@ -24,7 +24,7 @@ function get_throw_errno_impl(): (function(OS\Errno, string): noreturn) {
     OS\IsADirectoryException::class,
     OS\IsNotADirectoryException::class,
     OS\ProcessLookupException::class,
-    OS\TimeoutError::class,
+    OS\TimeoutException::class,
   ];
   $multiple_codes = keyset[
     OS\BlockingIOException::class,
