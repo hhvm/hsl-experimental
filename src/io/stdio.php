@@ -13,26 +13,6 @@ namespace HH\Lib\IO;
 use namespace HH\Lib\OS;
 use namespace HH\Lib\_Private\{_IO, _OS};
 
-/** Return STDOUT for the server process.
- *
- * This is usually not the same thing as request output.
- *
- * @see request_output
- */
-<<__Memoize>>
-function server_output(): WriteHandle {
-  return new _IO\StdioWriteHandle('php://stdout');
-}
-
-/** Return STDERR for the server process.
- *
- * @see request_error
- */
-<<__Memoize>>
-function server_error(): WriteHandle {
-  return new _IO\StdioWriteHandle('php://stderr');
-}
-
 /** Return the output handle for the current request.
  *
  * This should generally be used for sending data to clients. In CLI mode, this
@@ -47,7 +27,7 @@ function request_output(): CloseableWriteHandle {
   /* HH_IGNORE_ERROR[2049] __PHPStdLib */
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() === "cli") {
-    return server_output() as CloseableWriteHandle;
+    return new _IO\StdioWriteHandle('php://stdout');
   }
   return new _IO\StdioWriteHandle('php://output');
 }
@@ -84,11 +64,11 @@ function request_errorx(): CloseableWriteHandle {
   /* HH_IGNORE_ERROR[4107] __PHPStdLib */
   if (\php_sapi_name() !== "cli") {
     _OS\throw_errno(
-      OS\Errno::ENOENT,
+      OS\Errno::EBADF,
       "There is no request_error() handle",
     );
   }
-  return server_error() as CloseableWriteHandle;
+  return new _IO\StdioWriteHandle('php://stderr');
 }
 
 /** Return the input handle for the current request.
