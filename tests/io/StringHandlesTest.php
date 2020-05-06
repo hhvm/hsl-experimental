@@ -21,6 +21,13 @@ final class StringHandlesTest extends HackTest {
     expect($h->read(4))->toEqual('herp');
     expect(await $h->readAllAsync())->toEqual('derp');
     expect(await $h->readAllAsync())->toEqual('');
+    expect($h->tell())->toEqual(8);
+    await $h->seekAsync(0);
+    expect($h->tell())->toEqual(0);
+    expect(await $h->readAllAsync())->toEqual('herpderp');
+    await $h->seekAsync(4);
+    expect($h->tell())->toEqual(4);
+    expect(await $h->readAllAsync())->toEqual('derp');
   }
 
   public async function testStringOutput(): Awaitable<void> {
