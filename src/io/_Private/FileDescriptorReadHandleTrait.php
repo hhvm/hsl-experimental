@@ -15,6 +15,7 @@ use namespace HH\Lib\_Private\_OS;
 
 trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
   require extends FileDescriptorHandle;
+  use IO\ReadHandleConvenienceMethodsTrait;
 
   final public function read(?int $max_bytes = null): string {
     $max_bytes ??= DEFAULT_READ_BUFFER_SIZE;

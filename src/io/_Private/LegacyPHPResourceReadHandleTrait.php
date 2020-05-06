@@ -17,6 +17,7 @@ use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
   require extends LegacyPHPResourceHandle;
+  use IO\ReadHandleConvenienceMethodsTrait;
 
   final public function read(?int $max_bytes = null): string {
     $max_bytes ??= DEFAULT_READ_BUFFER_SIZE;

@@ -27,4 +27,18 @@ trait DisposableReadHandleWrapperTrait<T as IO\CloseableReadHandle>
   ): Awaitable<string> {
     return await $this->impl->readAsync($max_bytes, $timeout_ns);
   }
+
+  final public async function readAllAsync(
+    ?int $max_bytes = null,
+    ?int $timeout_ns = null,
+  ): Awaitable<string> {
+    return await $this->impl->readAllAsync($max_bytes, $timeout_ns);
+  }
+
+  final public async function readFixedSizeAsync(
+    int $size,
+    ?int $timeout_ns = null,
+  ): Awaitable<string> {
+    return await $this->impl->readFixedSizeAsync($size, $timeout_ns);
+  }
 }

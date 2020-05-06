@@ -17,6 +17,7 @@ use type HH\Lib\_Private\PHPWarningSuppressor;
 
 trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
   require extends LegacyPHPResourceHandle;
+  use IO\WriteHandleConvenienceMethodsTrait;
 
   final public function write(string $bytes): int {
     using new PHPWarningSuppressor();

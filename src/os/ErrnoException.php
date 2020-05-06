@@ -177,7 +177,7 @@ final class ProcessLookupException extends ErrnoException {
   }
 }
 
-final class TimeoutError extends ErrnoException {
+final class TimeoutException extends ErrnoException {
   use _OS\ErrnoExceptionWithSingleErrnoTrait;
 
   <<__Override>>

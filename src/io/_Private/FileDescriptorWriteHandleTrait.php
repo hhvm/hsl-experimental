@@ -15,6 +15,7 @@ use namespace HH\Lib\_Private\_OS;
 
 trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
   require extends FileDescriptorHandle;
+  use IO\WriteHandleConvenienceMethodsTrait;
 
   final public function write(string $bytes): int {
     return OS\write($this->impl, $bytes);
