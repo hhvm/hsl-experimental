@@ -30,7 +30,20 @@ final class MemoryHandleTest extends HackTest {
     expect(await $h->readAllAsync())->toEqual('derp');
   }
 
-  public async function testWrite(): Awaitable<void> {
+  public async function testReadAtInvalidOffset(): Awaitable<void> {
+    $h = new IO\MemoryHandle('herpderp');
+    await $h->seekAsync(99999);
+    expect(await $h->readAllAsync())->toEqual('');
+  }
+
+  public async function testReadTooMuch(): Awaitable<void> {
+    $h = new IO\MemoryHandle("herpderp");
+    expect(async () ==> await $h->readFixedSizeAsync(1024))->toThrow(
+      OS\BrokenPipeException::class,
+    );
+  }
+
+  public function testWrite(): void {
     $h = new IO\MemoryHandle();
     $h->write('herp');
     expect($h->getBuffer())->toEqual('herp');
@@ -40,4 +53,32 @@ final class MemoryHandleTest extends HackTest {
     $h->write('foo');
     expect($h->getBuffer())->toEqual('foo');
   }
+
+  public async function testOverwrite(): Awaitable<void> {
+    $h = new IO\MemoryHandle('xxxxderp');
+    $h->write('herp');
+    expect($h->getBuffer())->toEqual('herpderp');
+    expect(await $h->readAllAsync())->toEqual('derp');
+    await $h->seekAsync(0);
+    expect(await $h->readAllAsync())->toEqual('herpderp');
+  }
+
+  public async function testAppend(): Awaitable<void> {
+    $h = new IO\MemoryHandle('herp', IO\MemoryHandleWriteMode::APPEND);
+    $h->write('derp');
+    expect($h->getBuffer())->toEqual('herpderp');
+    expect(await $h->readAllAsync())->toEqual('');
+    await $h->seekAsync(0);
+    expect(await $h->readAllAsync())->toEqual('herpderp');
+  }
+
+	public async function testReset(): Awaitable<void> {
+    $h = new IO\MemoryHandle('herpderp');
+		expect(await $h->readAllAsync())->toEqual('herpderp');
+    $h->reset('foobar');
+		expect(await $h->readAllAsync())->toEqual('foobar');
+    await $h->seekAsync(0);
+		expect(await $h->readAllAsync())->toEqual('foobar');
+	}
+
 }
