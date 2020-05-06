@@ -15,9 +15,9 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: use type HackTest;
 
 // @oss-disable: <<Oncalls('hack')>>
-final class StringHandlesTest extends HackTest {
-  public async function testStringInput(): Awaitable<void> {
-    $h = new IO\StringInput('herpderp');
+final class MemoryHandleTest extends HackTest {
+  public async function testRead(): Awaitable<void> {
+    $h = new IO\MemoryHandle('herpderp');
     expect($h->read(4))->toEqual('herp');
     expect(await $h->readAllAsync())->toEqual('derp');
     expect(await $h->readAllAsync())->toEqual('');
@@ -30,13 +30,13 @@ final class StringHandlesTest extends HackTest {
     expect(await $h->readAllAsync())->toEqual('derp');
   }
 
-  public async function testStringOutput(): Awaitable<void> {
-    $h = new IO\StringOutput();
+  public async function testWrite(): Awaitable<void> {
+    $h = new IO\MemoryHandle();
     $h->write('herp');
     expect($h->getBuffer())->toEqual('herp');
     $h->write('derp');
     expect($h->getBuffer())->toEqual('herpderp');
-    $h->clearBuffer();
+    $h->reset();
     $h->write('foo');
     expect($h->getBuffer())->toEqual('foo');
   }
