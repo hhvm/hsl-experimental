@@ -87,8 +87,14 @@ abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
   final public async function closeAsync(): Awaitable<void> {
     $this->checkIsValid();
     if ($this is IO\WriteHandle) {
-      await $this->flushAsync();
+      await $this->queuedAsync(async () ==> {
+        using new PHPWarningSuppressor();
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+        \fflush($this->impl);
+      });
     }
+
     using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */

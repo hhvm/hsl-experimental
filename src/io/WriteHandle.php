@@ -46,8 +46,6 @@ interface WriteHandle extends Handle {
     ?int $timeout_ns = null,
   ): Awaitable<int>;
 
-  public function flushAsync(): Awaitable<void>;
-
   /** Write all of the requested data.
    *
    * A wrapper aroudn `writeAsync()` that will:

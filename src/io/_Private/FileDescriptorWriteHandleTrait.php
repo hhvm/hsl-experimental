@@ -40,9 +40,4 @@ trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
       return $this->write($bytes);
     });
   }
-
-  final public function flushAsync(): Awaitable<void> {
-    // no write buffer, so just wait for end of queue.
-    return $this->queuedAsync(async () ==> {});
-  }
 }

@@ -23,7 +23,6 @@ final class FileTest extends HackTest {
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
     $f1 = File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE);
     await $f1->writeAsync('Hello, world!');
-    await $f1->flushAsync();
     $e = expect(
       () ==> File\open_write_only_nd($filename, File\WriteMode::MUST_CREATE),
     )->toThrow(OS\ErrnoException::class);
@@ -57,7 +56,6 @@ final class FileTest extends HackTest {
       $b = Str\repeat('b', 10 * 1024 * 1024);
       $c = Str\repeat('c', 10 * 1024 * 1024);
       await $tf->writeAsync($a.$b.$c);
-      await $tf->flushAsync();
 
       await using ($tfr = File\open_read_only($tf->getPath()->toString())) {
         concurrent {
@@ -85,7 +83,6 @@ final class FileTest extends HackTest {
   public async function testTruncate(): Awaitable<void> {
     await using $tf = File\temporary_file();
     await $tf->writeAsync('Hello, world');
-    await $tf->flushAsync();
 
     $path = $tf->getPath()->toString();
     await using ($tfr = File\open_read_only($path)) {
@@ -105,7 +102,6 @@ final class FileTest extends HackTest {
   public async function testAppend(): Awaitable<void> {
     await using $tf = File\temporary_file();
     await $tf->writeAsync('Hello, world');
-    await $tf->flushAsync();
 
     $path = $tf->getPath()->toString();
     await using ($f = File\open_write_only($path, File\WriteMode::APPEND)) {
