@@ -60,9 +60,6 @@ abstract class FileDescriptorHandle implements IO\CloseableHandle {
   }
 
   final public async function closeAsync(): Awaitable<void> {
-    if ($this is IO\WriteHandle) {
-      await $this->flushAsync();
-    }
     OS\close($this->impl);
   }
 }

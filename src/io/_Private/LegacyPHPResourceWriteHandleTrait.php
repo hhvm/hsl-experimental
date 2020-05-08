@@ -53,13 +53,4 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
       return $this->write($bytes);
     });
   }
-
-  final public function flushAsync(): Awaitable<void> {
-    return $this->queuedAsync(async () ==> {
-      using new PHPWarningSuppressor();
-      /* HH_IGNORE_ERROR[2049] */
-      /* HH_IGNORE_ERROR[4107] */
-      \fflush($this->impl);
-    });
-  }
 }

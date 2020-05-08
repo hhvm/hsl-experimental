@@ -28,10 +28,6 @@ trait DisposableWriteHandleWrapperTrait<T as IO\CloseableWriteHandle>
     return await $this->impl->writeAsync($bytes, $timeout_ns);
   }
 
-  final public async function flushAsync(): Awaitable<void> {
-    await $this->impl->flushAsync();
-  }
-
   final public async function writeAllAsync(
     string $bytes,
     ?int $timeout_ns = null,
