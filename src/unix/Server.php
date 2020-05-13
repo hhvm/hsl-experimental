@@ -14,7 +14,7 @@ use namespace HH\Lib\Network;
 use namespace HH\Lib\_Private\{_Network, _Unix};
 
 final class Server
-  implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
+  implements Network\Server<CloseableSocket> {
   /** Path */
   const type TAddress = string;
 
@@ -33,12 +33,7 @@ final class Server
       |> new self($$);
   }
 
-  <<__ReturnDisposable>>
-  public async function nextConnectionAsync(): Awaitable<DisposableSocket> {
-    return new _Unix\DisposableSocket(await $this->nextConnectionNDAsync());
-  }
-
-  public async function nextConnectionNDAsync(): Awaitable<CloseableSocket> {
+  public async function nextConnectionAsync(): Awaitable<CloseableSocket> {
     return await _Network\socket_accept_async($this->impl)
       |> new _Unix\CloseableSocket($$);
   }

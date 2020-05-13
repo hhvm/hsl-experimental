@@ -32,26 +32,23 @@ final class HSLUnixSocketTest extends HackTest {
       concurrent {
         await async {
           ///// Server /////
-          await using ($client = await $server->nextConnectionAsync()) {
+          $client = await $server->nextConnectionAsync();
             expect($client->getLocalAddress())->toEqual($path);
             expect($client->getPeerAddress())->toEqual('');
 
             $server_recv->value = await $client->readAsync();
             await $client->writeAsync("foo\n");
-          }
-          ;
+          await $client->closeAsync();
         };
         await async {
           ///// client /////
-          await using (
-            $conn = await Unix\connect_async($path)
-          ) {
-            expect($conn->getLocalAddress())->toEqual('');
-            expect($conn->getPeerAddress())->toEqual($path);
+          $conn = await Unix\connect_async($path);
+          expect($conn->getLocalAddress())->toEqual('');
+          expect($conn->getPeerAddress())->toEqual($path);
 
-            await $conn->writeAsync("bar\n");
-            $client_recv->value = await $conn->readAsync();
-          }
+          await $conn->writeAsync("bar\n");
+          $client_recv->value = await $conn->readAsync();
+          await $conn->closeAsync();
         };
       }
       expect($client_recv->value)->toEqual("foo\n");

@@ -22,7 +22,7 @@ enum MemoryHandleWriteMode: int {
  *
  * This class is intended for use in unit tests.
  *
- * @see `IO\pipe_nd()` for more complicated tests
+ * @see `IO\pipe()` for more complicated tests
  */
 final class MemoryHandle implements ReadWriteHandle, SeekableHandle {
   use ReadHandleConvenienceMethodsTrait;

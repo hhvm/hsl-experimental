@@ -89,21 +89,18 @@ final class HSLTCPTest extends HackTest {
     concurrent {
       await async {
         ///// Server /////
-        await using ($client = await $server->nextConnectionAsync()) {
-          $server_recv->value = await $client->readAsync();
-          await $client->writeAsync("foo\n");
-        }
-        ;
+        $client = await $server->nextConnectionAsync();
+        $server_recv->value = await $client->readAsync();
+        await $client->writeAsync("foo\n");
+        await $client->closeAsync();
       };
       await async {
         ///// client /////
-        await using (
-          $conn = await TCP\connect_async(
-            $client_address,
-            $port,
-            shape('ip_version' => $client_protocol),
-          )
-        ) {
+        $conn = await TCP\connect_async(
+          $client_address,
+          $port,
+          shape('ip_version' => $client_protocol),
+        );
           list($ph, $pp) = $conn->getPeerAddress();
           $expected = vec[$host];
           if (
@@ -119,7 +116,7 @@ final class HSLTCPTest extends HackTest {
           expect($lp)->toNotEqual($pp);
           await $conn->writeAsync("bar\n");
           $client_recv->value = await $conn->readAsync();
-        }
+          await $conn->closeAsync();
       };
     }
     expect($client_recv->value)->toEqual("foo\n");
@@ -127,7 +124,7 @@ final class HSLTCPTest extends HackTest {
   }
 
   public async function testConnectingToInvalidPort(): Awaitable<void> {
-    $ex = expect(async () ==> await TCP\connect_nd_async('localhost', 0))
+    $ex = expect(async () ==> await TCP\connect_async('localhost', 0))
       ->toThrow(OS\ErrnoException::class);
     expect(vec[OS\Errno::EADDRNOTAVAIL, OS\Errno::ECONNREFUSED])
       ->toContain($ex->getErrno());
@@ -145,8 +142,8 @@ final class HSLTCPTest extends HackTest {
     );
     $port = $s1->getLocalAddress()[1];
     concurrent {
-      $client = await TCP\connect_nd_async('127.0.0.1', $port);
-      $_ = await $s1->nextConnectionNDAsync();
+      $client = await TCP\connect_async('127.0.0.1', $port);
+      $_ = await $s1->nextConnectionAsync();
     }
     await $client->writeAsync('hello, world');
     $s1->stopListening();
@@ -168,14 +165,18 @@ final class HSLTCPTest extends HackTest {
     );
     concurrent {
       $client_recv = await async {
-        await using $client = await TCP\connect_async('127.0.0.1', $port);
+        $client = await TCP\connect_async('127.0.0.1', $port);
         await $client->writeAsync("hello, world!\n");
-        return await $client->readAsync();
+        $result = await $client->readAsync();
+        await $client->closeAsync();
+        return $result;
       };
       $server_recv = await async {
-        await using $conn = await $s2->nextConnectionAsync();
+        $conn = await $s2->nextConnectionAsync();
         await $conn->writeAsync("foo bar\n");
-        return await $conn->readAsync();
+        $result = await $conn->readAsync();
+        await $conn->closeAsync();
+        return $result;
       };
     }
     expect($client_recv)->toEqual("foo bar\n");

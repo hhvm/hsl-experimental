@@ -18,7 +18,7 @@ use namespace HH\Lib\_Private\{_Network, _TCP};
  * If using IPv6 with a fallback to IPv4 with a connection timeout, the timeout
  * will apply separately to the IPv4 and IPv6 connection attempts.
  */
-async function connect_nd_async(
+async function connect_async(
   string $host,
   int $port,
   ConnectOptions $opts = shape(),
@@ -70,17 +70,11 @@ async function connect_nd_async(
   _Network\throw_socket_error($err, $err_message);
 }
 
-/** Connect to a socket asynchronously, returning a disposable handle.
- *
- * If using IPv6 with a fallback to IPv4 with a connection timeout, the timeout
- * will apply separately to the IPv4 and IPv6 connection attempts.
- */
-<<__ReturnDisposable>>
-async function connect_async(
+<<__Deprecated("Use connect_async()/gen_connect() instead")>>
+async function connect_nd_async(
   string $host,
   int $port,
   ConnectOptions $opts = shape(),
-): Awaitable<DisposableSocket> {
-  $nd = await connect_nd_async($host, $port, $opts);
-  return new _TCP\DisposableTCPSocket($nd);
+): Awaitable<CloseableSocket> {
+  return await connect_async($host, $port, $opts);
 }

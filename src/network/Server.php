@@ -15,11 +15,7 @@ namespace HH\Lib\Network;
  * @see Unix\Server
  * @see TCP\Server
  */
-interface Server<
-  TSock as Socket,
-  TDSock as TSock as DisposableSocket,
-  TNDSock as TSock as CloseableSocket,
-> {
+interface Server<TSock as Socket> {
   /** The type of address used by this socket.
    *
    * For example, this is likely to be a string path for Unix sockets,
@@ -33,14 +29,7 @@ interface Server<
    *
    * @see `nextConnectionNDAsync()` for non-disposables.
    */
-  <<__ReturnDisposable>>
-  public function nextConnectionAsync(): Awaitable<TDSock>;
-  /** Retrieve the next pending conenction.
-   *
-   * Will wait for new connections if none are pending.
-   * @see `nextConnectionAsync()` for a disposable
-   */
-  public function nextConnectionNDAsync(): Awaitable<TNDSock>;
+  public function nextConnectionAsync(): Awaitable<TSock>;
 
   /** Return the local (listening) address for the server */
   public function getLocalAddress(): this::TAddress;

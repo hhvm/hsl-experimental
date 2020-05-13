@@ -13,8 +13,7 @@ namespace HH\Lib\TCP;
 use namespace HH\Lib\Network;
 use namespace HH\Lib\_Private\{_Network, _TCP};
 
-final class Server
-  implements Network\Server<Socket, DisposableSocket, CloseableSocket> {
+final class Server implements Network\Server<CloseableSocket> {
   /** Host and port */
   const type TAddress = (string, int);
 
@@ -48,14 +47,7 @@ final class Server
       |> new self($$);
   }
 
-  <<__ReturnDisposable>>
-  public async function nextConnectionAsync(): Awaitable<DisposableSocket> {
-    return new _TCP\DisposableTCPSocket(
-      await $this->nextConnectionNDAsync(),
-    );
-  }
-
-  public async function nextConnectionNDAsync(): Awaitable<CloseableSocket> {
+  public async function nextConnectionAsync(): Awaitable<CloseableSocket> {
     return await _Network\socket_accept_async($this->impl)
       |> new _TCP\CloseableTCPSocket($$);
   }
