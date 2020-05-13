@@ -23,9 +23,12 @@ interface ReadHandle extends Handle {
   /** An immediate, unordered read.
    *
    * @see `genRead`
-   * @param max_bytes the maximum number of bytes to read
+   * @see `genReadAll`
+   * @param $max_bytes the maximum number of bytes to read
    *   - if `null`, an internal default will be used.
    *   - if 0, an `InvalidArgumentException` will be raised.
+   *   - up to `$max_bytes` may be allocated in a buffer; large values may lead
+   *     to unnecessarily hitting the request memory limit.
    * @throws `OS\BlockingIOException` if there is no more
    *   data available to read. If you want to wait for more
    *   data, use `genRead` instead.
@@ -40,9 +43,12 @@ interface ReadHandle extends Handle {
    * A wrapper around `read()` that will wait for more data if there is none
    * available at present.
    *
+   * @see `genReadAll`
    * @param max_bytes the maximum number of bytes to read
    *   - if `null`, an internal default will be used.
    *   - if 0, an `InvalidArgumentException` will be raised.
+   *   - up to `$max_bytes` may be allocated in a buffer; large values may lead
+   *     to unnecessarily hitting the request memory limit.
    * @returns
    *   - the read data on success
    *   - the empty string if the end of file is reached.
@@ -57,6 +63,9 @@ interface ReadHandle extends Handle {
    * It is possible for this to never return, e.g. if called on a pipe or
    * or socket which the other end keeps open forever. Set a timeout if you
    * do not want this to happen.
+   *
+   * Up to `$max_bytes` may be allocated in a buffer; large values may lead to
+   * unnecessarily hitting the request memory limit.
    */
   public function readAllAsync(
     ?int $max_bytes = null,
