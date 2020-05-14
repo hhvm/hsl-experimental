@@ -16,9 +16,15 @@ use namespace HH\Lib\_Private\_OS;
  *
  * See `man 2 pipe` for details. On error, an `ErrnoException` will be thrown.
  *
+ * `O_CLOEXEC` is implicitly set for consistent behavior between standalone CLI
+ * mode and server modes. Use `OS\fcntl()` to remove if needed.
+ *
  * @returns Two `FileDescriptor`s; the first is read-only, and the second is
  *   write-only. Data written to the second can be read from the first.
  */
 function pipe(): (FileDescriptor, FileDescriptor) {
-  return _OS\wrap_impl(() ==> _OS\pipe());
+  list($r, $w) = _OS\wrap_impl(() ==> _OS\pipe());
+  _OS\fcntl($r, _OS\F_SETFL, _OS\fcntl($r, _OS\F_GETFL) as int | _OS\O_CLOEXEC);
+  _OS\fcntl($w, _OS\F_SETFL, _OS\fcntl($w, _OS\F_GETFL) as int | _OS\O_CLOEXEC);
+  return tuple($r, $w);
 }

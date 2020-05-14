@@ -33,7 +33,9 @@ const int O_CLOEXEC = _OS\O_CLOEXEC;
  * See `man 2 open` for details. On error, an `ErrnoException` will be thrown.
  *
  * @param $flags a bitmask of `O_` flags; one out of `O_RDONLY`, `O_WRONLY`,
- *    and `O_RDWR` **must** be specified.
+ *    and `O_RDWR` **must** be specified. `O_CLOEXEC` is implicit, so that
+ *    standalone CLI mode is consistent with server modes. If needed, this can
+ *    be removed with `OS\fcntl()`.
  * @param $mode specify the mode of the file to create if `O_CREAT` is specified
  *    and the file does not exist.
  */
@@ -60,5 +62,6 @@ function open(string $path, int $flags, ?int $mode = null): FileDescriptor {
       'mode must be specified when O_CREAT is specified',
     );
   }
+  $flags |= _OS\O_CLOEXEC;
   return _OS\wrap_impl(() ==> _OS\open($path, $flags, $mode ?? 0));
 }
