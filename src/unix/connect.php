@@ -13,12 +13,8 @@ namespace HH\Lib\Unix;
 use namespace HH\Lib\Network;
 use namespace HH\Lib\_Private\{_Network, _Unix};
 
-/** Asynchronously connect to the specified unix socket, returning a
- * non-disposable handle.
- *
- * @see connect_async()
- */
-async function connect_nd_async(
+/** Asynchronously connect to the specified unix socket. */
+async function connect_async(
   string $path,
   ConnectOptions $opts = shape(),
 ): Awaitable<CloseableSocket> {
@@ -45,13 +41,11 @@ async function connect_nd_async(
   _Network\throw_socket_error($err, 'connect() failed');
 }
 
-/** Asynchronously connect to the specified unix socket, returning a disposable
- * handle.
- *
- * @see connect_nd_async()
- */
-<<__ReturnDisposable>>
-async function connect_async(string $path): Awaitable<DisposableSocket> {
-  $nd = await connect_nd_async($path);
-  return new _Unix\DisposableSocket($nd);
+<<__Deprecated('use connect_async() instead')>>
+async function connect_nd_async(
+  string $path,
+  ConnectOptions $opts,
+): Awaitable<CloseableSocket> {
+  return await connect_async($path, $opts);
+
 }

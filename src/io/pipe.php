@@ -17,10 +17,16 @@ use namespace HH\Lib\{_Private\_IO, OS};
  *
  * @see `Network\Socket`
  */
-function pipe_nd(): (CloseableReadHandle, CloseableWriteHandle) {
+function pipe(): (CloseableReadHandle, CloseableWriteHandle) {
   list($r, $w) = \HH\Lib\OS\pipe();
   return tuple(
     new _IO\PipeReadHandle($r),
     new _IO\PipeWriteHandle($w),
   );
+}
+
+
+<<__Deprecated("use pipe() instead")>>
+function pipe_nd(): (CloseableReadHandle, CloseableWriteHandle) {
+  return pipe();
 }

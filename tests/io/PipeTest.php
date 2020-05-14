@@ -21,7 +21,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: <<Oncalls('hack')>>
 final class PipeTest extends HackTest {
   public async function testWritesAreReadableAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
 
     $read = await $r->readAsync();
@@ -33,7 +33,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadWithoutLimitAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
     await $w->closeAsync();
     $s = await $r->readAsync();
@@ -41,7 +41,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testPartialReadAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     await $w->writeAsync('1234567890');
     $s = await $r->readAsync(5);
     expect($s)->toEqual('12345');
@@ -50,7 +50,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadTooManyAsync(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     await $w->writeAsync('1234567890');
     await $w->closeAsync();
     $s = await $r->readAsync(11);
@@ -59,8 +59,8 @@ final class PipeTest extends HackTest {
 
   public async function testInteractionAsync(): Awaitable<void> {
     // Emulate a client-server environment
-    list($cr, $sw) = IO\pipe_nd();
-    list($sr, $cw) = IO\pipe_nd();
+    list($cr, $sw) = IO\pipe();
+    list($sr, $cw) = IO\pipe();
 
     concurrent {
       await async { // client
@@ -86,7 +86,7 @@ final class PipeTest extends HackTest {
     // Intent is to:
     // - make sure we throw the expected errno
     // - make sure there isn't an infinite loop
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     await $r->closeAsync();
     await $w->closeAsync();
     $ex = expect(async () ==> await $r->readAsync())->toThrow(
@@ -96,7 +96,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadFromPipeClosedOnOtherEnd(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     await $w->closeAsync();
     // Standard behavior for `read(fd)` with "no more data is coming" rather
     // than "no more available now"
@@ -104,7 +104,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testInterleavedReads(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     concurrent {
       await async {
         $w->write("Hello, ");
@@ -119,7 +119,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadAll(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     concurrent {
       await async {
         $w->write("Hello, ");
@@ -134,14 +134,14 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadAllTimeout(): Awaitable<void> {
-    list($r, $_w) = IO\pipe_nd();
+    list($r, $_w) = IO\pipe();
     expect(
       async () ==> await $r->readAllAsync(/* max_bytes = */ null, 1 /* ns */),
     )->toThrow(OS\TimeoutException::class);
   }
 
   public async function testReadAllTruncated(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     concurrent {
       await async {
         $w->write("Hello, ");
@@ -155,7 +155,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testReadFixedSize(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     $w->write("Hello");
     expect(await $r->readFixedSizeAsync(3))->toEqual('Hel');
 
@@ -176,7 +176,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testPartialWrites(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     concurrent {
       await async {
         await HH\Asio\later();
@@ -191,7 +191,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testWriteAll(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     concurrent {
       await async {
         await HH\Asio\later();
@@ -206,7 +206,7 @@ final class PipeTest extends HackTest {
   }
 
   public async function testWriteAllTruncated(): Awaitable<void> {
-    list($r, $w) = IO\pipe_nd();
+    list($r, $w) = IO\pipe();
     concurrent {
       await async {
         await HH\Asio\later();

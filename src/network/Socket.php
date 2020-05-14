@@ -21,7 +21,6 @@ use namespace HH\Lib\{IO, TCP, Unix};
  * @see `Unix\Socket`
  */
 <<__Sealed(
-  DisposableSocket::class,
   CloseableSocket::class,
   TCP\Socket::class,
   Unix\Socket::class,

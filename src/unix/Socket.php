@@ -15,10 +15,9 @@ use namespace HH\Lib\{IO, Network};
 /** A Unix socket for a server or client connection.
  *
  * @see `Unix\Server` to accept new connections
- * @see `Unix\connect_async()` and `Unix\connect_nd_async()` to conenct to an
- *   existing server.
+ * @see `Unix\connect_async()` to connect to an existing server
  */
-<<__Sealed(DisposableSocket::class, CloseableSocket::class)>>
+<<__Sealed(CloseableSocket::class)>>
 interface Socket extends Network\Socket {
   /** A file path */
   const type TAddress = string;

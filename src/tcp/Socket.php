@@ -15,11 +15,10 @@ use namespace HH\Lib\{IO, Network};
 /**
  * A TCP client or server socket.
  *
- * @see `TCP\Server` to create a server
- * @see `TCP\connect_async()` and `TCP\connect_nd_async()` to connect to an
- *   existing server
+ * @see `TCP\Server` to create a server.
+ * @see `TCP\connect_async()` to connect to an existing server.
  */
-<<__Sealed(DisposableSocket::class, CloseableSocket::class)>>
+<<__Sealed(CloseableSocket::class)>>
 interface Socket extends Network\Socket {
   /** A host and port number */
   const type TAddress = (string, int);
