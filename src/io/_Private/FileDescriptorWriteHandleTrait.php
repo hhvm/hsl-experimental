@@ -30,14 +30,12 @@ trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
     }
     $timeout_ns ??= 0;
 
-    return await $this->queuedAsync(async () ==> {
-      try {
-        return $this->write($bytes);
-      } catch (OS\BlockingIOException $_) {
-        // We need to wait, which we do below...
-      }
-      await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_ns);
+    try {
       return $this->write($bytes);
-    });
+    } catch (OS\BlockingIOException $_) {
+      // We need to wait, which we do below...
+    }
+    await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_ns);
+    return $this->write($bytes);
   }
 }

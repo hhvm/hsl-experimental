@@ -22,17 +22,17 @@ final class MemoryHandleTest extends HackTest {
     expect(await $h->readAllAsync())->toEqual('derp');
     expect(await $h->readAllAsync())->toEqual('');
     expect($h->tell())->toEqual(8);
-    await $h->seekAsync(0);
+    $h->seek(0);
     expect($h->tell())->toEqual(0);
     expect(await $h->readAllAsync())->toEqual('herpderp');
-    await $h->seekAsync(4);
+    $h->seek(4);
     expect($h->tell())->toEqual(4);
     expect(await $h->readAllAsync())->toEqual('derp');
   }
 
   public async function testReadAtInvalidOffset(): Awaitable<void> {
     $h = new IO\MemoryHandle('herpderp');
-    await $h->seekAsync(99999);
+    $h->seek(99999);
     expect(await $h->readAllAsync())->toEqual('');
   }
 
@@ -59,7 +59,7 @@ final class MemoryHandleTest extends HackTest {
     $h->write('herp');
     expect($h->getBuffer())->toEqual('herpderp');
     expect(await $h->readAllAsync())->toEqual('derp');
-    await $h->seekAsync(0);
+    $h->seek(0);
     expect(await $h->readAllAsync())->toEqual('herpderp');
   }
 
@@ -68,7 +68,7 @@ final class MemoryHandleTest extends HackTest {
     $h->write('derp');
     expect($h->getBuffer())->toEqual('herpderp');
     expect(await $h->readAllAsync())->toEqual('');
-    await $h->seekAsync(0);
+    $h->seek(0);
     expect(await $h->readAllAsync())->toEqual('herpderp');
   }
 
@@ -77,7 +77,7 @@ final class MemoryHandleTest extends HackTest {
     expect(await $h->readAllAsync())->toEqual('herpderp');
     $h->reset('foobar');
     expect(await $h->readAllAsync())->toEqual('foobar');
-    await $h->seekAsync(0);
+    $h->seek(0);
     expect(await $h->readAllAsync())->toEqual('foobar');
   }
 

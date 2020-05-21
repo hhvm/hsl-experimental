@@ -24,7 +24,7 @@ enum MemoryHandleWriteMode: int {
  *
  * @see `IO\pipe()` for more complicated tests
  */
-final class MemoryHandle implements ReadWriteHandle, SeekableHandle {
+final class MemoryHandle implements SeekableReadWriteHandle {
   use ReadHandleConvenienceMethodsTrait;
   use WriteHandleConvenienceMethodsTrait;
 
@@ -57,7 +57,7 @@ final class MemoryHandle implements ReadWriteHandle, SeekableHandle {
     return $ret;
   }
 
-  public async function seekAsync(int $pos): Awaitable<void> {
+  public function seek(int $pos): void {
     if ($pos < 0) {
       _OS\throw_errno(OS\Errno::ERANGE, "Position must be >= 0");
     }
@@ -110,7 +110,7 @@ final class MemoryHandle implements ReadWriteHandle, SeekableHandle {
 
   /** Set the internal buffer and reset position to the beginning of the file.
    *
-   * If you wish to preserve the position, use `tell()` and `seekAsync()`,
+   * If you wish to preserve the position, use `tell()` and `seek()`,
    * or `appendToBuffer()`.
    */
   public function reset(string $data = ''): void {

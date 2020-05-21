@@ -88,7 +88,7 @@ final class HSLTCPTest extends HackTest {
         $client = await $server->nextConnectionAsync();
         $server_recv->value = await $client->readAsync();
         await $client->writeAsync("foo\n");
-        await $client->closeAsync();
+        $client->close();
       };
       await async {
         ///// client /////
@@ -112,7 +112,7 @@ final class HSLTCPTest extends HackTest {
         expect($lp)->toNotEqual($pp);
         await $conn->writeAsync("bar\n");
         $client_recv->value = await $conn->readAsync();
-        await $conn->closeAsync();
+        $conn->close();
       };
     }
     expect($client_recv->value)->toEqual("foo\n");
@@ -164,14 +164,14 @@ final class HSLTCPTest extends HackTest {
         $client = await TCP\connect_async('127.0.0.1', $port);
         await $client->writeAsync("hello, world!\n");
         $result = await $client->readAsync();
-        await $client->closeAsync();
+        $client->close();
         return $result;
       };
       $server_recv = await async {
         $conn = await $s2->nextConnectionAsync();
         await $conn->writeAsync("foo bar\n");
         $result = await $conn->readAsync();
-        await $conn->closeAsync();
+        $conn->close();
         return $result;
       };
     }

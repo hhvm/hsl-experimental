@@ -38,7 +38,7 @@ final class HSLUnixSocketTest extends HackTest {
 
           $server_recv->value = await $client->readAsync();
           await $client->writeAsync("foo\n");
-          await $client->closeAsync();
+          $client->close();
         };
         await async {
           ///// client /////
@@ -48,7 +48,7 @@ final class HSLUnixSocketTest extends HackTest {
 
           await $conn->writeAsync("bar\n");
           $client_recv->value = await $conn->readAsync();
-          await $conn->closeAsync();
+          $conn->close();
         };
       }
       expect($client_recv->value)->toEqual("foo\n");

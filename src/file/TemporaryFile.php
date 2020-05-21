@@ -13,15 +13,15 @@ namespace HH\Lib\File;
 use namespace HH\Lib\IO;
 use namespace HH\Lib\_Private\_IO;
 
-final class TemporaryFile implements \IAsyncDisposable {
+final class TemporaryFile implements \IDisposable {
   public function __construct(private CloseableReadWriteHandle $handle) {}
 
   public function getHandle(): CloseableReadWriteHandle {
     return $this->handle;
   }
-  public async function __disposeAsync(): Awaitable<void> {
+  public function __dispose(): void {
     $f = $this->getHandle();
-    await $f->closeAsync();
+    $f->close();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \unlink($f->getPath()->toString());

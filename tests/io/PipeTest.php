@@ -26,8 +26,7 @@ final class PipeTest extends HackTest {
 
     $read = await $r->readAsync();
     expect($read)->toEqual("Hello, world!\nHerp derp\n");
-
-    await $w->closeAsync();
+    $w->close();
     $s = await $r->readAsync();
     expect($s)->toEqual('');
   }
@@ -35,7 +34,7 @@ final class PipeTest extends HackTest {
   public async function testReadWithoutLimitAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe();
     await $w->writeAsync("Hello, world!\nHerp derp\n");
-    await $w->closeAsync();
+    $w->close();
     $s = await $r->readAsync();
     expect($s)->toEqual("Hello, world!\nHerp derp\n");
   }
@@ -52,7 +51,7 @@ final class PipeTest extends HackTest {
   public async function testReadTooManyAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe();
     await $w->writeAsync('1234567890');
-    await $w->closeAsync();
+    $w->close();
     $s = await $r->readAsync(11);
     expect($s)->toEqual('1234567890');
   }
@@ -87,8 +86,8 @@ final class PipeTest extends HackTest {
     // - make sure we throw the expected errno
     // - make sure there isn't an infinite loop
     list($r, $w) = IO\pipe();
-    await $r->closeAsync();
-    await $w->closeAsync();
+    $r->close();
+    $w->close();
     $ex = expect(async () ==> await $r->readAsync())->toThrow(
       OS\ErrnoException::class,
     );
@@ -97,7 +96,7 @@ final class PipeTest extends HackTest {
 
   public async function testReadFromPipeClosedOnOtherEnd(): Awaitable<void> {
     list($r, $w) = IO\pipe();
-    await $w->closeAsync();
+    $w->close();
     // Standard behavior for `read(fd)` with "no more data is coming" rather
     // than "no more available now"
     expect(await $r->readAsync())->toEqual('');
@@ -125,7 +124,7 @@ final class PipeTest extends HackTest {
         $w->write("Hello, ");
         await HH\Asio\later();
         $w->write("world.");
-        await $w->closeAsync();
+        $w->close();
       };
       await async {
         expect(await $r->readAllAsync())->toEqual("Hello, world.");
@@ -163,7 +162,7 @@ final class PipeTest extends HackTest {
       await async {
         await HH\Asio\later();
         $w->write(", world");
-        await $w->closeAsync();
+        $w->close();
       };
       expect(await $r->readFixedSizeAsync(3))->toEqual('lo,', 'multi-packet');
     }
@@ -197,7 +196,7 @@ final class PipeTest extends HackTest {
         await HH\Asio\later();
         await $w->writeAllAsync(Str\repeat('a', 1024 * 1024));
         await $w->writeAsync('foo');
-        await $w->closeAsync();
+        $w->close();
       };
       await async {
         expect(Str\length(await $r->readAllAsync()))->toEqual((1024 * 1024) + 3);
@@ -229,7 +228,7 @@ final class PipeTest extends HackTest {
         try {
           expect(await $r->readAsync(4))->toEqual('aaaa');
         } finally {
-          await $r->closeAsync();
+          $r->close();
         }
       };
     }

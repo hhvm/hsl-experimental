@@ -27,11 +27,11 @@ final class FileTest extends HackTest {
       () ==> File\open_write_only($filename, File\WriteMode::MUST_CREATE),
     )->toThrow(OS\ErrnoException::class);
     expect($e->getErrno())->toEqual(OS\Errno::EEXIST);
-    await $f1->closeAsync();
+    $f1->close();
 
     $f2 = File\open_read_only($filename);
     $content = await $f2->readAsync();
-    await $f2->closeAsync();
+    $f2->close();
     expect($content)->toEqual('Hello, world!');
 
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
@@ -40,7 +40,7 @@ final class FileTest extends HackTest {
   }
 
   public async function testTemporaryFile(): Awaitable<void> {
-    await using ($tf = File\temporary_file()) {
+    using ($tf = File\temporary_file()) {
       $f = $tf->getHandle();
       $path = $f->getPath();
       await $f->writeAsync('Hello, world');
@@ -51,7 +51,7 @@ final class FileTest extends HackTest {
   }
 
   public async function testMultipleReads(): Awaitable<void> {
-    await using ($tf = File\temporary_file()) {
+    using ($tf = File\temporary_file()) {
       $f = $tf->getHandle();
       // 10MB is hopefully small enough to not make test infra sad, but
       // way bigger than any reasonable IO buffer size
@@ -84,14 +84,14 @@ final class FileTest extends HackTest {
   }
 
   public async function testTruncate(): Awaitable<void> {
-    await using $tf = File\temporary_file();
+    using $tf = File\temporary_file();
     $f = $tf->getHandle();
     await $f->writeAsync('Hello, world');
 
     $path = $f->getPath()->toString();
     $fr = File\open_read_only($path);
     $content = await $fr->readAsync();
-    await $fr->closeAsync();
+    $fr->close();
 
     expect($content)->toEqual('Hello, world');
 
@@ -100,18 +100,18 @@ final class FileTest extends HackTest {
     $f = File\open_write_only($path, File\WriteMode::TRUNCATE);
     await $f->writeAsync('Foo bar');
     expect(file_get_contents($path))->toEqual('Foo bar');
-    await $f->closeAsync();
+    $f->close();
   }
 
   public async function testAppend(): Awaitable<void> {
-    await using $tf = File\temporary_file();
+    using $tf = File\temporary_file();
     $f = $tf->getHandle();
     await $f->writeAsync('Hello, world');
 
     $path = $f->getPath()->toString();
     $f = File\open_write_only($path, File\WriteMode::APPEND);
     await $f->writeAsync("\nGoodbye, cruel world");
-    await $f->closeAsync();
+    $f->close();
 
     expect(file_get_contents($path))->toEqual(
       "Hello, world\nGoodbye, cruel world",
@@ -119,7 +119,7 @@ final class FileTest extends HackTest {
   }
 
   public async function testLock(): Awaitable<void> {
-    await using $tf = File\temporary_file();
+    using $tf = File\temporary_file();
     $f = $tf->getHandle();
     $path = $f->getPath()->toString();
 
@@ -128,14 +128,14 @@ final class FileTest extends HackTest {
       $f2 = File\open_read_only($path);
       using ($f2->tryLockx(File\LockType::SHARED)) {
       }
-      await $f2->closeAsync();
+      $f2->close();
       // Non-disposable as we need to put it in a lambda
       $f3 = File\open_read_only($path);
       expect(() ==> {
         using ($f3->tryLockx(File\LockType::EXCLUSIVE)) {
         }
       })->toThrow(File\AlreadyLockedException::class);
-      await $f3->closeAsync();
+      $f3->close();
     }
 
     // With an exclusive lock held open...
@@ -145,7 +145,7 @@ final class FileTest extends HackTest {
         using ($f4->tryLockx(File\LockType::SHARED)) {
         }
       })->toThrow(File\AlreadyLockedException::class);
-      await $f4->closeAsync();
+      $f4->close();
     }
   }
 }

@@ -22,20 +22,6 @@ abstract class FileDescriptorHandle implements IO\CloseableHandle {
     OS\fcntl($impl, OS\FcntlOp::F_SETFL, $flags | OS\O_NONBLOCK);
   }
 
-  private ?Awaitable<mixed> $lastOperation;
-  final protected function queuedAsync<T>(
-    (function(): Awaitable<T>) $next,
-  ): Awaitable<T> {
-    $last = $this->lastOperation;
-    $queue = async {
-      await $last;
-      return await $next();
-    };
-    $this->lastOperation = $queue;
-    return $queue;
-  }
-
-
   final protected async function selectAsync(
     int $flags,
     int $timeout_ns,
@@ -59,7 +45,7 @@ abstract class FileDescriptorHandle implements IO\CloseableHandle {
     }
   }
 
-  final public async function closeAsync(): Awaitable<void> {
+  final public function close(): void {
     OS\close($this->impl);
   }
 }

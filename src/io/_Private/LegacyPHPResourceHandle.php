@@ -14,6 +14,8 @@ use namespace HH\Lib\{IO, OS, Str};
 use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
+// @lint-ignore-every PHP_IGNORE_ERROR
+
 abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
   protected bool $isAwaitable = true;
   protected function __construct(protected resource $impl) {
@@ -21,20 +23,6 @@ abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \stream_set_blocking($impl, false);
   }
-
-  private ?Awaitable<mixed> $lastOperation;
-  final protected function queuedAsync<T>(
-    (function(): Awaitable<T>) $next,
-  ): Awaitable<T> {
-    $last = $this->lastOperation;
-    $queue = async {
-      await $last;
-      return await $next();
-    };
-    $this->lastOperation = $queue;
-    return $queue;
-  }
-
 
   final protected async function selectAsync(
     int $flags,
@@ -84,18 +72,16 @@ abstract class LegacyPHPResourceHandle implements IO\CloseableHandle {
     return \feof($this->impl);
   }
 
-  final public async function closeAsync(): Awaitable<void> {
+  final public function close(): void {
     $this->checkIsValid();
+    using new PHPWarningSuppressor();
+
     if ($this is IO\WriteHandle) {
-      await $this->queuedAsync(async () ==> {
-        using new PHPWarningSuppressor();
-        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-        \fflush($this->impl);
-      });
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+      \fflush($this->impl);
     }
 
-    using new PHPWarningSuppressor();
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \fclose($this->impl);

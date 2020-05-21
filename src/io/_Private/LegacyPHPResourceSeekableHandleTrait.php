@@ -13,6 +13,8 @@ namespace HH\Lib\_Private\_IO;
 use namespace HH\Lib\{IO, Str};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
+// @lint-ignore-every PHP_IGNORE_ERROR
+
 trait LegacyPHPResourceSeekableHandleTrait implements IO\SeekableHandle {
   require extends LegacyPHPResourceHandle;
   /**
@@ -20,22 +22,18 @@ trait LegacyPHPResourceSeekableHandleTrait implements IO\SeekableHandle {
    *
    * Offset is relative to the start of the handle - so, the beginning of the
    * handle is always offset 0.
-   *
-   * Any other pending operations (such as writes) will complete first.
    */
-  final public async function seekAsync(int $offset): Awaitable<void> {
-    await $this->queuedAsync(async () ==> {
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      \fseek($this->impl, $offset);
-    });
+  final public function seek(int $offset): void {
+    using new PHPWarningSuppressor();
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    \fseek($this->impl, $offset);
   }
 
   final public function tell(): int {
     using new PHPWarningSuppressor();
-
-      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     return \ftell($this->impl);
   }
 }

@@ -39,10 +39,8 @@ abstract class CloseableFileHandle
     return $size;
   }
 
-  final public async function seekAsync(int $offset): Awaitable<void> {
-    await $this->queuedAsync(async () ==> {
-      OS\lseek($this->impl, $offset, OS\SeekWhence::SEEK_SET);
-    });
+  final public function seek(int $offset): void {
+    OS\lseek($this->impl, $offset, OS\SeekWhence::SEEK_SET);
   }
 
   final public function tell(): int {

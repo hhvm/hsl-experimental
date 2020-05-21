@@ -17,6 +17,6 @@ namespace HH\Lib\IO;
  * be neither disposable nor closeable.
  */
 interface CloseableHandle extends Handle {
-  /** Complete pending operations then close the handle */
-  public function closeAsync(): Awaitable<void>;
+  /** Close the handle */
+  public function close(): void;
 }

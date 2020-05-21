@@ -15,6 +15,8 @@ use namespace HH\Lib\_Private\_OS;
 use namespace HH\Lib\{IO, OS};
 use type HH\Lib\_Private\PHPWarningSuppressor;
 
+// @lint-ignore-every PHP_IGNORE_ERROR
+
 trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
   require extends LegacyPHPResourceHandle;
   use IO\WriteHandleConvenienceMethodsTrait;
@@ -43,14 +45,12 @@ trait LegacyPHPResourceWriteHandleTrait implements IO\WriteHandle {
     $timeout_ns ??= 0;
     $timeout_secs = $timeout_ns * 1.0E-9;
 
-    return await $this->queuedAsync(async () ==> {
-      try {
-        return $this->write($bytes);
-      } catch (OS\BlockingIOException $_) {
-        // need to wait
-      }
-      await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_secs);
+    try {
       return $this->write($bytes);
-    });
+    } catch (OS\BlockingIOException $_) {
+      // need to wait
+    }
+    await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_secs);
+    return $this->write($bytes);
   }
 }
