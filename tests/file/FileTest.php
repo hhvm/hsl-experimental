@@ -8,8 +8,7 @@
  *
  */
 
-use namespace HH\Lib\Str;
-use namespace HH\Lib\{File, OS};
+use namespace HH\Lib\{File, OS, PseudoRandom, Str};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -43,11 +42,50 @@ final class FileTest extends HackTest {
     using ($tf = File\temporary_file()) {
       $f = $tf->getHandle();
       $path = $f->getPath();
+      $path_s = $path->toString();
+      // Make sure we didn't get the template
+      expect($path->exists())->toBeTrue();
+      expect($path_s)->toNotContainSubstring('XXXXXX');
+
+      // Make sure it works :)
       await $f->writeAsync('Hello, world');
-      $content = file_get_contents($path->toString());
+      $content = file_get_contents($path_s);
       expect($content)->toEqual('Hello, world');
+
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+      expect(Str\starts_with($path_s, \sys_get_temp_dir()))->toBeTrue();
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+      $mode = \stat($path_s)['mode'];
+      expect($mode & 0777)->toEqual(
+        0600,
+        'File should only be readable/writable by current user',
+      );
     }
     expect($path->exists())->toBeFalse();
+
+    using ($tf = File\temporary_file('foo', '.bar')) {
+      $path = $tf->getHandle()->getPath()->toString();
+      expect($path)->toContainSubstring('/foo');
+      expect(Str\ends_with($path, '.bar'))->toBeTrue();
+      expect(Str\ends_with($path, '..bar'))->toBeFalse();
+    }
+
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    $dir = \sys_get_temp_dir().'/hsl-test-'.PseudoRandom\int(0, 99999999);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    \mkdir($dir);
+    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    using ($tf = File\temporary_file($dir.'/foo')) {
+      expect(
+        Str\starts_with($tf->getHandle()->getPath()->toString(), $dir.'/foo'),
+      )
+        ->toBeTrue();
+    }
   }
 
   public async function testMultipleReads(): Awaitable<void> {
