@@ -13,13 +13,17 @@ namespace HH\Lib\_Private\_IO;
 use namespace HH\Lib\{IO, OS, Str};
 use namespace HH\Lib\_Private\_OS;
 
-abstract class FileDescriptorHandle implements IO\CloseableHandle {
+abstract class FileDescriptorHandle implements IO\CloseableHandle, IO\FDHandle {
   protected bool $isAwaitable = true;
 
   protected function __construct(protected OS\FileDescriptor $impl) {
     // Preserve existing flags, especially O_APPEND
     $flags = OS\fcntl($impl, OS\FcntlOp::F_GETFL) as int;
     OS\fcntl($impl, OS\FcntlOp::F_SETFL, $flags | OS\O_NONBLOCK);
+  }
+
+  final public function getFileDescriptor(): OS\FileDescriptor {
+    return $this->impl;
   }
 
   final protected async function selectAsync(

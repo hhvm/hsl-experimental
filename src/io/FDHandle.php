@@ -10,5 +10,8 @@
 
 namespace HH\Lib\IO;
 
-interface CloseableWriteHandle extends WriteHandle, CloseableHandle {
+use namespace HH\Lib\OS;
+
+interface FDHandle extends Handle {
+  public function getFileDescriptor(): OS\FileDescriptor;
 }

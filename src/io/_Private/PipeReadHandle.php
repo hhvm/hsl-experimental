@@ -14,7 +14,7 @@ use namespace HH\Lib\{IO, OS};
 
 final class PipeReadHandle
   extends FileDescriptorHandle
-  implements IO\CloseableReadHandle {
+  implements IO\CloseableReadFDHandle {
   use FileDescriptorReadHandleTrait;
   public function __construct(OS\FileDescriptor $r) {
     parent::__construct($r);
