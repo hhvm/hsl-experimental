@@ -11,7 +11,7 @@
 namespace HH\Lib\IO;
 
 use namespace HH\Lib\OS;
-use namespace HH\Lib\_Private\{_IO, _OS};
+use namespace HH\Lib\_Private\_IO;
 
 /** Return the output handle for the current request.
  *
@@ -22,14 +22,14 @@ use namespace HH\Lib\_Private\{_IO, _OS};
  */
 <<__Memoize>>
 function request_output(): CloseableWriteHandle {
-  // php://output has differing eof behavior for interactive stdin - we need
-  // the php://stdout for interactive usage (e.g. repls)
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  if (\php_sapi_name() === "cli") {
-    return new _IO\StdioWriteHandle('php://stdout');
+  try {
+    return new _IO\StdioWriteHandle(OS\stdout());
+  } catch (OS\ErrnoException $e) {
+    if ($e->getErrno() === OS\Errno::EBADF) {
+      return new _IO\ResponseWriteHandle();
+    }
+    throw $e;
   }
-  return new _IO\StdioWriteHandle('php://output');
 }
 
 /** Return the error output handle for the current request.
@@ -37,38 +37,32 @@ function request_output(): CloseableWriteHandle {
  * This is usually only available for CLI scripts; it will return null in most
  * other contexts, including HTTP requests.
  *
- * For a throwing version, use `request_error(x)`.
+ * For a throwing version, use `request_errorx()`.
  *
  * In CLI mode, this is usually the process STDERR.
  */
 function request_error(): ?CloseableWriteHandle {
   try {
     return request_errorx();
-  } catch (OS\NotFoundException $_) {
-    return null;
+  } catch (OS\ErrnoException $e) {
+    if ($e->getErrno() === OS\Errno::EBADF) {
+      return null;
+    }
+    throw $e;
   }
 }
 
 /** Return the error output handle for the current request.
  *
- * This is usually only available for CLI scripts; it will throw an
- * `NotFoundException` in most other contexts, including HTTP
- * requests.
+ * This is usually only available for CLI scripts; it will fail with `EBADF.
+ * in most other contexts, including HTTP requests.
  *
  * For a non-throwing version, use `request_error()`.
  *
  * In CLI mode, this is usually the process STDERR.
  */
 function request_errorx(): CloseableWriteHandle {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  if (\php_sapi_name() !== "cli") {
-    _OS\throw_errno(
-      OS\Errno::EBADF,
-      "There is no request_error() handle",
-    );
-  }
-  return new _IO\StdioWriteHandle('php://stderr');
+  return new _IO\StdioWriteHandle(OS\stderr());
 }
 
 /** Return the input handle for the current request.
@@ -78,12 +72,12 @@ function request_errorx(): CloseableWriteHandle {
  */
 <<__Memoize>>
 function request_input(): CloseableReadHandle {
-  // php://input has differing eof behavior for interactive stdin - we need
-  // the php://stdin for interactive usage (e.g. repls)
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-  if (\php_sapi_name() === "cli") {
-    return new _IO\StdioReadHandle('php://stdin');
+  try {
+    return new _IO\StdioReadHandle(OS\stdin());
+  } catch (OS\ErrnoException $e) {
+    if ($e->getErrno() === OS\Errno::EBADF) {
+      return new _IO\RequestReadHandle();
+    }
+    throw $e;
   }
-  return new _IO\StdioReadHandle('php://input');
 }

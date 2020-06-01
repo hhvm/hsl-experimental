@@ -12,12 +12,14 @@ namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\{IO, OS};
 
-final class StdioWriteHandle
-  extends FileDescriptorHandle
+final class ResponseWriteHandle
+  extends LegacyPHPResourceHandle
   implements IO\CloseableWriteHandle {
-  use FileDescriptorWriteHandleTrait;
+  use LegacyPHPResourceWriteHandleTrait;
 
-  public function __construct(OS\FileDescriptor $fd) {
-    parent::__construct($fd);
+  public function __construct() {
+    /* HH_IGNORE_ERROR[2049] PHP stdlib */
+    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    parent::__construct(\fopen('php://output', 'w'));
   }
 }

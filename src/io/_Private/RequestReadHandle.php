@@ -12,12 +12,14 @@ namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\{IO, OS};
 
-final class StdioReadHandle
-  extends FileDescriptorHandle
+final class RequestReadHandle
+  extends LegacyPHPResourceHandle
   implements IO\CloseableReadHandle {
+  use LegacyPHPResourceReadHandleTrait;
 
-  use FileDescriptorReadHandleTrait;
-  public function __construct(OS\FileDescriptor $fd) {
-    parent::__construct($fd);
+  public function __construct() {
+    /* HH_IGNORE_ERROR[2049] PHP stdlib */
+    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    parent::__construct(\fopen('php://input', 'r'));
   }
 }
