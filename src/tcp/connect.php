@@ -27,18 +27,18 @@ async function connect_async(
   $timeout = $opts['timeout'] ?? null;
   switch ($ipver) {
     case Network\IPProtocolBehavior::PREFER_IPV6:
-      /* HH_IGNORE_ERROR[2049] PHP STDLib */
-      /* HH_IGNORE_ERROR[4107] PHP STDLib */
+      /* HH_FIXME[2049] PHP STDLib */
+      /* HH_FIXME[4107] PHP STDLib */
       $afs = vec[\AF_INET6, \AF_INET];
       break;
     case Network\IPProtocolBehavior::FORCE_IPV6:
-      /* HH_IGNORE_ERROR[2049] PHP STDLib */
-      /* HH_IGNORE_ERROR[4107] PHP STDLib */
+      /* HH_FIXME[2049] PHP STDLib */
+      /* HH_FIXME[4107] PHP STDLib */
       $afs = vec[\AF_INET6];
       break;
     case Network\IPProtocolBehavior::FORCE_IPV4:
-      /* HH_IGNORE_ERROR[2049] PHP STDLib */
-      /* HH_IGNORE_ERROR[4107] PHP STDLib */
+      /* HH_FIXME[2049] PHP STDLib */
+      /* HH_FIXME[4107] PHP STDLib */
       $afs = vec[\AF_INET];
       break;
   }
@@ -47,16 +47,16 @@ async function connect_async(
   $err_message = '';
   // TODO: refactor so that socket_connect_async() throws, and we catch and retry
   foreach ($afs as $af) {
-    /* HH_IGNORE_ERROR[2049] PHP STDLib */
-    /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    /* HH_FIXME[2049] PHP STDLib */
+    /* HH_FIXME[4107] PHP STDLib */
     \socket_clear_error();
-    /* HH_IGNORE_ERROR[2049] PHP STDLib */
-    /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    /* HH_FIXME[2049] PHP STDLib */
+    /* HH_FIXME[4107] PHP STDLib */
     $sock = \socket_create($af, \SOCK_STREAM, \SOL_TCP);
     // This must be *immediately* after the socket_create call, not in an else
     // block
-    /* HH_IGNORE_ERROR[2049] PHP STDLib */
-    /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    /* HH_FIXME[2049] PHP STDLib */
+    /* HH_FIXME[4107] PHP STDLib */
     $err = \socket_last_error();
     $err_message = "socket() failed";
     if ($sock is resource) {

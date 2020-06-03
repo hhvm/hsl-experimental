@@ -26,8 +26,8 @@ use namespace HH\Lib\_Private;
 function slice(string $string, int $offset, ?int $length = null): string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $offset = _Private\validate_offset($offset, length($string));
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $result = \grapheme_substr($string, $offset, $length);
   if ($result === false) {
     return '';
@@ -49,8 +49,8 @@ function slice(string $string, int $offset, ?int $length = null): string {
  */
 function extract(string $string, int $size, int $start = 0): ?(string, int) {
   $next = 0;
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $result = \grapheme_extract(
     $string,
     $size,

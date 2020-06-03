@@ -14,8 +14,8 @@ use namespace HH\Lib\_Private\_File;
 
 <<__ReturnDisposable>>
 function temporary_file(): TemporaryFile {
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   $path = \sys_get_temp_dir().'/'.\bin2hex(\random_bytes(8));
   return new TemporaryFile(open_read_write($path, WriteMode::MUST_CREATE));
 }

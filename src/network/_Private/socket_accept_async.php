@@ -18,8 +18,8 @@ async function socket_accept_async(resource $server): Awaitable<resource> {
 
   $retry = true;
   while (true) {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    /* HH_FIXME[2049] PHP stdlib */
+    /* HH_FIXME[4107] PHP stdlib */
     $sock = \socket_accept($server);
     if ($sock is resource) {
       return $sock;
@@ -28,15 +28,15 @@ async function socket_accept_async(resource $server): Awaitable<resource> {
       $sock === false,
       'socket_accept() returned neither `false` nor a `resource`',
     );
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    /* HH_FIXME[2049] PHP stdlib */
+    /* HH_FIXME[4107] PHP stdlib */
     $err = \socket_last_error($server) as int;
     if ($retry === false || ($err !== 0 && $err !== OS\Errno::EAGAIN)) {
       throw_socket_error($err, "accept() failed");
     }
     // accept (3P) defines select() as indicating the FD ready for read when there's a connection
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    /* HH_FIXME[2049] PHP stdlib */
+    /* HH_FIXME[4107] PHP stdlib */
     await \stream_await($server, \STREAM_AWAIT_READ);
     $retry = false;
   }

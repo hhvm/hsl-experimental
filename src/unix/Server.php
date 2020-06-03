@@ -42,8 +42,8 @@ final class Server implements Network\Server<CloseableSocket> {
   }
 
   public function stopListening(): void {
-    /* HH_IGNORE_ERROR[2049] PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] PHPStdLib */
+    /* HH_FIXME[2049] PHPStdLib */
+    /* HH_FIXME[4107] PHPStdLib */
     \socket_close($this->impl);
   }
 }

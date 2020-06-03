@@ -30,14 +30,14 @@ async function socket_connect_async(
   // We return error codes and expect the user-facing functions to deal with
   // them. Don't spew PHP errors to logs.
   using new PHPWarningSuppressor();
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   \socket_set_blocking($sock, false);
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   $res = \socket_connect($sock, $host, $port);
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   $err = \socket_last_error($sock);
   if ($res === true) {
     return 0;
@@ -76,21 +76,21 @@ async function socket_connect_async(
   if ($err !== OS\Errno::EINPROGRESS) {
     return $err;
   }
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   \socket_clear_error($sock);
 
   // connect(2) documents non-blocking sockets as being ready for write
   // when complete
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   $res = await \stream_await($sock, \STREAM_AWAIT_WRITE, $timeout_seconds ?? 0.0);
   if ($res === \STREAM_AWAIT_CLOSED) {
     return OS\Errno::ECONNRESET as int;
   }
   if ($res === \STREAM_AWAIT_TIMEOUT) {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    /* HH_FIXME[2049] PHP stdlib */
+    /* HH_FIXME[4107] PHP stdlib */
     \fclose($sock);
     return OS\Errno::ETIMEDOUT as int;
   }
@@ -98,7 +98,7 @@ async function socket_connect_async(
   // effectively a cache of the C errno constant after the last socket_*
   // call - but given that the failure of an async connect is detected by
   // select - which has its' own use of errno, it can't be set the usual way.
-  /* HH_IGNORE_ERROR[2049] PHP stdlib */
-  /* HH_IGNORE_ERROR[4107] PHP stdlib */
+  /* HH_FIXME[2049] PHP stdlib */
+  /* HH_FIXME[4107] PHP stdlib */
   return \socket_get_option($sock, \SOL_SOCKET, \SO_ERROR);
 }

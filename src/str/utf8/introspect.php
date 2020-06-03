@@ -21,8 +21,8 @@ use type HH\Lib\Experimental\Str\Encoding;
  */
 <<__RxLocal>>
 function length(string $string): int {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_strlen($string, Encoding::UTF8);
 }
 
@@ -44,8 +44,8 @@ function length(string $string): int {
 <<__RxLocal>>
 function search(string $haystack, string $needle, int $offset = 0): ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $position = \mb_strpos($haystack, $needle, $offset, Encoding::UTF8);
   if ($position === false) {
     return null;
@@ -71,8 +71,8 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
 <<__RxLocal>>
 function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $position = \mb_stripos($haystack, $needle, $offset, Encoding::UTF8);
   if ($position === false) {
     return null;
@@ -101,8 +101,8 @@ function search_last(string $haystack, string $needle, int $offset = 0): ?int {
     $offset >= -$haystack_length && $offset <= $haystack_length,
     'Offset is out-of-bounds.',
   );
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $position = \mb_strrpos($haystack, $needle, $offset, Encoding::UTF8);
   if ($position === false) {
     return null;
@@ -115,7 +115,7 @@ function search_last(string $haystack, string $needle, int $offset = 0): ?int {
  */
 <<__RxLocal>>
 function is_utf8(string $string): bool {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_check_encoding($string, Encoding::UTF8);
 }

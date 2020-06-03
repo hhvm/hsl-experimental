@@ -15,17 +15,17 @@ use namespace HH\Lib\OS;
 function get_sock_name(resource $sock): (string, int) {
   $addr = '';
   $port = -1;
-  /* HH_IGNORE_ERROR[2049] PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] PHPStdLib */
+  /* HH_FIXME[2049] PHPStdLib */
+  /* HH_FIXME[4107] PHPStdLib */
   \socket_clear_error($sock);
-  /* HH_IGNORE_ERROR[2049] PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] PHPStdLib */
+  /* HH_FIXME[2049] PHPStdLib */
+  /* HH_FIXME[4107] PHPStdLib */
   $success = \socket_getsockname($sock, inout $addr, inout $port);
   if ($success) {
     return tuple($addr, $port);
   }
-  /* HH_IGNORE_ERROR[2049] PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] PHPStdLib */
+  /* HH_FIXME[2049] PHPStdLib */
+  /* HH_FIXME[4107] PHPStdLib */
   $err = \socket_last_error($sock) as int;
   throw_socket_error(
     $err === 0 ? OS\Errno::EAFNOSUPPORT as int : $err,

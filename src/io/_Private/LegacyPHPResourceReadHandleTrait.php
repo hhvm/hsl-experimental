@@ -28,11 +28,11 @@ trait LegacyPHPResourceReadHandleTrait implements IO\ReadHandle {
 
     using new PHPWarningSuppressor();
 
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    /* HH_FIXME[2049] __PHPStdLib */
+    /* HH_FIXME[4107] __PHPStdLib */
     $result = \stream_get_contents($this->impl, $max_bytes ?? -1);
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    /* HH_FIXME[2049] __PHPStdLib */
+    /* HH_FIXME[4107] __PHPStdLib */
     $errno = \posix_get_last_error();
     if ($result === false) {
       _OS\throw_errno($errno as int, 'stream_get_contents');

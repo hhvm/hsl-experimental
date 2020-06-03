@@ -14,8 +14,8 @@ use type HH\Lib\Network\SocketOptions;
 
 function set_socket_options(resource $sock, SocketOptions $opts): void {
   if ($opts['SO_REUSEADDR'] ?? false) {
-    /* HH_IGNORE_ERROR[2049] PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] PHPStdLib */
+    /* HH_FIXME[2049] PHPStdLib */
+    /* HH_FIXME[4107] PHPStdLib */
     \socket_set_option($sock, \SOL_SOCKET, \SO_REUSEADDR, 1);
   }
 }

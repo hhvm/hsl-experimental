@@ -37,8 +37,8 @@ final class OptionalIncrementalTimeout {
   }
 
   private static function nowNS(): int {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    /* HH_FIXME[2049] PHP stdlib */
+    /* HH_FIXME[4107] PHP stdlib */
     return \clock_gettime_ns(\CLOCK_MONOTONIC);
   }
 }

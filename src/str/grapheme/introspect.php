@@ -20,8 +20,8 @@ use namespace HH\Lib\Str;
  */
 <<__RxLocal>>
 function length(string $string): int {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \grapheme_strlen($string);
 }
 
@@ -42,8 +42,8 @@ function length(string $string): int {
 <<__RxLocal>>
 function search(string $haystack, string $needle, int $offset = 0): ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $position = \grapheme_strpos($haystack, $needle, $offset);
   if ($position === false) {
     return null;
@@ -68,8 +68,8 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
 <<__RxLocal>>
 function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   $position = \grapheme_stripos($haystack, $needle, $offset);
   if ($position === false) {
     return null;

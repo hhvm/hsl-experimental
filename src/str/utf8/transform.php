@@ -18,8 +18,8 @@ use type HH\Lib\Experimental\Str\Encoding;
  */
 <<__RxLocal>>
 function uppercase(string $string): string {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_strtoupper($string, Encoding::UTF8);
 }
 
@@ -28,8 +28,8 @@ function uppercase(string $string): string {
  */
 <<__RxLocal>>
 function lowercase(string $string): string {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_strtolower($string, Encoding::UTF8);
 }
 
@@ -38,8 +38,8 @@ function lowercase(string $string): string {
  */
 <<__RxLocal>>
 function from_encoding(string $string, Encoding $encoding): string {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_convert_encoding($string, Encoding::UTF8 as string, $encoding);
 }
 
@@ -48,8 +48,8 @@ function from_encoding(string $string, Encoding $encoding): string {
  */
 <<__RxLocal>>
 function to_encoding(string $string, Encoding $encoding): string {
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_convert_encoding($string, $encoding as string, Encoding::UTF8);
 }
 
@@ -135,8 +135,8 @@ function convert_kana(string $string, TConvertKanaOption $options): string {
     |> Keyset\keys($$)
     |> Str\join($$, '');
 
-  /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-  /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \mb_convert_kana($string, $option_string, Encoding::UTF8);
 }
 

@@ -18,11 +18,11 @@ async function connect_async(
   string $path,
   ConnectOptions $opts = shape(),
 ): Awaitable<CloseableSocket> {
-  /* HH_IGNORE_ERROR[2049] PHP STDLib */
-  /* HH_IGNORE_ERROR[4107] PHP STDLib */
+  /* HH_FIXME[2049] PHP STDLib */
+  /* HH_FIXME[4107] PHP STDLib */
   $sock = \socket_create(\AF_UNIX, \SOCK_STREAM, 0);
-  /* HH_IGNORE_ERROR[2049] PHP STDLib */
-  /* HH_IGNORE_ERROR[4107] PHP STDLib */
+  /* HH_FIXME[2049] PHP STDLib */
+  /* HH_FIXME[4107] PHP STDLib */
   if ($sock is resource) {
     $err = await _Network\socket_connect_async(
       $sock,
@@ -34,8 +34,8 @@ async function connect_async(
       return new _Unix\CloseableSocket($sock);
     }
   } else {
-    /* HH_IGNORE_ERROR[2049] PHP STDLib */
-    /* HH_IGNORE_ERROR[4107] PHP STDLib */
+    /* HH_FIXME[2049] PHP STDLib */
+    /* HH_FIXME[4107] PHP STDLib */
     $err = \socket_last_error() as int;
   }
   _Network\throw_socket_error($err, 'connect() failed');
