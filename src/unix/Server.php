@@ -10,24 +10,25 @@
 
 namespace HH\Lib\Unix;
 
-use namespace HH\Lib\Network;
+use namespace HH\Lib\{Network, OS};
 use namespace HH\Lib\_Private\{_Network, _Unix};
 
 final class Server implements Network\Server<CloseableSocket> {
   /** Path */
   const type TAddress = string;
 
-  private function __construct(private resource $impl) {
+  private function __construct(private OS\FileDescriptor $impl) {
   }
 
   /** Create a bound and listening instance */
   public static async function createAsync(string $path): Awaitable<this> {
     return await _Network\socket_create_bind_listen_async(
-      \AF_UNIX,
-      \SOCK_STREAM,
+      OS\SocketDomain::PF_UNIX,
+      OS\SocketType::SOCK_STREAM,
       /* proto = */ 0,
-      $path,
-      /* port = */ 0,
+      new OS\sockaddr_un($path),
+      /* backlog = */ 16,
+      /* socket options = */ shape(),
     )
       |> new self($$);
   }
@@ -38,12 +39,11 @@ final class Server implements Network\Server<CloseableSocket> {
   }
 
   public function getLocalAddress(): string {
-    return _Network\get_sock_name($this->impl)[0];
+    return (OS\getsockname($this->impl) as OS\sockaddr_un)->getPath()
+      as nonnull;
   }
 
   public function stopListening(): void {
-    /* HH_FIXME[2049] PHPStdLib */
-    /* HH_FIXME[4107] PHPStdLib */
-    \socket_close($this->impl);
+    OS\close($this->impl);
   }
 }

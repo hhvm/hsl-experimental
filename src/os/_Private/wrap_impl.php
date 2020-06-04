@@ -16,6 +16,6 @@ function wrap_impl<T>((function(): T) $impl): T {
   try {
     return $impl();
   } catch (namespace\ErrnoException $e) {
-    throw_errno($e->getCode() as OS\Errno, $e->getMessage());
+    throw_errno($e->getCode() as OS\Errno, '%s', $e->getMessage());
   }
 }

@@ -21,9 +21,9 @@ use type \HH\Lib\Ref;
 // @oss-disable: <<Oncalls('hf')>>
 final class HSLUnixSocketTest extends HackTest {
   public async function testBasicConnectivity(): Awaitable<void> {
-    /* HH_IGNORE_ERROR[2049] PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] PHPStdLib */
-    $path = \sys_get_temp_dir().'/hsl-unix-socket-'.PseudoRandom\int(0, Math\INT64_MAX).'.sock';
+    // Not using sys_get_temp_dir() as on MacOS, that defaults to something too
+    // long to reliably be valid unix socket paths.
+    $path = '/tmp/hsl-unix-socket-'.PseudoRandom\int(0, Math\INT64_MAX).'.sock';
     try {
       $server = await Unix\Server::createAsync($path);
       expect($server->getLocalAddress())->toEqual($path);
@@ -34,7 +34,7 @@ final class HSLUnixSocketTest extends HackTest {
           ///// Server /////
           $client = await $server->nextConnectionAsync();
           expect($client->getLocalAddress())->toEqual($path);
-          expect($client->getPeerAddress())->toEqual('');
+          expect($client->getPeerAddress())->toEqual(null);
 
           $server_recv->value = await $client->readAsync();
           await $client->writeAsync("foo\n");
@@ -43,7 +43,7 @@ final class HSLUnixSocketTest extends HackTest {
         await async {
           ///// client /////
           $conn = await Unix\connect_async($path);
-          expect($conn->getLocalAddress())->toEqual('');
+          expect($conn->getLocalAddress())->toEqual(null);
           expect($conn->getPeerAddress())->toEqual($path);
 
           await $conn->writeAsync("bar\n");

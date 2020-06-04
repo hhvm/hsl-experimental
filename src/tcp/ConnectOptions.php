@@ -12,6 +12,6 @@ namespace HH\Lib\TCP;
 use namespace HH\Lib\Network;
 
 type ConnectOptions = shape(
-  ?'timeout' => ?float,
+  ?'timeout_ns' => ?int,
   ?'ip_version' => Network\IPProtocolBehavior,
 );

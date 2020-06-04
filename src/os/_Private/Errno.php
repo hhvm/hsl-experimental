@@ -67,10 +67,16 @@ function get_throw_errno_impl(): (function(OS\Errno, string): noreturn) {
   };
 }
 
-function throw_errno(OS\Errno $errno, string $message): noreturn {
+function throw_errno(
+  OS\Errno $errno,
+  Str\SprintfFormatString $message,
+  mixed ...$args
+): noreturn {
+  /* HH_FIXME[4027] needs literal format string */
+  $message = Str\format($message, ...$args);
   invariant(
     $errno !== 0,
-    "Asked to throw an errno after %s(), but errno indicates success",
+    "Asked to throw an errno ('%s'), but errno indicates success",
     $message,
   );
   $name = C\firstx(get_errno_names()[$errno]);
