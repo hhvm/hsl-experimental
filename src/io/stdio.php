@@ -18,10 +18,12 @@ use namespace HH\Lib\_Private\_IO;
  * This should generally be used for sending data to clients. In CLI mode, this
  * is usually the process STDOUT.
  *
+ * This MAY be a `CloseableWriteHandle`
+ *
  * @see requestOutput
  */
 <<__Memoize>>
-function request_output(): CloseableWriteHandle {
+function request_output(): WriteHandle {
   try {
     return new _IO\StdioWriteHandle(OS\stdout());
   } catch (OS\ErrnoException $e) {
@@ -69,9 +71,11 @@ function request_errorx(): CloseableWriteHandle {
  *
  * In CLI mode, this is likely STDIN; for HTTP requests, it may contain the
  * POST data, if any.
+ *
+ * This MAY be a `CloseableReadHandle`.
  */
 <<__Memoize>>
-function request_input(): CloseableReadHandle {
+function request_input(): ReadHandle {
   try {
     return new _IO\StdioReadHandle(OS\stdin());
   } catch (OS\ErrnoException $e) {

@@ -12,14 +12,17 @@ namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\{IO, OS};
 
-final class ResponseWriteHandle
-  extends LegacyPHPResourceHandle
-  implements IO\CloseableWriteHandle {
-  use LegacyPHPResourceWriteHandleTrait;
+final class ResponseWriteHandle implements IO\WriteHandle {
+  use IO\WriteHandleConvenienceMethodsTrait;
 
-  public function __construct() {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
-    parent::__construct(\fopen('php://output', 'w'));
+  public function write(string $bytes): int {
+    return namespace\response_write($bytes);
+  }
+
+  public async function writeAsync(
+    string $bytes,
+    ?int $_timeout_ns = null,
+  ): Awaitable<int> {
+    return $this->write($bytes);
   }
 }
