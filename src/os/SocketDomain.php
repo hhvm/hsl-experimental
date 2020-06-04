@@ -8,11 +8,12 @@
  *
  */
 
-namespace HH\Lib\_Private\_Network;
+namespace HH\Lib\OS;
 
-function maybe_throw_socket_error(int $php_socket_error, string $message): void {
-  if ($php_socket_error === 0) {
-    return;
-  }
-  throw_socket_error($php_socket_error, $message);
+use namespace HH\Lib\_Private\_OS;
+
+enum SocketDomain: int {
+  PF_UNIX = _OS\PF_UNIX;
+  PF_INET = _OS\PF_INET;
+  PF_INET6 = _OS\PF_INET6;
 }

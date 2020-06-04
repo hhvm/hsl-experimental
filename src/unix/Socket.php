@@ -19,6 +19,6 @@ use namespace HH\Lib\{IO, Network};
  */
 <<__Sealed(CloseableSocket::class)>>
 interface Socket extends Network\Socket {
-  /** A file path */
-  const type TAddress = string;
+  /** An identifier; usually a file path, but this isn't guaranteed. */
+  const type TAddress = ?string;
 }

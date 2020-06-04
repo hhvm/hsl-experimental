@@ -36,10 +36,11 @@ trait ReadHandleConvenienceMethodsTrait {
     $timer = new \HH\Lib\_Private\OptionalIncrementalTimeout(
       $timeout_ns,
       () ==> {
-        _OS\throw_errno(OS\Errno::ETIMEDOUT, Str\format(
+        _OS\throw_errno(
+          OS\Errno::ETIMEDOUT,
           "Reached timeout before %s data could be read.",
           $data === '' ? 'any' : 'all',
-        ));
+        );
       },
     );
 
@@ -60,11 +61,9 @@ trait ReadHandleConvenienceMethodsTrait {
     if (Str\length($data) !== $size) {
       _OS\throw_errno(
         OS\Errno::EPIPE,
-        Str\format(
-          "%d bytes were requested, but only able to read %d bytes",
-          $size,
-          Str\length($data),
-        ),
+        "%d bytes were requested, but only able to read %d bytes",
+        $size,
+        Str\length($data),
       );
     }
     return $data;

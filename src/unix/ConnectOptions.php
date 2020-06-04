@@ -11,5 +11,5 @@
 namespace HH\Lib\Unix;
 
 type ConnectOptions = shape(
-  ?'timeout' => ?float,
+  ?'timeout_ns' => int,
 );

@@ -52,9 +52,25 @@ use namespace HH\Lib\_Private\_OS;
 class ErrnoException extends \Exception {
   public function __construct(private Errno $errno, string $message) {
     parent::__construct($message);
+    // Can't be in constructor: constructor takes int, but property - and
+    // accessor - are mixed.
+    $this->code = $errno;
   }
 
   final public function getErrno(): Errno{
+    return $this->errno;
+  }
+
+  /** Deprecated for clarity, and potential future ambiguity.
+   *
+   * In the future, we may have exceptions with multiple 'codes', such as an
+   * `errno` and a getaddrinfo `GAI` constant.
+   *
+   * Keeping logging rate at 0 so that generic code that works on any exception
+   * stays happy.
+   */
+  <<__Deprecated("Use `getErrno()` instead", 0), __Rx, __MaybeMutable>>
+  final public function getCode(): Errno {
     return $this->errno;
   }
 }

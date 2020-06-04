@@ -36,10 +36,11 @@ trait WriteHandleConvenienceMethodsTrait {
     $timer = new \HH\Lib\_Private\OptionalIncrementalTimeout(
       $timeout_ns,
       () ==> {
-        _OS\throw_errno(OS\Errno::ETIMEDOUT, Str\format(
+        _OS\throw_errno(
+          OS\Errno::ETIMEDOUT,
           "Reached timeout before %s data could be read.",
           $data === '' ? 'any' : 'all',
-        ));
+        );
       },
     );
 
@@ -52,11 +53,9 @@ trait WriteHandleConvenienceMethodsTrait {
     if ($data !== '') {
       _OS\throw_errno(
         OS\Errno::EPIPE,
-        Str\format(
-          "asked to write %d bytes, but only able to write %d bytes",
-          $original_size,
-          $original_size - Str\length($data),
-        ),
+        "asked to write %d bytes, but only able to write %d bytes",
+        $original_size,
+        $original_size - Str\length($data),
       );
     }
   }
