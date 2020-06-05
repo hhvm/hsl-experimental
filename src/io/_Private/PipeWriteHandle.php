@@ -14,7 +14,7 @@ use namespace HH\Lib\{IO, OS};
 
 final class PipeWriteHandle
   extends FileDescriptorHandle
-  implements IO\CloseableWriteHandle {
+  implements IO\CloseableWriteFDHandle {
   use FileDescriptorWriteHandleTrait;
 
   public function __construct(OS\FileDescriptor $r) {

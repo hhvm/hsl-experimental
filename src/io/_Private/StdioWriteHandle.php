@@ -14,7 +14,7 @@ use namespace HH\Lib\{IO, OS};
 
 final class StdioWriteHandle
   extends FileDescriptorHandle
-  implements IO\CloseableWriteHandle {
+  implements IO\CloseableWriteFDHandle {
   use FileDescriptorWriteHandleTrait;
 
   public function __construct(OS\FileDescriptor $fd) {
