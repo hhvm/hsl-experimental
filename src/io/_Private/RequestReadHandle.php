@@ -12,14 +12,21 @@ namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\{IO, OS};
 
-final class RequestReadHandle
-  extends LegacyPHPResourceHandle
-  implements IO\CloseableReadHandle {
-  use LegacyPHPResourceReadHandleTrait;
+final class RequestReadHandle implements IO\ReadHandle {
+  use IO\ReadHandleConvenienceMethodsTrait;
 
-  public function __construct() {
-    /* HH_IGNORE_ERROR[2049] PHP stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
-    parent::__construct(\fopen('php://input', 'r'));
+  public function read(?int $max_bytes = null): string {
+    invariant(
+      $max_bytes === null || $max_bytes > 0,
+      '$max_bytes must be null or positive',
+    );
+    return namespace\request_read($max_bytes ?? DEFAULT_READ_BUFFER_SIZE);
+  }
+
+  public async function readAsync(
+    ?int $max_bytes = null,
+    ?int $timeout_ns = null,
+  ): Awaitable<string> {
+    return $this->read($max_bytes);
   }
 }
