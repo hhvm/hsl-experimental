@@ -69,7 +69,7 @@ class ErrnoException extends \Exception {
    * Keeping logging rate at 0 so that generic code that works on any exception
    * stays happy.
    */
-  <<__Deprecated("Use `getErrno()` instead", 0), __Rx, __MaybeMutable>>
+  <<__Deprecated("Use `getErrno()` instead", 0), __Pure, __MaybeMutable>>
   final public function getCode(): Errno {
     return $this->errno;
   }
