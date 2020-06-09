@@ -186,4 +186,19 @@ final class HSLTCPTest extends HackTest {
     expect($client_recv)->toEqual("foo bar\n");
     expect($server_recv)->toEqual("hello, world!\n");
   }
+
+  public async function testCloseDuringAsyncAccept(): Awaitable<void> {
+    $s = await TCP\Server::createAsync(
+      IPProtocolVersion::IPV4,
+      '127.0.0.1',
+      0,
+    );
+    // intentionally not awaiting
+    $accept_awaitable = $s->nextConnectionAsync();
+    $s->stopListening();
+    $ex = expect(async () ==> await $accept_awaitable)->toThrow(
+      OS\ErrnoException::class,
+    );
+    expect($ex->getErrno())->toEqual(OS\Errno::ECONNABORTED);
+  }
 }

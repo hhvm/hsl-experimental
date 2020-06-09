@@ -15,13 +15,24 @@ use namespace HH\Lib\_Private\_OS;
 /** Accept a socket connection, waiting if necessary */
 async function socket_accept_async(
   OS\FileDescriptor $server,
+  CancelablePoller $poller,
 ): Awaitable<OS\FileDescriptor> {
   try {
     list($fd, $_addr) = OS\accept($server);
     return $fd;
   } catch (OS\BlockingIOException $_) {
     // accept (3P) defines select() as indicating the FD ready for read when there's a connection
-    await _OS\poll_async($server, \STREAM_AWAIT_READ, /* timeout = */ 0);
+    $result = await $poller->pollAsync(
+      $server,
+      \STREAM_AWAIT_READ, /* timeout = */
+      0,
+    );
+    if ($result === \STREAM_AWAIT_CLOSED) {
+      _OS\throw_errno(
+        OS\Errno::ECONNABORTED,
+        "Server socket closed while waiting for connection",
+      );
+    }
     list($fd, $_addr) = OS\accept($server);
     return $fd;
   }
