@@ -12,7 +12,7 @@ namespace HH\Lib\File;
 
 use namespace HH\Lib\IO;
 
-interface Handle extends IO\SeekableHandle {
+interface Handle extends IO\SeekableFDHandle {
   /**
    * Get the name of this file.
    */
@@ -45,11 +45,11 @@ interface Handle extends IO\SeekableHandle {
   public function tryLockx(LockType $type): Lock;
 }
 
-interface ReadHandle extends Handle, IO\SeekableReadHandle {
+interface ReadHandle extends Handle, IO\SeekableReadFDHandle {
 }
 
-interface WriteHandle extends Handle, IO\SeekableWriteHandle {
+interface WriteHandle extends Handle, IO\SeekableWriteFDHandle {
 }
 
-interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\SeekableReadWriteHandle {
+interface ReadWriteHandle extends WriteHandle, ReadHandle, IO\SeekableReadWriteFDHandle {
 }
