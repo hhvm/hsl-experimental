@@ -22,8 +22,8 @@ final class TemporaryFile implements \IDisposable {
   public function __dispose(): void {
     $f = $this->getHandle();
     $f->close();
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    /* HH_FIXME[2049] __PHPStdLib */
+    /* HH_FIXME[4107] __PHPStdLib */
     \unlink($f->getPath()->toString());
   }
 }

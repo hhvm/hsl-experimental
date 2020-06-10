@@ -18,8 +18,8 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 // @oss-disable: <<Oncalls('hack')>>
 final class FileTest extends HackTest {
   public async function testExclusiveOpen(): Awaitable<void> {
-    /* HH_IGNORE_ERROR[2049] PHP Stdlib */
-    /* HH_IGNORE_ERROR[4107] PHP stdlib */
+    /* HH_FIXME[2049] PHP Stdlib */
+    /* HH_FIXME[4107] PHP stdlib */
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
     $f1 = File\open_write_only($filename, File\WriteMode::MUST_CREATE);
     await $f1->writeAsync('Hello, world!');
@@ -34,8 +34,8 @@ final class FileTest extends HackTest {
     $f2->close();
     expect($content)->toEqual('Hello, world!');
 
-    /* HH_IGNORE_ERROR[2049] __PHPStdLib */
-    /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    /* HH_FIXME[2049] __PHPStdLib */
+    /* HH_FIXME[4107] __PHPStdLib */
     unlink($filename);
   }
 

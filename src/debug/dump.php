@@ -14,8 +14,8 @@ use namespace HH\Lib\IO;
 
 /** Return a human-readable string representation of a value */
 function dump_s(<<__AcceptDisposable>> mixed $value): string {
-  /* HH_FIXME[2049] */
-  /* HH_FIXME[4107] */
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
   return \print_r(
    /* HH_FIXME[4188] disposable as non-disposable */ $value,
    /* return = */ true,
