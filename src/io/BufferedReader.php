@@ -18,6 +18,7 @@ use namespace HH\Lib\_Private\_OS;
 /** Wrapper for `ReadHandle`s, with buffered line-based byte-based accessors.
  *
  * - `readLineAsync()` is similar to `fgets()`
+ * - `readUntilAsync()` is a more general form
  * - `readByteAsync()` is similar to `fgetc()`
  */
 final class BufferedReader implements IO\ReadHandle {
@@ -92,17 +93,19 @@ final class BufferedReader implements IO\ReadHandle {
     return $this->read($max_bytes);
   }
 
-  /** Read until `\n`.
+  /** Read until the specified suffix is seen.
    *
-   * The trailing `\n` is read (so won't be returned by other calls), but is not
+   * The trailing suffix is read (so won't be returned by other calls), but is not
    * included in the return value.
    *
-   * This call fails with `EPIPE` if `\n` is not seen, even if there is other
+   * This call fails with `EPIPE` if the suffix is not seen, even if there is other
    * data.
+   *
+   * @see readLineAsync
    */
-  public async function readLineAsync(): Awaitable<string> {
+  public async function readUntilAsync(string $suffix): Awaitable<string> {
     $buf = $this->buffer;
-    $idx = Str\search($buf, "\n");
+    $idx = Str\search($buf, $suffix);
     if ($idx !== null) {
       $this->buffer = Str\slice($buf, $idx + 1);
       return Str\slice($buf, 0, $idx);
@@ -119,12 +122,29 @@ final class BufferedReader implements IO\ReadHandle {
         );
       }
       $buf .= $chunk;
-    } while (!Str\contains($chunk, "\n"));
+    } while (!Str\contains($chunk, $suffix));
 
-    $idx = Str\search($buf, "\n");
+    $idx = Str\search($buf, $suffix);
     invariant($idx !== null, 'Should not have exited loop without newline');
-    $this->buffer = Str\slice($buf, $idx + 1);
+    $this->buffer = Str\slice($buf, $idx + Str\length($suffix));
     return Str\slice($buf, 0, $idx);
+  }
+
+  /** Read until the platform end-of-line sequence is seen.
+   *
+   * On current platforms, this is always `\n`; it may have other values on other
+   * platforms in the future, e.g. `\r\n`.
+   *
+   * The newline sequence is read (so won't be returned by other calls), but is not
+   * included in the return value.
+   *
+   * This call fails with `EPIPE` if "\n" not seen, even if there is other
+   * data.
+   *
+   * @see `readUntilAsync` for a more general form
+   */
+  public async function readLineAsync(): Awaitable<string> {
+    return await $this->readUntilAsync("\n");
   }
 
   <<__Override>> // from trait
@@ -172,7 +192,9 @@ final class BufferedReader implements IO\ReadHandle {
    *
    * Fails with EPIPE if the handle is closed or otherwise unreadable.
    */
-  public async function readByteAsync(?int $timeout_ns = null): Awaitable<string> {
+  public async function readByteAsync(
+    ?int $timeout_ns = null,
+  ): Awaitable<string> {
     if ($timeout_ns is int && $timeout_ns <= 0) {
       _OS\throw_errno(OS\Errno::EINVAL, 'Timeout must be null or > 0');
     }

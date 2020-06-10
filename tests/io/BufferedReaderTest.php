@@ -84,4 +84,18 @@ final class BufferedReaderTest extends HackTest {
       OS\BrokenPipeException::class,
     );
   }
+
+  public async function testReadUntil(): Awaitable<void> {
+    $r = new IO\BufferedReader(new IO\MemoryHandle("ab\r\ncd\r\n"));
+    expect(await $r->readLineAsync())->toEqual("ab\r");
+    expect(await $r->readLineAsync())->toEqual("cd\r");
+
+    $r = new IO\BufferedReader(new IO\MemoryHandle("ab\r\ncd\r\n"));
+    expect(await $r->readUntilAsync("\r\n"))->toEqual("ab");
+    expect(await $r->readUntilAsync("\r\n"))->toEqual("cd");
+
+    $r = new IO\BufferedReader(new IO\MemoryHandle("abFOOcdFOO"));
+    expect(await $r->readUntilAsync("FOO"))->toEqual("ab");
+    expect(await $r->readUntilAsync("FOO"))->toEqual("cd");
+  }
 }
