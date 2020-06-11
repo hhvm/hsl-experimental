@@ -106,8 +106,9 @@ final class BufferedReader implements IO\ReadHandle {
   public async function readUntilAsync(string $suffix): Awaitable<string> {
     $buf = $this->buffer;
     $idx = Str\search($buf, $suffix);
+    $suffix_len = Str\length($suffix);
     if ($idx !== null) {
-      $this->buffer = Str\slice($buf, $idx + 1);
+      $this->buffer = Str\slice($buf, $idx + $suffix_len);
       return Str\slice($buf, 0, $idx);
     }
 
@@ -125,8 +126,8 @@ final class BufferedReader implements IO\ReadHandle {
     } while (!Str\contains($chunk, $suffix));
 
     $idx = Str\search($buf, $suffix);
-    invariant($idx !== null, 'Should not have exited loop without newline');
-    $this->buffer = Str\slice($buf, $idx + Str\length($suffix));
+    invariant($idx !== null, 'Should not have exited loop without suffix');
+    $this->buffer = Str\slice($buf, $idx + $suffix_len);
     return Str\slice($buf, 0, $idx);
   }
 
