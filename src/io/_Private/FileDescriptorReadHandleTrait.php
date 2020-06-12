@@ -20,9 +20,7 @@ trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
   final public function read(?int $max_bytes = null): string {
     $max_bytes ??= DEFAULT_READ_BUFFER_SIZE;
 
-    if ($max_bytes <= 0) {
-      throw new \InvalidArgumentException('$max_bytes must be null, or >= 0');
-    }
+    _OS\arg_assert($max_bytes > 0, '$max_bytes must be null, or > 0');
     return OS\read($this->impl, $max_bytes);
   }
 
@@ -32,12 +30,11 @@ trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
   ): Awaitable<string> {
     $max_bytes ??= DEFAULT_READ_BUFFER_SIZE;
 
-    if ($max_bytes <= 0) {
-      throw new \InvalidArgumentException('$max_bytes must be null, or > 0');
-    }
-    if ($timeout_ns is int && $timeout_ns <= 0) {
-      throw new \InvalidArgumentException('$timeout_ns must be null, or >= 0');
-    }
+    _OS\arg_assert($max_bytes > 0, '$max_bytes must be null, or > 0');
+    _OS\arg_assert(
+      $timeout_ns is null || $timeout_ns > 0,
+      '$timeout_ns must be null, or > 0',
+    );
     $timeout_ns ??= 0;
 
     try {

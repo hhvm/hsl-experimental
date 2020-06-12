@@ -11,16 +11,15 @@
 namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\{IO, OS};
+use namespace HH\Lib\_Private\_OS;
 
 final class RequestReadHandle implements IO\ReadHandle {
   use IO\ReadHandleConvenienceMethodsTrait;
 
   public function read(?int $max_bytes = null): string {
-    invariant(
-      $max_bytes === null || $max_bytes > 0,
-      '$max_bytes must be null or positive',
-    );
-    return namespace\request_read($max_bytes ?? DEFAULT_READ_BUFFER_SIZE);
+    $max_bytes ??= DEFAULT_READ_BUFFER_SIZE;
+    _OS\arg_assert($max_bytes > 0, '$max_bytes must be null or positive');
+    return namespace\request_read($max_bytes);
   }
 
   public async function readAsync(

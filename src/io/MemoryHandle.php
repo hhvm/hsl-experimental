@@ -45,7 +45,7 @@ final class MemoryHandle implements SeekableReadWriteHandle {
 
   public function read(?int $max_bytes = null): string {
     $max_bytes ??= Math\INT64_MAX;
-    invariant($max_bytes > 0, '$max_bytes must be null or positive');
+    _OS\arg_assert($max_bytes > 0, '$max_bytes must be null or positive');
     $len = Str\length($this->buffer);
     if ($this->offset >= $len) {
       return '';
@@ -58,9 +58,7 @@ final class MemoryHandle implements SeekableReadWriteHandle {
   }
 
   public function seek(int $pos): void {
-    if ($pos < 0) {
-      _OS\throw_errno(OS\Errno::EINVAL, "Position must be >= 0");
-    }
+    _OS\arg_assert($pos >= 0, "Position must be >= 0");
     // Past end of file is explicitly fine
     $this->offset = $pos;
   }
@@ -82,7 +80,7 @@ final class MemoryHandle implements SeekableReadWriteHandle {
       return Str\length($data);
     }
 
-    invariant(
+    _OS\arg_assert(
       $this->writeMode === MemoryHandleWriteMode::OVERWRITE,
       "Write mode must be OVERWRITE or APPEND",
     );
