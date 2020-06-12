@@ -59,7 +59,7 @@ final class MemoryHandle implements SeekableReadWriteHandle {
 
   public function seek(int $pos): void {
     if ($pos < 0) {
-      _OS\throw_errno(OS\Errno::ERANGE, "Position must be >= 0");
+      _OS\throw_errno(OS\Errno::EINVAL, "Position must be >= 0");
     }
     // Past end of file is explicitly fine
     $this->offset = $pos;

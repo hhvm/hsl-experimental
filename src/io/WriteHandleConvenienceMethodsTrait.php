@@ -28,7 +28,7 @@ trait WriteHandleConvenienceMethodsTrait {
     }
 
     if ($timeout_ns is int && $timeout_ns <= 0) {
-      _OS\throw_errno(OS\Errno::ERANGE, 'Timeout must be null, or > 0');
+      _OS\throw_errno(OS\Errno::EINVAL, 'Timeout must be null, or > 0');
     }
 
     $original_size = Str\length($data);
