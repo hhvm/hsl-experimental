@@ -23,12 +23,14 @@ trait ReadHandleConvenienceMethodsTrait {
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string> {
-    if ($max_bytes is int && $max_bytes <= 0) {
-      _OS\throw_errno(OS\Errno::EINVAL, "Max bytes must be null, or > 0");
-    }
-    if ($timeout_ns is int && $timeout_ns <= 0) {
-      _OS\throw_errno(OS\Errno::EINVAL, 'Timeout must be null, or > 0');
-    }
+    _OS\arg_assert(
+      $max_bytes is null || $max_bytes > 0,
+      'Max bytes must be null, or > 0',
+    );
+    _OS\arg_assert(
+      $timeout_ns is null || $timeout_ns > 0,
+      'Timeout must be null, or > 0',
+    );
 
     $to_read = $max_bytes ?? Math\INT64_MAX;
 

@@ -46,28 +46,23 @@ function mkostemps(
   int $suffix_length,
   int $flags,
 ): (FileDescriptor, string) {
-  if ($suffix_length < 0) {
-    _OS\throw_errno(Errno::EINVAL, 'Suffix length must not be negative');
-  }
-  if ($suffix_length > Str\length($template) - 6) {
-     _OS\throw_errno(Errno::EINVAL, 'Suffix length must be at most 6 less than the length of the template');
-  }
+  _OS\arg_assert($suffix_length >= 0, 'Suffix length must not be negative');
+  _OS\arg_assert(
+    Str\length($template) > $suffix_length + 6,
+    'Suffix length must be at most 6 less than the length of the template',
+  );
   if ($suffix_length === 0) {
-    if (!Str\ends_with($template, 'XXXXXX')) {
-      _OS\throw_errno(
-        Errno::EINVAL,
-        'Template must end with exactly 6 `X` characters',
-      );
-    }
+    _OS\arg_assert(
+      Str\ends_with($template, 'XXXXXX'),
+      'Template must end with exactly 6 `X` characters',
+    );
   } else if ($suffix_length > 0) {
     $base = Str\slice($template, 0, Str\length($template) - $suffix_length);
-    if (!Str\ends_with($base, 'XXXXXX')) {
-      _OS\throw_errno(
-        Errno::EINVAL,
-        'Template must be of form prefixXXXXXXsuffix - exactly 6 `X` '.
-        'characters are required',
-      );
-    }
+    _OS\arg_assert(
+      Str\ends_with($base, 'XXXXXX'),
+      'Template must be of form prefixXXXXXXsuffix - exactly 6 `X` '.
+      'characters are required',
+    );
   }
   // We do not want LightProcess to be observable.
   $flags |= O_CLOEXEC;

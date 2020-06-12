@@ -26,7 +26,7 @@ interface ReadHandle extends Handle {
    * @see `genReadAll`
    * @param $max_bytes the maximum number of bytes to read
    *   - if `null`, an internal default will be used.
-   *   - if 0, an `InvalidArgumentException` will be raised.
+   *   - if 0, `EINVAL` will be raised.
    *   - up to `$max_bytes` may be allocated in a buffer; large values may lead
    *     to unnecessarily hitting the request memory limit.
    * @throws `OS\BlockingIOException` if there is no more
@@ -46,7 +46,7 @@ interface ReadHandle extends Handle {
    * @see `genReadAll`
    * @param max_bytes the maximum number of bytes to read
    *   - if `null`, an internal default will be used.
-   *   - if 0, an `InvalidArgumentException` will be raised.
+   *   - if 0, `EINVAL` will be raised.
    *   - up to `$max_bytes` may be allocated in a buffer; large values may lead
    *     to unnecessarily hitting the request memory limit.
    * @returns

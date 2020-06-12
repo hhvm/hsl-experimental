@@ -25,9 +25,10 @@ trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
     string $bytes,
     ?int $timeout_ns = null,
   ): Awaitable<int> {
-    if ($timeout_ns is int && $timeout_ns <= 0) {
-      throw new \InvalidArgumentException('$timeout_ns must be null, or >= 0');
-    }
+    _OS\arg_assert(
+      $timeout_ns is null || $timeout_ns > 0,
+      '$timeout_ns must be null, or >= 0',
+    );
     $timeout_ns ??= 0;
 
     try {

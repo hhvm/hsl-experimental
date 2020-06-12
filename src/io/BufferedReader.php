@@ -36,12 +36,10 @@ final class BufferedReader implements IO\ReadHandle {
 
   // implementing interface
   public function read(?int $max_bytes = null): string {
-    if ($max_bytes is int && $max_bytes <= 0) {
-      _OS\throw_errno(
-        OS\Errno::EINVAL,
-        "Max bytes must be null, or greater than 0",
-      );
-    }
+    _OS\arg_assert(
+      $max_bytes is null || $max_bytes > 0,
+      "Max bytes must be null, or greater than 0",
+    );
 
     if ($this->eof) {
       return '';
@@ -68,18 +66,14 @@ final class BufferedReader implements IO\ReadHandle {
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string> {
-    if ($max_bytes is int && $max_bytes <= 0) {
-      _OS\throw_errno(
-        OS\Errno::EINVAL,
-        "Max bytes must be null, or greater than 0",
-      );
-    }
-    if ($timeout_ns is int && $timeout_ns <= 0) {
-      _OS\throw_errno(
-        OS\Errno::EINVAL,
-        "Timeout must be null, or greater than 0",
-      );
-    }
+    _OS\arg_assert(
+      $max_bytes is null || $max_bytes > 0,
+      "Max bytes must be null, or greater than 0",
+    );
+    _OS\arg_assert(
+      $timeout_ns is null || $timeout_ns > 0,
+      "Timeout must be null, or greater than 0",
+    );
 
     if ($this->eof) {
       return '';
@@ -196,9 +190,10 @@ final class BufferedReader implements IO\ReadHandle {
   public async function readByteAsync(
     ?int $timeout_ns = null,
   ): Awaitable<string> {
-    if ($timeout_ns is int && $timeout_ns <= 0) {
-      _OS\throw_errno(OS\Errno::EINVAL, 'Timeout must be null or > 0');
-    }
+    _OS\arg_assert(
+      $timeout_ns is null || $timeout_ns > 0,
+      "Timeout must be null, or greater than 0",
+    );
     if ($this->buffer === '' && !$this->eof) {
       await $this->fillBufferAsync(null, $timeout_ns);
     }
