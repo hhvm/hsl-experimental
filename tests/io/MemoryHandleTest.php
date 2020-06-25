@@ -84,6 +84,7 @@ final class MemoryHandleTest extends HackTest {
   public async function testClose(): Awaitable<void> {
     $h = new IO\MemoryHandle('herp', IO\MemoryHandleWriteMode::APPEND);
     $h->close();
+    expect($h->getBuffer())->toEqual('herp');
     $ex = expect(() ==> $h->read(1024))->toThrow(OS\ErrnoException::class);
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
     $h->reset('herp');

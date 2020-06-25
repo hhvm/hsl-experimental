@@ -40,7 +40,6 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
   public function close(): void {
     $this->open = false;
     $this->offset = -1;
-    $this->buffer = '';
   }
 
   public async function readAsync(
