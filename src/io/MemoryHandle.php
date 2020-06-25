@@ -24,16 +24,23 @@ enum MemoryHandleWriteMode: int {
  *
  * @see `IO\pipe()` for more complicated tests
  */
-final class MemoryHandle implements SeekableReadWriteHandle {
+final class MemoryHandle implements CloseableSeekableReadWriteHandle {
   use ReadHandleConvenienceMethodsTrait;
   use WriteHandleConvenienceMethodsTrait;
 
   private int $offset = 0;
+  private bool $open = true;
 
   public function __construct(
     private string $buffer = '',
     private MemoryHandleWriteMode $writeMode = MemoryHandleWriteMode::OVERWRITE,
   ) {
+  }
+
+  public function close(): void {
+    $this->open = false;
+    $this->offset = -1;
+    $this->buffer = '';
   }
 
   public async function readAsync(
@@ -44,6 +51,8 @@ final class MemoryHandle implements SeekableReadWriteHandle {
   }
 
   public function read(?int $max_bytes = null): string {
+    $this->checkIsOpen();
+
     $max_bytes ??= Math\INT64_MAX;
     _OS\arg_assert($max_bytes > 0, '$max_bytes must be null or positive');
     $len = Str\length($this->buffer);
@@ -58,16 +67,20 @@ final class MemoryHandle implements SeekableReadWriteHandle {
   }
 
   public function seek(int $pos): void {
+    $this->checkIsOpen();
+
     _OS\arg_assert($pos >= 0, "Position must be >= 0");
     // Past end of file is explicitly fine
     $this->offset = $pos;
   }
 
   public function tell(): int {
+    $this->checkIsOpen();
     return $this->offset;
   }
 
   public function write(string $data): int {
+    $this->checkIsOpen();
     $length = Str\length($this->buffer);
     if ($length < $this->offset) {
       $this->buffer .= Str\repeat("\0", $this->offset - $length);
@@ -112,6 +125,7 @@ final class MemoryHandle implements SeekableReadWriteHandle {
    * or `appendToBuffer()`.
    */
   public function reset(string $data = ''): void {
+    $this->open = true;
     $this->buffer = $data;
     $this->offset = 0;
   }
@@ -121,6 +135,17 @@ final class MemoryHandle implements SeekableReadWriteHandle {
    * @see `write()` if you want the offset to be changed.
    */
   public function appendToBuffer(string $data): void {
+    $this->checkIsOpen();
     $this->buffer .= $data;
+  }
+
+  private function checkIsOpen(): void {
+    if (!$this->open) {
+      _OS\throw_errno(
+        OS\Errno::EBADF,
+        "%s::close() was already called",
+        self::class,
+      );
+    }
   }
 }
