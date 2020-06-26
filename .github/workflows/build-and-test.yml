@@ -15,6 +15,8 @@ jobs:
     runs-on: ${{matrix.os}}-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Alias master for Composer `dev-master` version resolution
+        run: git branch master HEAD
       - name: Install Composer
         run: .github/workflows/install-composer.sh --install-dir=${{runner.temp}}
       - name: Install HHVM (apt)
