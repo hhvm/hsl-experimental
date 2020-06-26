@@ -210,8 +210,47 @@ final class BufferedReader implements IO\ReadHandle {
     return $ret;
   }
 
+  /** If we are known to have reached the end of the file.
+   *
+   * This function is best-effort: `true` is reliable, but `false` is more of
+   * 'maybe'. For example, if called on an open socket with no data available,
+   * it will return `false`; it is then possible that a future read will:
+   * - return data if the other send sends some more
+   * - block forever, or until timeout if set
+   * - return the empty string if the socket closes the connection
+   *
+   * Additionally, helpers such as `readUntil` may fail with `EPIPE`.
+   */
   public function isEndOfFile(): bool {
-    return $this->eof;
+    if ($this->eof) {
+      return true;
+    }
+    if ($this->buffer !== '') {
+      return false;
+    }
+
+    // attempt to make `while (!$handle->isEOF()) {` safe on a closed file
+    // handle, e.g. STDIN; if we just return `$this->eof`, the caller loop
+    // body must check for EPIPE and EBADF which is unexpected.
+    try {
+      // Calling the non-async (but still non-blocking) version as the async
+      // version could wait for the other end to send data - which could lead
+      // to both ends of a pipe/socket waiting on each other.
+      $this->buffer = $this->handle->read();
+      if ($this->buffer === '') {
+        $this->eof = true;
+        return true;
+      }
+    } catch (OS\BlockingIOException $_EWOULDBLOCK) {
+      return false;
+    } catch (OS\ErrnoException $ex) {
+      if ($ex->getErrno() === OS\Errno::EBADF) {
+        $this->eof = true;
+        return true;
+      }
+      // ignore; they'll hit it again when they try a real read
+    }
+    return false;
   }
 
   private async function fillBufferAsync(
