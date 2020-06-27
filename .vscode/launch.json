@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "HackTest: Current File",
+      "type": "hhvm",
+      "request": "launch",
+      "script": "vendor/bin/hacktest ${file}",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "HackTest: All Tests",
+      "type": "hhvm",
+      "request": "launch",
+      "script": "vendor/bin/hacktest tests/",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "HackTest: Current Directory",
+      "type": "hhvm",
+      "request": "launch",
+      "script": "vendor/bin/hacktest ${fileDirname}/",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
