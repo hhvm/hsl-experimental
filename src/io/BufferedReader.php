@@ -113,7 +113,7 @@ final class BufferedReader implements IO\ReadHandle {
         $this->eof = true;
         throw new OS\BrokenPipeException(
           OS\Errno::EPIPE,
-          'Reached end of file before newline',
+          'Reached end of file before suffix',
         );
       }
       $buf .= $chunk;
