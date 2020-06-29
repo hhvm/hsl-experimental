@@ -24,16 +24,14 @@ jobs:
         run: |
           set -ex
           export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common apt-transport-https
-          sudo apt-key add .github/workflows/hhvm.gpg.key
           if [ "${{matrix.hhvm}}" = "nightly" ]; then
-            sudo add-apt-repository https://dl.hhvm.com/ubuntu
+            sudo apt-get remove hhvm
             sudo apt-get install -y hhvm-nightly
           elif [ "${{matrix.hhvm}}" = "latest" ]; then
-            sudo add-apt-repository https://dl.hhvm.com/ubuntu
-            sudo apt-get install -y hhvm
+            sudo apt-get ugprade -y hhvm
           else
+            sudo add-apt-repository --remove https://dl.hhvm.com/ubuntu
+            sudo apt-get remove hhvm
             DISTRO=$(lsb_release --codename --short)
             sudo add-apt-repository \
               "deb https://dl.hhvm.com/ubuntu ${DISTRO}-${{matrix.hhvm}} main"
