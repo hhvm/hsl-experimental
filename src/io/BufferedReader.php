@@ -133,7 +133,7 @@ final class BufferedReader implements IO\ReadHandle {
     if ($ret === null) {
       throw new OS\BrokenPipeException(
         OS\Errno::EPIPE,
-        'Reached end of file before newline',
+        'Marker/suffix not found before end of file',
       );
     }
     return $ret;
