@@ -73,7 +73,7 @@ final class BufferedReaderTest extends HackTest {
     expect(await $r->readLineAsync())->toEqual("cd");
     expect(await $r->readLineAsync())->toEqual("ef");
     expect(await $r->readLineAsync())->toBeNull();
-    expect(async () ==> await $r->readLineAsyncx())->toThrow(
+    expect(async () ==> await $r->readLinexAsync())->toThrow(
       OS\BrokenPipeException::class,
     );
 

@@ -95,7 +95,7 @@ final class BufferedReader implements IO\ReadHandle {
    * This call returns null if the suffix is not seen, even if there is other
    * data.
    *
-   * @see `readUntilAsyncx()` if you want to throw EPIPE instead of returning null
+   * @see `readUntilxAsync()` if you want to throw EPIPE instead of returning null
    * @see `linesIterator()` if you want to iterate over all lines
    * @see `readLineAsync()` if you want trailing data instead of null
    */
@@ -128,7 +128,7 @@ final class BufferedReader implements IO\ReadHandle {
    * This is similar to `readUntilAsync()`, however it raises EPIPE instead
    * of returning null.
    */
-  public async function readUntilAsyncx(string $suffix): Awaitable<string> {
+  public async function readUntilxAsync(string $suffix): Awaitable<string> {
     $ret = await $this->readUntilAsync($suffix);
     if ($ret === null) {
       throw new OS\BrokenPipeException(
@@ -157,7 +157,7 @@ final class BufferedReader implements IO\ReadHandle {
    * - `"foo\nbar\n"` is also considered a 2-line input
    *
    * @see `linesIterator()` for an iterator
-   * @see `readLineAsyncx()` to throw EPIPE instead of returning null
+   * @see `readLinexAsync()` to throw EPIPE instead of returning null
    * @see `readUntilAsync()` for a more general form
    */
   public async function readLineAsync(): Awaitable<?string> {
@@ -183,7 +183,7 @@ final class BufferedReader implements IO\ReadHandle {
    *
    * @see `readLineAsync()` for details.
    */
-  public async function readLineAsyncx(): Awaitable<string> {
+  public async function readLinexAsync(): Awaitable<string> {
     $line = await $this->readLineAsync();
     if ($line !== null) {
       return $line;
