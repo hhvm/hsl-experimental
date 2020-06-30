@@ -8,10 +8,11 @@
  *
  */
 
-use namespace HH\Lib\{IO, OS};
+use namespace HH\Lib\{IO, OS, Vec};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
+use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use type HackTest;
 
 // @oss-disable: <<Oncalls('hack')>>
@@ -70,7 +71,9 @@ final class BufferedReaderTest extends HackTest {
     $r = new IO\BufferedReader(new IO\MemoryHandle("ab\ncd\nef"));
     expect(await $r->readLineAsync())->toEqual("ab");
     expect(await $r->readLineAsync())->toEqual("cd");
-    expect(async () ==> await $r->readLineAsync())->toThrow(
+    expect(await $r->readLineAsync())->toEqual("ef");
+    expect(await $r->readLineAsync())->toBeNull();
+    expect(async () ==> await $r->readLinexAsync())->toThrow(
       OS\BrokenPipeException::class,
     );
 
@@ -80,9 +83,8 @@ final class BufferedReaderTest extends HackTest {
     expect(await $r->readAllAsync())->toEqual('ef');
 
     $r = new IO\BufferedReader(new IO\MemoryHandle('ab'));
-    expect(async () ==> await $r->readLineAsync())->toThrow(
-      OS\BrokenPipeException::class,
-    );
+    expect(await $r->readLineAsync())->toEqual('ab');
+    expect(await $r->readLineAsync())->toBeNull();
   }
 
   public async function testReadUntil(): Awaitable<void> {
@@ -103,5 +105,66 @@ final class BufferedReaderTest extends HackTest {
     $_ = await $r->readByteAsync();
     expect(await $r->readUntilAsync("FOO"))->toEqual("ab");
     expect(await $r->readUntilAsync("FOO"))->toEqual("cd");
+  }
+
+  public async function testReadLineVsReadUntil(): Awaitable<void> {
+    $r = new IO\BufferedReader(new IO\MemoryHandle("ab\ncd"));
+    expect(await $r->readLineAsync())->toEqual('ab');
+    expect(await $r->readLineAsync())->toEqual('cd');
+
+    $r = new IO\BufferedReader(new IO\MemoryHandle("ab\ncd"));
+    expect(await $r->readUntilAsync("\n"))->toEqual('ab');
+    expect(await $r->readUntilAsync("\n"))->toBeNull();
+  }
+
+  public static function provideLines(): vec<(string, vec<string>)> {
+    /* Some of these seem unintuive, but they match libc fgets() and Rust
+     * `lines()`; they also seem to match what people actually expect in
+     * practice
+     *
+     * - Hit EOL? Everything up to there is a line
+     * - Hit EOF? If we have content, it's a new line, but if not, there's
+     *   nothing.
+     */
+    return vec[
+      tuple('', vec[]), // myprog < /dev/null
+      tuple("\n", vec['']), // echo | ./myprog
+      tuple('foo', vec['foo']),
+      tuple("foo\n", vec['foo']), // echo foo | ./myprog
+      tuple("foo\nbar", vec['foo', 'bar']),
+      tuple("foo\nbar\n", vec['foo', 'bar']),
+      tuple("foo\nbar\n\n", vec['foo', 'bar', '']),
+    ];
+  }
+
+  <<DataProvider('provideLines')>>
+  public async function testIterateLines(
+    string $input,
+    vec<string> $expected_lines,
+  ): Awaitable<void> {
+    $b = new IO\BufferedReader(new IO\MemoryHandle($input));
+    $actual_lines = vec[];
+    foreach ($b->linesIterator() await as $line) {
+      $actual_lines[] = $line;
+    }
+    expect($actual_lines)->toEqual(
+      $expected_lines,
+      "Input %s",
+      \var_export($input, true),
+    );
+  }
+
+  public async function testIterateLinesOnClosedFile(): Awaitable<void> {
+    list($r, $w) = IO\pipe();
+    $r->close();
+    $w->close();
+    $b = new IO\BufferedReader($r);
+
+    $lines = vec[];
+    foreach ($b->linesIterator() await as $line) {
+      $lines[] = $line;
+    }
+    expect($lines)->toEqual(vec[]);
+
   }
 }

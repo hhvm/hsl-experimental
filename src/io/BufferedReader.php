@@ -92,12 +92,14 @@ final class BufferedReader implements IO\ReadHandle {
    * The trailing suffix is read (so won't be returned by other calls), but is not
    * included in the return value.
    *
-   * This call fails with `EPIPE` if the suffix is not seen, even if there is other
+   * This call returns null if the suffix is not seen, even if there is other
    * data.
    *
-   * @see readLineAsync
+   * @see `readUntilxAsync()` if you want to throw EPIPE instead of returning null
+   * @see `linesIterator()` if you want to iterate over all lines
+   * @see `readLineAsync()` if you want trailing data instead of null
    */
-  public async function readUntilAsync(string $suffix): Awaitable<string> {
+  public async function readUntilAsync(string $suffix): Awaitable<?string> {
     $buf = $this->buffer;
     $idx = Str\search($buf, $suffix);
     $suffix_len = Str\length($suffix);
@@ -110,11 +112,7 @@ final class BufferedReader implements IO\ReadHandle {
       $chunk = await $this->handle->readAsync();
       if ($chunk === '') {
         $this->buffer = $buf;
-        $this->eof = true;
-        throw new OS\BrokenPipeException(
-          OS\Errno::EPIPE,
-          'Reached end of file before newline',
-        );
+        return null;
       }
       $buf .= $chunk;
     } while (!Str\contains($chunk, $suffix));
@@ -125,7 +123,23 @@ final class BufferedReader implements IO\ReadHandle {
     return Str\slice($buf, 0, $idx);
   }
 
-  /** Read until the platform end-of-line sequence is seen.
+  /** Read until the suffix, or raise EPIPE if the separator is not seen.
+   *
+   * This is similar to `readUntilAsync()`, however it raises EPIPE instead
+   * of returning null.
+   */
+  public async function readUntilxAsync(string $suffix): Awaitable<string> {
+    $ret = await $this->readUntilAsync($suffix);
+    if ($ret === null) {
+      throw new OS\BrokenPipeException(
+        OS\Errno::EPIPE,
+        'Marker/suffix not found before end of file',
+      );
+    }
+    return $ret;
+  }
+
+  /** Read until the platform end-of-line sequence is seen, or EOF is reached.
    *
    * On current platforms, this is always `\n`; it may have other values on other
    * platforms in the future, e.g. `\r\n`.
@@ -133,13 +147,62 @@ final class BufferedReader implements IO\ReadHandle {
    * The newline sequence is read (so won't be returned by other calls), but is not
    * included in the return value.
    *
-   * This call fails with `EPIPE` if "\n" not seen, even if there is other
-   * data.
+   * - Returns null if the end of file is reached with no data.
+   * - Returns a string otherwise
    *
-   * @see `readUntilAsync` for a more general form
+   * Some illustrative edge cases:
+   * - `''` is considered a 0-line input
+   * - `'foo'` is considered a 1-line input
+   * - `"foo\nbar"` is considered a 2-line input
+   * - `"foo\nbar\n"` is also considered a 2-line input
+   *
+   * @see `linesIterator()` for an iterator
+   * @see `readLinexAsync()` to throw EPIPE instead of returning null
+   * @see `readUntilAsync()` for a more general form
    */
-  public async function readLineAsync(): Awaitable<string> {
-    return await $this->readUntilAsync("\n");
+  public async function readLineAsync(): Awaitable<?string> {
+    try {
+      $line = await $this->readUntilAsync("\n");
+    } catch (OS\ErrnoException $ex) {
+      if ($ex->getErrno() === OS\Errno::EBADF) {
+        // Eg foreach ($stdin->linesIterator()) when stdin is closed
+        return null;
+      }
+      throw $ex;
+    }
+
+    if ($line !== null) {
+      return $line;
+    }
+
+    $line = await $this->readAllAsync();
+    return $line === '' ? null : $line;
+  }
+
+  /** Read a line or throw EPIPE.
+   *
+   * @see `readLineAsync()` for details.
+   */
+  public async function readLinexAsync(): Awaitable<string> {
+    $line = await $this->readLineAsync();
+    if ($line !== null) {
+      return $line;
+    }
+    throw new OS\BrokenPipeException(OS\Errno::EPIPE, 'No more lines to read.');
+  }
+
+  /** Iterate over all lines in the file.
+   *
+   * Usage:
+   *
+   * ```
+   * foreach ($reader->linesIterator() await as $line) {
+   *   do_stuff($line);
+   * }
+   * ```
+   */
+  public function linesIterator(): AsyncIterator<string> {
+    return new BufferedReaderLineIterator($this);
   }
 
   <<__Override>> // from trait
