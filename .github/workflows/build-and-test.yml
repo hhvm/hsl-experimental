@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Alias master for Composer `dev-master` version resolution
         run: |
-          if ! -e .git/refs/heads/master; then
+          if [ ! -e .git/refs/heads/master ]; then
             git branch master HEAD
           fi
       - name: Install Composer
