@@ -167,4 +167,25 @@ final class BufferedReaderTest extends HackTest {
     expect($lines)->toEqual(vec[]);
 
   }
+
+  public async function testEndOfFile(): Awaitable<void> {
+    $b = new IO\BufferedReader(new IO\MemoryHandle(''));
+    expect($b->isEndOfFile())->toBeTrue();
+
+    // Closed, no data.
+    list($r, $w) = IO\pipe();
+    $r->close();
+    $w->close();
+    $b = new IO\BufferedReader($r);
+    expect($b->isEndOfFile())->toBeTrue();
+
+    $b = new IO\BufferedReader(new IO\MemoryHandle("foo\nbar\n"));
+    expect($b->isEndOfFile())->toBeFalse();
+    expect(await $b->readLineAsync())->toEqual("foo");
+    expect($b->isEndOfFile())->toBeFalse();
+    expect(await $b->readLineAsync())->toEqual("bar");
+
+    expect(async () ==> await $b->readLinexAsync())->toThrow(OS\BrokenPipeException::class);
+    expect($b->isEndOfFile())->toBeTrue();
+  }
 }
