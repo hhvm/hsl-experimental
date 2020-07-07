@@ -81,6 +81,20 @@ final class PipeTest extends HackTest {
     }
   }
 
+  public async function testCloseWhenDisposed(): Awaitable<void> {
+    list($r, $w) = IO\pipe();
+    using ($w->closeWhenDisposed()) {
+      $w->write("Hello, world\n");
+    }
+    expect(await $r->readAsync())->toEqual("Hello, world\n");
+    // - does not block forever
+    // - does not fail, just succeeds with no data
+    expect(await $r->readAsync())->toEqual('');
+
+    $ex = expect(() ==> $w->write('foo'))->toThrow(OS\ErrnoException::class);
+    expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
+  }
+
   public async function testReadFromClosedPipe(): Awaitable<void> {
     // Intent is to:
     // - make sure we throw the expected errno

@@ -11,7 +11,7 @@
 namespace HH\Lib\_Private\_IO;
 
 use namespace HH\Lib\{IO, OS, Str};
-use namespace HH\Lib\_Private\_OS;
+use namespace HH\Lib\_Private\{_IO, _OS};
 
 abstract class FileDescriptorHandle implements IO\CloseableHandle, IO\FDHandle {
   protected bool $isAwaitable = true;
@@ -51,5 +51,10 @@ abstract class FileDescriptorHandle implements IO\CloseableHandle, IO\FDHandle {
 
   final public function close(): void {
     OS\close($this->impl);
+  }
+
+  <<__ReturnDisposable>>
+  final public function closeWhenDisposed(): \IDisposable {
+    return new _IO\CloseWhenDisposed($this);
   }
 }
