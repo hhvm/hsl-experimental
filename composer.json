@@ -17,6 +17,6 @@
     "hhvm/hsl": "^4.15"
   },
   "provide": {
-    "hhvm/hsl-io": "0.2.0"
+    "hhvm/hsl-io": "0.2.1"
   }
 }

@@ -19,4 +19,11 @@ namespace HH\Lib\IO;
 interface CloseableHandle extends Handle {
   /** Close the handle */
   public function close(): void;
+
+  /** Close the handle when the returned disposable is disposed.
+   *
+   * Usage: `using $handle->closeWhenDisposed();`
+   */
+  <<__ReturnDisposable>>
+  public function closeWhenDisposed(): \IDisposable;
 }

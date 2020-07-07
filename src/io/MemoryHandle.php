@@ -11,7 +11,7 @@
 namespace HH\Lib\IO;
 
 use namespace HH\Lib\{Math, OS, Str};
-use namespace HH\Lib\_Private\_OS;
+use namespace HH\Lib\_Private\{_IO, _OS};
 
 enum MemoryHandleWriteMode: int {
   OVERWRITE = 0;
@@ -40,6 +40,11 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
   public function close(): void {
     $this->open = false;
     $this->offset = -1;
+  }
+
+  <<__ReturnDisposable>>
+  public function closeWhenDisposed(): \IDisposable {
+    return new _IO\CloseWhenDisposed($this);
   }
 
   public async function readAsync(

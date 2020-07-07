@@ -30,6 +30,15 @@ final class MemoryHandleTest extends HackTest {
     expect(await $h->readAllAsync())->toEqual('derp');
   }
 
+  public function testCloseWhenDisposed(): void {
+    $h = new IO\MemoryHandle('foobar');
+    using ($h->closeWhenDisposed()) {
+      expect($h->read(3))->toEqual('foo');
+    }
+    $ex = expect(() ==> $h->read(3))->toThrow(OS\ErrnoException::class);
+    expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
+  }
+
   public async function testReadAtInvalidOffset(): Awaitable<void> {
     $h = new IO\MemoryHandle('herpderp');
     $h->seek(99999);
