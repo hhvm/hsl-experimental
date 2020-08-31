@@ -26,6 +26,12 @@ final class Lock implements \IDisposable {
   }
 
   final public function __dispose(): void {
-    _OS\flock($this->fd, _OS\LOCK_UN);
+    try {
+      OS\flock($this->fd, _OS\LOCK_UN);
+    } catch (OS\ErrnoException $e) {
+      if ($e->getErrno() !== OS\Errno::EBADF) {
+        throw $e;
+      }
+    }
   }
 }
