@@ -184,4 +184,14 @@ final class FileTest extends HackTest {
       $f4->close();
     }
   }
+
+  public function testEarlyClosedDisposables(): void {
+    using $tf = File\temporary_file();
+    using ($tf->getHandle()->tryLockx(File\LockType::SHARED)) {
+      $tf->getHandle()->close();
+    }
+    // Expectations:
+    // - the lock's __dispose didn't throw
+    // - the temporary file's __dispose didn't throw
+  }
 }

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\File;
 
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{IO, OS};
 use namespace HH\Lib\_Private\_IO;
 
 final class TemporaryFile implements \IDisposable {
@@ -21,7 +21,13 @@ final class TemporaryFile implements \IDisposable {
   }
   public function __dispose(): void {
     $f = $this->getHandle();
-    $f->close();
+    try {
+      $f->close();
+    } catch (OS\ErrnoException $e) {
+      if ($e->getErrno() !== OS\Errno::EBADF) {
+        throw $e;
+      }
+    }
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
     \unlink($f->getPath()->toString());
