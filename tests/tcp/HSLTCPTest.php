@@ -198,6 +198,7 @@ final class HSLTCPTest extends HackTest {
     $s->stopListening();
     $ex = expect(async () ==> await $accept_awaitable)->toThrow(
       OS\ErrnoException::class,
+      'Server socket closed while waiting for connection',
     );
     expect($ex->getErrno())->toEqual(OS\Errno::ECONNABORTED);
   }
