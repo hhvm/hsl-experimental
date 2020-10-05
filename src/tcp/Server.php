@@ -17,10 +17,7 @@ final class Server implements Network\Server<CloseableSocket> {
   /** Host and port */
   const type TAddress = (string, int);
 
-  private _Network\CancelablePoller $poller;
-
   private function __construct(private OS\FileDescriptor $impl) {
-    $this->poller = new _Network\CancelablePoller();
   }
 
   /** Create a bound and listening instance */
@@ -106,7 +103,7 @@ final class Server implements Network\Server<CloseableSocket> {
   }
 
   public async function nextConnectionAsync(): Awaitable<CloseableSocket> {
-    return await _Network\socket_accept_async($this->impl, $this->poller)
+    return await _Network\socket_accept_async($this->impl)
       |> new _TCP\CloseableTCPSocket($$);
   }
 
@@ -127,6 +124,5 @@ final class Server implements Network\Server<CloseableSocket> {
 
   public function stopListening(): void {
     OS\close($this->impl);
-    $this->poller->cancelAll(\STREAM_AWAIT_CLOSED);
   }
 }
