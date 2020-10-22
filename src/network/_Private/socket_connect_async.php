@@ -12,7 +12,6 @@ namespace HH\Lib\_Private\_Network;
 
 use namespace HH\Lib\OS;
 use namespace HH\Lib\_Private\_OS;
-use type HH\Lib\_Private\PHPWarningSuppressor;
 
 /** Asynchronously connect to a socket.
  *

@@ -12,7 +12,6 @@ namespace HH\Lib\_Private\_Network;
 
 use namespace HH\Lib\{Network, OS};
 use namespace HH\Lib\_Private\_OS;
-use type HH\Lib\_Private\PHPWarningSuppressor;
 
 /** Create a server socket and start listening */
 async function socket_create_bind_listen_async(
