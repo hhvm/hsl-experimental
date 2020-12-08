@@ -11,7 +11,7 @@
 namespace HH\Lib\IO;
 
 use namespace HH\Lib\{Math, Str, OS};
-use namespace HH\Lib\_Private\_OS;
+use namespace HH\Lib\_Private\{_IO, _OS};
 
 /** Trait implementing `ReadHandle` methods that can be implemented in terms
  * of more basic methods.
@@ -47,8 +47,9 @@ trait ReadHandleConvenienceMethodsTrait {
     );
 
     do {
+      $chunk_size = Math\minva($to_read, _IO\DEFAULT_READ_BUFFER_SIZE);
       /* @lint-ignore AWAIT_IN_LOOP */
-      $chunk = await $this->readAsync($to_read, $timer->getRemainingNS());
+      $chunk = await $this->readAsync($chunk_size, $timer->getRemainingNS());
       $data .= $chunk;
       $to_read -= Str\length($chunk);
     } while ($to_read > 0 && $chunk !== '');
