@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hhvm/hsl-experimental.svg?branch=master)](https://travis-ci.org/hhvm/hsl-experimental)
+![Continuous Integration](https://github.com/hhvm/hsl-experimental/workflows/Continuous%20Integration/badge.svg)
 
 # Hack Standard Library - Experimental Additions
 
