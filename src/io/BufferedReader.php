@@ -12,7 +12,7 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\{IO, OS, Str};
+use namespace HH\Lib\{IO, Math, OS, Str};
 use namespace HH\Lib\_Private\_OS;
 
 /** Wrapper for `ReadHandle`s, with buffered line-based byte-based accessors.
@@ -109,13 +109,16 @@ final class BufferedReader implements IO\ReadHandle {
     }
 
     do {
+      // + 1 as it would have been matched in the previous iteration if it
+      // fully fit in the chunk
+      $offset = Math\maxva(0, Str\length($buf) - $suffix_len + 1);
       $chunk = await $this->handle->readAsync();
       if ($chunk === '') {
         $this->buffer = $buf;
         return null;
       }
       $buf .= $chunk;
-    } while (!Str\contains($chunk, $suffix));
+    } while (!Str\contains($buf, $suffix, $offset));
 
     $idx = Str\search($buf, $suffix);
     invariant($idx !== null, 'Should not have exited loop without suffix');

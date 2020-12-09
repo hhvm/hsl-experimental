@@ -8,7 +8,8 @@
  *
  */
 
-use namespace HH\Lib\{IO, OS, Vec};
+use namespace HH\Lib\{IO, OS, Str, Vec};
+use namespace HH\Lib\_Private\_IO;
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable
@@ -105,6 +106,28 @@ final class BufferedReaderTest extends HackTest {
     $_ = await $r->readByteAsync();
     expect(await $r->readUntilAsync("FOO"))->toEqual("ab");
     expect(await $r->readUntilAsync("FOO"))->toEqual("cd");
+  }
+
+  public async function testReadUntilBufferBoundary(): Awaitable<void> {
+    // Intent is to test the case when the separator starts in one chunk, and
+    // ends in another, i.e.:
+    // - Str\length($padding) < chunk size
+    // - Str\length($padding.$separator) > chunk size
+    $padding = Str\repeat('a', _IO\DEFAULT_READ_BUFFER_SIZE - 1);
+    $separator = 'bc';
+
+    list($r, $w) = IO\pipe();
+    concurrent {
+      await async {
+        await $w->writeAllAsync($padding.$separator.'junk');
+        $w->close();
+      };
+      await async {
+        $br = new IO\BufferedReader($r);
+        expect(await $br->readUntilAsync($separator))->toEqual($padding);
+        $r->close();
+      };
+    }
   }
 
   public async function testReadLineVsReadUntil(): Awaitable<void> {
