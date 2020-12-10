@@ -121,7 +121,6 @@ final class BufferedReader implements IO\ReadHandle {
       $idx = Str\search($buf, $suffix, $offset);
     } while ($idx === null);
 
-    invariant($idx !== null, 'Should not have exited loop without suffix');
     $this->buffer = Str\slice($buf, $idx + $suffix_len);
     return Str\slice($buf, 0, $idx);
   }
