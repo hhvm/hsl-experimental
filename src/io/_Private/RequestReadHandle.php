@@ -22,7 +22,7 @@ final class RequestReadHandle implements IO\ReadHandle {
     return namespace\request_read($max_bytes);
   }
 
-  public async function readAsync(
+  public async function readAllowPartialSuccessAsync(
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string> {

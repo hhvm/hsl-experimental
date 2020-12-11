@@ -47,7 +47,7 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
     return new _IO\CloseWhenDisposed($this);
   }
 
-  public async function readAsync(
+  public async function readAllowPartialSuccessAsync(
     ?int $max_bytes = null,
     ?int $_timeout_nanos = null,
   ): Awaitable<string> {
@@ -112,7 +112,7 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
     return $data_length;
   }
 
-  public async function writeAsync(
+  public async function writeAllowPartialSuccessAsync(
     string $data,
     ?int $timeout_nanos = null,
   ): Awaitable<int> {

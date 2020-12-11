@@ -22,37 +22,37 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 final class PipeTest extends HackTest {
   public async function testWritesAreReadableAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe();
-    await $w->writeAsync("Hello, world!\nHerp derp\n");
+    await $w->writeAllowPartialSuccessAsync("Hello, world!\nHerp derp\n");
 
-    $read = await $r->readAsync();
+    $read = await $r->readAllowPartialSuccessAsync();
     expect($read)->toEqual("Hello, world!\nHerp derp\n");
     $w->close();
-    $s = await $r->readAsync();
+    $s = await $r->readAllowPartialSuccessAsync();
     expect($s)->toEqual('');
   }
 
   public async function testReadWithoutLimitAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe();
-    await $w->writeAsync("Hello, world!\nHerp derp\n");
+    await $w->writeAllowPartialSuccessAsync("Hello, world!\nHerp derp\n");
     $w->close();
-    $s = await $r->readAsync();
+    $s = await $r->readAllowPartialSuccessAsync();
     expect($s)->toEqual("Hello, world!\nHerp derp\n");
   }
 
   public async function testPartialReadAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe();
-    await $w->writeAsync('1234567890');
-    $s = await $r->readAsync(5);
+    await $w->writeAllowPartialSuccessAsync('1234567890');
+    $s = await $r->readAllowPartialSuccessAsync(5);
     expect($s)->toEqual('12345');
-    $s = await $r->readAsync(5);
+    $s = await $r->readAllowPartialSuccessAsync(5);
     expect($s)->toEqual('67890');
   }
 
   public async function testReadTooManyAsync(): Awaitable<void> {
     list($r, $w) = IO\pipe();
-    await $w->writeAsync('1234567890');
+    await $w->writeAllowPartialSuccessAsync('1234567890');
     $w->close();
-    $s = await $r->readAsync(11);
+    $s = await $r->readAllowPartialSuccessAsync(11);
     expect($s)->toEqual('1234567890');
   }
 
@@ -63,20 +63,20 @@ final class PipeTest extends HackTest {
 
     concurrent {
       await async { // client
-        await $cw->writeAsync("Herp\n");
-        $response = await $cr->readAsync();
+        await $cw->writeAllowPartialSuccessAsync("Herp\n");
+        $response = await $cr->readAllowPartialSuccessAsync();
         expect($response)->toEqual("Derp\n");
-        await $cw->writeAsync("Foo\n");
-        $response = await $cr->readAsync();
+        await $cw->writeAllowPartialSuccessAsync("Foo\n");
+        $response = await $cr->readAllowPartialSuccessAsync();
         expect($response)->toEqual("Bar\n");
       };
       await async { // server
-        $request = await $sr->readAsync();
+        $request = await $sr->readAllowPartialSuccessAsync();
         expect($request)->toEqual("Herp\n");
-        await $sw->writeAsync("Derp\n");
-        $request = await $sr->readAsync();
+        await $sw->writeAllowPartialSuccessAsync("Derp\n");
+        $request = await $sr->readAllowPartialSuccessAsync();
         expect($request)->toEqual("Foo\n");
-        await $sw->writeAsync("Bar\n");
+        await $sw->writeAllowPartialSuccessAsync("Bar\n");
       };
     }
   }
@@ -86,10 +86,10 @@ final class PipeTest extends HackTest {
     using ($w->closeWhenDisposed()) {
       $w->write("Hello, world\n");
     }
-    expect(await $r->readAsync())->toEqual("Hello, world\n");
+    expect(await $r->readAllowPartialSuccessAsync())->toEqual("Hello, world\n");
     // - does not block forever
     // - does not fail, just succeeds with no data
-    expect(await $r->readAsync())->toEqual('');
+    expect(await $r->readAllowPartialSuccessAsync())->toEqual('');
 
     $ex = expect(() ==> $w->write('foo'))->toThrow(OS\ErrnoException::class);
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
@@ -102,7 +102,7 @@ final class PipeTest extends HackTest {
     list($r, $w) = IO\pipe();
     $r->close();
     $w->close();
-    $ex = expect(async () ==> await $r->readAsync())->toThrow(
+    $ex = expect(async () ==> await $r->readAllowPartialSuccessAsync())->toThrow(
       OS\ErrnoException::class,
     );
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
@@ -113,7 +113,7 @@ final class PipeTest extends HackTest {
     $w->close();
     // Standard behavior for `read(fd)` with "no more data is coming" rather
     // than "no more available now"
-    expect(await $r->readAsync())->toEqual('');
+    expect(await $r->readAllowPartialSuccessAsync())->toEqual('');
   }
 
   public async function testInterleavedReads(): Awaitable<void> {
@@ -125,8 +125,8 @@ final class PipeTest extends HackTest {
         $w->write("world.");
       };
       await async {
-        expect(await $r->readAsync())->toEqual("Hello, ");
-        expect(await $r->readAsync())->toEqual("world.");
+        expect(await $r->readAllowPartialSuccessAsync())->toEqual("Hello, ");
+        expect(await $r->readAllowPartialSuccessAsync())->toEqual("world.");
       };
     }
   }
@@ -198,7 +198,7 @@ final class PipeTest extends HackTest {
         );
       };
       await async {
-        expect(await $r->readAsync(3))->toEqual('aaa');
+        expect(await $r->readAllowPartialSuccessAsync(3))->toEqual('aaa');
       };
     }
   }
@@ -209,7 +209,7 @@ final class PipeTest extends HackTest {
       await async {
         await HH\Asio\later();
         await $w->writeAllAsync(Str\repeat('a', 1024 * 1024));
-        await $w->writeAsync('foo');
+        await $w->writeAllowPartialSuccessAsync('foo');
         $w->close();
       };
       await async {
@@ -240,7 +240,7 @@ final class PipeTest extends HackTest {
       };
       await async {
         try {
-          expect(await $r->readAsync(4))->toEqual('aaaa');
+          expect(await $r->readAllowPartialSuccessAsync(4))->toEqual('aaaa');
         } finally {
           $r->close();
         }

@@ -47,7 +47,10 @@ trait WriteHandleConvenienceMethodsTrait {
 
     do {
       /* @lint-ignore AWAIT_IN_LOOP */
-      $written = await $this->writeAsync($data, $timer->getRemainingNS());
+      $written = await $this->writeAllowPartialSuccessAsync(
+        $data,
+        $timer->getRemainingNS(),
+      );
       $data = Str\slice($data, $written);
     } while ($written !== 0 && $data !== '');
 

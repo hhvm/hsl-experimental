@@ -90,8 +90,8 @@ final class HSLTCPTest extends HackTest {
       await async {
         ///// Server /////
         $client = await $server->nextConnectionAsync();
-        $server_recv->value = await $client->readAsync();
-        await $client->writeAsync("foo\n");
+        $server_recv->value = await $client->readAllowPartialSuccessAsync();
+        await $client->writeAllowPartialSuccessAsync("foo\n");
         $client->close();
       };
       await async {
@@ -118,8 +118,8 @@ final class HSLTCPTest extends HackTest {
         list($lh, $lp) = $conn->getLocalAddress();
         expect($lh)->toEqual($ph);
         expect($lp)->toNotEqual($pp);
-        await $conn->writeAsync("bar\n");
-        $client_recv->value = await $conn->readAsync();
+        await $conn->writeAllowPartialSuccessAsync("bar\n");
+        $client_recv->value = await $conn->readAllowPartialSuccessAsync();
         $conn->close();
       };
     }
@@ -149,7 +149,7 @@ final class HSLTCPTest extends HackTest {
       $client = await TCP\connect_async('127.0.0.1', $port);
       $_ = await $s1->nextConnectionAsync();
     }
-    await $client->writeAsync('hello, world');
+    await $client->writeAllowPartialSuccessAsync('hello, world');
     $s1->stopListening();
 
     $ex = expect(
@@ -170,15 +170,15 @@ final class HSLTCPTest extends HackTest {
     concurrent {
       $client_recv = await async {
         $client = await TCP\connect_async('127.0.0.1', $port);
-        await $client->writeAsync("hello, world!\n");
-        $result = await $client->readAsync();
+        await $client->writeAllowPartialSuccessAsync("hello, world!\n");
+        $result = await $client->readAllowPartialSuccessAsync();
         $client->close();
         return $result;
       };
       $server_recv = await async {
         $conn = await $s2->nextConnectionAsync();
-        await $conn->writeAsync("foo bar\n");
-        $result = await $conn->readAsync();
+        await $conn->writeAllowPartialSuccessAsync("foo bar\n");
+        $result = await $conn->readAllowPartialSuccessAsync();
         $conn->close();
         return $result;
       };

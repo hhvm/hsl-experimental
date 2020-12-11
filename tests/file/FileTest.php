@@ -21,7 +21,7 @@ final class FileTest extends HackTest {
     /* HH_IGNORE_ERROR[4107] PHP stdlib */
     $filename = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
     $f1 = File\open_write_only($filename, File\WriteMode::MUST_CREATE);
-    await $f1->writeAsync('Hello, world!');
+    await $f1->writeAllowPartialSuccessAsync('Hello, world!');
     $e = expect(
       () ==> File\open_write_only($filename, File\WriteMode::MUST_CREATE),
     )->toThrow(OS\ErrnoException::class);
@@ -29,7 +29,7 @@ final class FileTest extends HackTest {
     $f1->close();
 
     $f2 = File\open_read_only($filename);
-    $content = await $f2->readAsync();
+    $content = await $f2->readAllowPartialSuccessAsync();
     $f2->close();
     expect($content)->toEqual('Hello, world!');
 
@@ -48,7 +48,7 @@ final class FileTest extends HackTest {
       expect($path_s)->toNotContainSubstring('XXXXXX');
 
       // Make sure it works :)
-      await $f->writeAsync('Hello, world');
+      await $f->writeAllowPartialSuccessAsync('Hello, world');
       $content = file_get_contents($path_s);
       expect($content)->toEqual('Hello, world');
 
@@ -94,14 +94,14 @@ final class FileTest extends HackTest {
       $a = Str\repeat('a', 10 * 1024 * 1024);
       $b = Str\repeat('b', 10 * 1024 * 1024);
       $c = Str\repeat('c', 10 * 1024 * 1024);
-      await $f->writeAsync($a.$b.$c);
+      await $f->writeAllowPartialSuccessAsync($a.$b.$c);
 
       $fr = File\open_read_only($f->getPath()->toString());
       // FIXME: autoclose
       concurrent {
-        $r1 = await $fr->readAsync(10 * 1024 * 1024);
-        $r2 = await $fr->readAsync(10 * 1024 * 1024);
-        $r3 = await $fr->readAsync(10 * 1024 * 1024);
+        $r1 = await $fr->readAllowPartialSuccessAsync(10 * 1024 * 1024);
+        $r2 = await $fr->readAllowPartialSuccessAsync(10 * 1024 * 1024);
+        $r3 = await $fr->readAllowPartialSuccessAsync(10 * 1024 * 1024);
       }
       // Strong guarantees:
       expect($r1 === $a || $r2 === $a || $r3 === $a)->toBeTrue();
@@ -122,11 +122,11 @@ final class FileTest extends HackTest {
   public async function testTruncate(): Awaitable<void> {
     using $tf = File\temporary_file();
     $f = $tf->getHandle();
-    await $f->writeAsync('Hello, world');
+    await $f->writeAllowPartialSuccessAsync('Hello, world');
 
     $path = $f->getPath()->toString();
     $fr = File\open_read_only($path);
-    $content = await $fr->readAsync();
+    $content = await $fr->readAllowPartialSuccessAsync();
     $fr->close();
 
     expect($content)->toEqual('Hello, world');
@@ -134,7 +134,7 @@ final class FileTest extends HackTest {
     expect(file_get_contents($path))->toEqual('Hello, world');
 
     $f = File\open_write_only($path, File\WriteMode::TRUNCATE);
-    await $f->writeAsync('Foo bar');
+    await $f->writeAllowPartialSuccessAsync('Foo bar');
     expect(file_get_contents($path))->toEqual('Foo bar');
     $f->close();
   }
@@ -142,11 +142,11 @@ final class FileTest extends HackTest {
   public async function testAppend(): Awaitable<void> {
     using $tf = File\temporary_file();
     $f = $tf->getHandle();
-    await $f->writeAsync('Hello, world');
+    await $f->writeAllowPartialSuccessAsync('Hello, world');
 
     $path = $f->getPath()->toString();
     $f = File\open_write_only($path, File\WriteMode::APPEND);
-    await $f->writeAsync("\nGoodbye, cruel world");
+    await $f->writeAllowPartialSuccessAsync("\nGoodbye, cruel world");
     $f->close();
 
     expect(file_get_contents($path))->toEqual(

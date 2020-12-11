@@ -41,7 +41,7 @@ async function dump_to_async(
   <<__AcceptDisposable>> mixed $value,
   <<__AcceptDisposable>> IO\WriteHandle $handle,
 ): Awaitable<void> {
-  await $handle->writeAsync(dump_s($value));
+  await $handle->writeAllowPartialSuccessAsync(dump_s($value));
 }
 
 /** Print a human-readable representation of a value, and return it.

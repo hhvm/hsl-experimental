@@ -21,7 +21,7 @@ use namespace HH\Lib\_Private;
 interface WriteHandle extends Handle {
   /** An immediate unordered write.
    *
-   * @see `genWrite()`
+   * @see `genWriteAllowPartialSuccess()`
    * @throws `OS\BlockingIOException` if the handle is a socket or similar,
    *   and the write would block.
    * @returns the number of bytes written on success
@@ -41,7 +41,7 @@ interface WriteHandle extends Handle {
    * @returns the number of bytes written, which may be less than the length of
    *   input string.
    */
-  public function writeAsync(
+  public function writeAllowPartialSuccessAsync(
     string $bytes,
     ?int $timeout_ns = null,
   ): Awaitable<int>;

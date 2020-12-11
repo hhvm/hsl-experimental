@@ -49,7 +49,10 @@ trait ReadHandleConvenienceMethodsTrait {
     do {
       $chunk_size = Math\minva($to_read, _IO\DEFAULT_READ_BUFFER_SIZE);
       /* @lint-ignore AWAIT_IN_LOOP */
-      $chunk = await $this->readAsync($chunk_size, $timer->getRemainingNS());
+      $chunk = await $this->readAllowPartialSuccessAsync(
+        $chunk_size,
+        $timer->getRemainingNS(),
+      );
       $data .= $chunk;
       $to_read -= Str\length($chunk);
     } while ($to_read > 0 && $chunk !== '');

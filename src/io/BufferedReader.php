@@ -62,7 +62,7 @@ final class BufferedReader implements IO\ReadHandle {
     return Str\slice($buf, 0, $max_bytes);
   }
 
-  public async function readAsync(
+  public async function readAllowPartialSuccessAsync(
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string> {
@@ -112,7 +112,7 @@ final class BufferedReader implements IO\ReadHandle {
       // + 1 as it would have been matched in the previous iteration if it
       // fully fit in the chunk
       $offset = Math\maxva(0, Str\length($buf) - $suffix_len + 1);
-      $chunk = await $this->handle->readAsync();
+      $chunk = await $this->handle->readAllowPartialSuccessAsync();
       if ($chunk === '') {
         $this->buffer = $buf;
         return null;
@@ -322,7 +322,8 @@ final class BufferedReader implements IO\ReadHandle {
     ?int $desired_bytes,
     ?int $timeout_ns,
   ): Awaitable<void> {
-    $chunk = await $this->getHandle()->readAsync($desired_bytes, $timeout_ns);
+    $chunk = await $this->getHandle()
+      ->readAllowPartialSuccessAsync($desired_bytes, $timeout_ns);
     if ($chunk === '') {
       $this->eof = true;
     }

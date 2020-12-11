@@ -36,8 +36,8 @@ final class HSLUnixSocketTest extends HackTest {
           expect($client->getLocalAddress())->toEqual($path);
           expect($client->getPeerAddress())->toEqual(null);
 
-          $server_recv->value = await $client->readAsync();
-          await $client->writeAsync("foo\n");
+          $server_recv->value = await $client->readAllowPartialSuccessAsync();
+          await $client->writeAllowPartialSuccessAsync("foo\n");
           $client->close();
         };
         await async {
@@ -46,8 +46,8 @@ final class HSLUnixSocketTest extends HackTest {
           expect($conn->getLocalAddress())->toEqual(null);
           expect($conn->getPeerAddress())->toEqual($path);
 
-          await $conn->writeAsync("bar\n");
-          $client_recv->value = await $conn->readAsync();
+          await $conn->writeAllowPartialSuccessAsync("bar\n");
+          $client_recv->value = await $conn->readAllowPartialSuccessAsync();
           $conn->close();
         };
       }

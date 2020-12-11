@@ -53,7 +53,7 @@ interface ReadHandle extends Handle {
    *   - the read data on success
    *   - the empty string if the end of file is reached.
    */
-  public function readAsync(
+  public function readAllowPartialSuccessAsync(
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string>;

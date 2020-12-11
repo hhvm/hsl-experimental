@@ -24,7 +24,7 @@ trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
     return OS\read($this->impl, $max_bytes);
   }
 
-  final public async function readAsync(
+  final public async function readAllowPartialSuccessAsync(
     ?int $max_bytes = null,
     ?int $timeout_ns = null,
   ): Awaitable<string> {

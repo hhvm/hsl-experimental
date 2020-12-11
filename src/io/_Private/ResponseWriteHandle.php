@@ -19,7 +19,7 @@ final class ResponseWriteHandle implements IO\WriteHandle {
     return namespace\response_write($bytes);
   }
 
-  public async function writeAsync(
+  public async function writeAllowPartialSuccessAsync(
     string $bytes,
     ?int $_timeout_ns = null,
   ): Awaitable<int> {

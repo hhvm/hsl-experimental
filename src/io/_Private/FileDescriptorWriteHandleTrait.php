@@ -21,7 +21,7 @@ trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
     return OS\write($this->impl, $bytes);
   }
 
-  final public async function writeAsync(
+  final public async function writeAllowPartialSuccessAsync(
     string $bytes,
     ?int $timeout_ns = null,
   ): Awaitable<int> {

@@ -31,7 +31,7 @@ final class BufferedReaderTest extends HackTest {
     $r = new IO\BufferedReader(new IO\MemoryHandle('abcdef'));
     expect(await $r->readByteAsync())->toEqual('a');
     expect($r->read(2))->toEqual('bc');
-    expect(await $r->readAsync(2))->toEqual('de');
+    expect(await $r->readAllowPartialSuccessAsync(2))->toEqual('de');
     expect(await $r->readByteAsync())->toEqual('f');
 
     $r = new IO\BufferedReader(new IO\MemoryHandle('abcdef'));
@@ -62,7 +62,7 @@ final class BufferedReaderTest extends HackTest {
   public async function testReadTooMuch(): Awaitable<void> {
     $newbuf = () ==> new IO\BufferedReader(new IO\MemoryHandle('abc'));
     expect($newbuf()->read(6))->toEqual('abc');
-    expect(await $newbuf()->readAsync(6))->toEqual('abc');
+    expect(await $newbuf()->readAllowPartialSuccessAsync(6))->toEqual('abc');
     expect(async () ==> await $newbuf()->readFixedSizeAsync(6))->toThrow(
       OS\BrokenPipeException::class,
     );
