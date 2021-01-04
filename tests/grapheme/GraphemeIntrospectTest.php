@@ -13,6 +13,7 @@ use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\DataProvider; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
+// @oss-disable: <<Oncalls('hhvm_oss')>>
 final class GraphemeIntrospectTest extends \Facebook\HackTest\HackTest {
 
   public static function provideLength(): vec<(string, int)> {
