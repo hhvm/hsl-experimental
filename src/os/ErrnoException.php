@@ -70,7 +70,7 @@ class ErrnoException extends \Exception {
    * stays happy.
    */
   <<__Deprecated("Use `getErrno()` instead", 0), __Pure, __MaybeMutable>>
-  final public function getCode(): Errno {
+  final public function getCode()[]: Errno {
     return $this->errno;
   }
 }
