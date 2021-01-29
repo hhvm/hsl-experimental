@@ -21,7 +21,7 @@ use namespace HH\Lib\_Private;
 interface WriteHandle extends Handle {
   /** An immediate unordered write.
    *
-   * @see `genWriteAllowPartialSuccess()`
+   * @see `writeAllowPartialSuccessAsync()`
    * @throws `OS\BlockingIOException` if the handle is a socket or similar,
    *   and the write would block.
    * @returns the number of bytes written on success

@@ -101,7 +101,7 @@ final class BufferedReaderTest extends HackTest {
     expect(await $r->readUntilAsync("FOO"))->toEqual("ab");
     expect(await $r->readUntilAsync("FOO"))->toEqual("cd");
 
-    // Start with genReadByte so we have a non-empty buffer
+    // Start with readByteAsync so we have a non-empty buffer
     $r = new IO\BufferedReader(new IO\MemoryHandle("_abFOOcdFOO"));
     $_ = await $r->readByteAsync();
     expect(await $r->readUntilAsync("FOO"))->toEqual("ab");
