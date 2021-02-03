@@ -22,8 +22,8 @@ use namespace HH\Lib\_Private;
 interface ReadHandle extends Handle {
   /** An immediate, unordered read.
    *
-   * @see `genRead`
-   * @see `genReadAll`
+   * @see `readAsync`
+   * @see `readAllAsync`
    * @param $max_bytes the maximum number of bytes to read
    *   - if `null`, an internal default will be used.
    *   - if 0, `EINVAL` will be raised.
@@ -31,7 +31,7 @@ interface ReadHandle extends Handle {
    *     to unnecessarily hitting the request memory limit.
    * @throws `OS\BlockingIOException` if there is no more
    *   data available to read. If you want to wait for more
-   *   data, use `genRead` instead.
+   *   data, use `readAsync` instead.
    * @returns
    *   - the read data on success.
    *   - the empty string if the end of file is reached.
@@ -43,7 +43,7 @@ interface ReadHandle extends Handle {
    * A wrapper around `read()` that will wait for more data if there is none
    * available at present.
    *
-   * @see `genReadAll`
+   * @see `readAllAsync`
    * @param max_bytes the maximum number of bytes to read
    *   - if `null`, an internal default will be used.
    *   - if 0, `EINVAL` will be raised.
