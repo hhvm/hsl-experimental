@@ -23,7 +23,7 @@ use namespace HH\Lib\_Private;
  * Previously known in PHP as `grapheme_substr`.
  */
 <<__RxLocal>>
-function slice(string $string, int $offset, ?int $length = null): string {
+function slice(string $string, int $offset, ?int $length = null)[rx_local]: string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $offset = _Private\validate_offset($offset, length($string));
   /* HH_FIXME[2049] __PHPStdLib */

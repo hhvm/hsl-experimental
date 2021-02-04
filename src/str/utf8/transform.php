@@ -17,7 +17,7 @@ use type HH\Lib\Experimental\Str\Encoding;
  * Returns the string with all alphabetic characters converted to uppercase.
  */
 <<__RxLocal>>
-function uppercase(string $string): string {
+function uppercase(string $string)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \mb_strtoupper($string, Encoding::UTF8);
@@ -27,7 +27,7 @@ function uppercase(string $string): string {
  * Returns the string with all alphabetic characters converted to lowercase.
  */
 <<__RxLocal>>
-function lowercase(string $string): string {
+function lowercase(string $string)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \mb_strtolower($string, Encoding::UTF8);
@@ -37,7 +37,7 @@ function lowercase(string $string): string {
  * Convert the string from the specified encoding to UTF-8
  */
 <<__RxLocal>>
-function from_encoding(string $string, Encoding $encoding): string {
+function from_encoding(string $string, Encoding $encoding)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \mb_convert_encoding($string, Encoding::UTF8 as string, $encoding);
@@ -47,7 +47,7 @@ function from_encoding(string $string, Encoding $encoding): string {
  * Convert the string from UTF-8 to the specified encoding
  */
 <<__RxLocal>>
-function to_encoding(string $string, Encoding $encoding): string {
+function to_encoding(string $string, Encoding $encoding)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \mb_convert_encoding($string, $encoding as string, Encoding::UTF8);
@@ -126,7 +126,7 @@ type TConvertKanaOption = shape(
  * See TConvertKanaOption for the list of options
  */
 <<__RxLocal>>
-function convert_kana(string $string, TConvertKanaOption $options): string {
+function convert_kana(string $string, TConvertKanaOption $options)[rx_local]: string {
   // the native implementation wants a string containing all the options
   // order does not matter
   // take only true elements from the shape and join them
@@ -154,7 +154,7 @@ function splice(
   string $replacement,
   int $offset,
   ?int $length = null,
-): string {
+)[rx_local]: string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $total_length = length($string);
   $offset = _Private\validate_offset($offset, $total_length);

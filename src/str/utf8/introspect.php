@@ -20,7 +20,7 @@ use type HH\Lib\Experimental\Str\Encoding;
  * Previously known in PHP as `mb_strlen`.
  */
 <<__RxLocal>>
-function length(string $string): int {
+function length(string $string)[rx_local]: int {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \mb_strlen($string, Encoding::UTF8);
@@ -42,7 +42,7 @@ function length(string $string): int {
  * Previously known in PHP as `mb_strpos`.
  */
 <<__RxLocal>>
-function search(string $haystack, string $needle, int $offset = 0): ?int {
+function search(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -69,7 +69,7 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
  * Previously known in PHP as `mb_stripos`.
  */
 <<__RxLocal>>
-function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
+function search_ci(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -95,7 +95,7 @@ function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
  * Previously known in PHP as `mb_strrpos`.
  */
 <<__RxLocal>>
-function search_last(string $haystack, string $needle, int $offset = 0): ?int {
+function search_last(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $haystack_length = length($haystack);
   invariant(
     $offset >= -$haystack_length && $offset <= $haystack_length,
@@ -114,7 +114,7 @@ function search_last(string $haystack, string $needle, int $offset = 0): ?int {
  * Determine whether a string of unknown encoding is valid UTF-8
  */
 <<__RxLocal>>
-function is_utf8(string $string): bool {
+function is_utf8(string $string)[rx_local]: bool {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \mb_check_encoding($string, Encoding::UTF8);

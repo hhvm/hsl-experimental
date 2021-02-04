@@ -19,7 +19,7 @@ use namespace HH\Lib\Str;
  * Previously known in PHP as `grapheme_strlen`.
  */
 <<__RxLocal>>
-function length(string $string): int {
+function length(string $string)[rx_local]: int {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
   return \grapheme_strlen($string);
@@ -40,7 +40,7 @@ function length(string $string): int {
  * Previously known in PHP as `grapheme_strpos`.
  */
 <<__RxLocal>>
-function search(string $haystack, string $needle, int $offset = 0): ?int {
+function search(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -66,7 +66,7 @@ function search(string $haystack, string $needle, int $offset = 0): ?int {
  * Previously known in PHP as `grapheme_stripos`.
  */
 <<__RxLocal>>
-function search_ci(string $haystack, string $needle, int $offset = 0): ?int {
+function search_ci(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
