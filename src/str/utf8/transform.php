@@ -16,7 +16,6 @@ use type HH\Lib\Experimental\Str\Encoding;
 /**
  * Returns the string with all alphabetic characters converted to uppercase.
  */
-<<__RxLocal>>
 function uppercase(string $string)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -26,7 +25,6 @@ function uppercase(string $string)[rx_local]: string {
 /**
  * Returns the string with all alphabetic characters converted to lowercase.
  */
-<<__RxLocal>>
 function lowercase(string $string)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -36,7 +34,6 @@ function lowercase(string $string)[rx_local]: string {
 /**
  * Convert the string from the specified encoding to UTF-8
  */
-<<__RxLocal>>
 function from_encoding(string $string, Encoding $encoding)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -46,7 +43,6 @@ function from_encoding(string $string, Encoding $encoding)[rx_local]: string {
 /**
  * Convert the string from UTF-8 to the specified encoding
  */
-<<__RxLocal>>
 function to_encoding(string $string, Encoding $encoding)[rx_local]: string {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -125,7 +121,6 @@ type TConvertKanaOption = shape(
  *
  * See TConvertKanaOption for the list of options
  */
-<<__RxLocal>>
 function convert_kana(string $string, TConvertKanaOption $options)[rx_local]: string {
   // the native implementation wants a string containing all the options
   // order does not matter
@@ -148,7 +143,6 @@ function convert_kana(string $string, TConvertKanaOption $options)[rx_local]: st
  * remainder of the string will be replaced. If the length is zero, the
  * replacement will be inserted at the offset.
  */
-<<__RxLocal>>
 function splice(
   string $string,
   string $replacement,

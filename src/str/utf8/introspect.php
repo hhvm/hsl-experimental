@@ -19,7 +19,6 @@ use type HH\Lib\Experimental\Str\Encoding;
  *
  * Previously known in PHP as `mb_strlen`.
  */
-<<__RxLocal>>
 function length(string $string)[rx_local]: int {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */
@@ -41,7 +40,6 @@ function length(string $string)[rx_local]: int {
  *
  * Previously known in PHP as `mb_strpos`.
  */
-<<__RxLocal>>
 function search(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   /* HH_FIXME[2049] __PHPStdLib */
@@ -68,7 +66,6 @@ function search(string $haystack, string $needle, int $offset = 0)[rx_local]: ?i
  *
  * Previously known in PHP as `mb_stripos`.
  */
-<<__RxLocal>>
 function search_ci(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $offset = _Private\validate_offset($offset, length($haystack));
   /* HH_FIXME[2049] __PHPStdLib */
@@ -94,7 +91,6 @@ function search_ci(string $haystack, string $needle, int $offset = 0)[rx_local]:
  *
  * Previously known in PHP as `mb_strrpos`.
  */
-<<__RxLocal>>
 function search_last(string $haystack, string $needle, int $offset = 0)[rx_local]: ?int {
   $haystack_length = length($haystack);
   invariant(
@@ -113,7 +109,6 @@ function search_last(string $haystack, string $needle, int $offset = 0)[rx_local
 /**
  * Determine whether a string of unknown encoding is valid UTF-8
  */
-<<__RxLocal>>
 function is_utf8(string $string)[rx_local]: bool {
   /* HH_FIXME[2049] __PHPStdLib */
   /* HH_FIXME[4107] __PHPStdLib */

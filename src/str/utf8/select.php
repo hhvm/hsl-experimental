@@ -24,7 +24,6 @@ use type HH\Lib\Experimental\Str\Encoding;
  *
  * Previously known in PHP as `mb_substr`.
  */
-<<__RxLocal>>
 function slice(string $string, int $offset, ?int $length = null)[rx_local]: string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $offset = _Private\validate_offset($offset, length($string));
@@ -43,7 +42,6 @@ function slice(string $string, int $offset, ?int $length = null)[rx_local]: stri
  *
  * Previously known in PHP as `mb_strcut`.
  */
-<<__RxLocal>>
 function slice_bytes(string $string, int $offset, ?int $length = null)[rx_local]: string {
   invariant($length === null || $length >= 0, 'Expected non-negative length.');
   $offset = _Private\validate_offset($offset, Str\length($string));
