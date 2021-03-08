@@ -84,14 +84,14 @@ final class PipeTest extends HackTest {
   public async function testCloseWhenDisposed(): Awaitable<void> {
     list($r, $w) = IO\pipe();
     using ($w->closeWhenDisposed()) {
-      $w->write("Hello, world\n");
+      await $w->writeAllAsync("Hello, world\n");
     }
     expect(await $r->readAllowPartialSuccessAsync())->toEqual("Hello, world\n");
     // - does not block forever
     // - does not fail, just succeeds with no data
     expect(await $r->readAllowPartialSuccessAsync())->toEqual('');
 
-    $ex = expect(() ==> $w->write('foo'))->toThrow(OS\ErrnoException::class);
+    $ex = expect(async () ==> await $w->writeAllAsync('foo'))->toThrow(OS\ErrnoException::class);
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
   }
 
@@ -120,9 +120,9 @@ final class PipeTest extends HackTest {
     list($r, $w) = IO\pipe();
     concurrent {
       await async {
-        $w->write("Hello, ");
+        await $w->writeAllAsync("Hello, ");
         await HH\Asio\later();
-        $w->write("world.");
+        await $w->writeAllAsync("world.");
       };
       await async {
         expect(await $r->readAllowPartialSuccessAsync())->toEqual("Hello, ");
@@ -135,9 +135,9 @@ final class PipeTest extends HackTest {
     list($r, $w) = IO\pipe();
     concurrent {
       await async {
-        $w->write("Hello, ");
+        await $w->writeAllAsync("Hello, ");
         await HH\Asio\later();
-        $w->write("world.");
+        await $w->writeAllAsync("world.");
         $w->close();
       };
       await async {
@@ -157,9 +157,9 @@ final class PipeTest extends HackTest {
     list($r, $w) = IO\pipe();
     concurrent {
       await async {
-        $w->write("Hello, ");
+        await $w->writeAllAsync("Hello, ");
         await HH\Asio\later();
-        $w->write("world.");
+        await $w->writeAllAsync("world.");
       };
       await async {
         expect(await $r->readAllAsync(8))->toEqual("Hello, w");
@@ -169,13 +169,13 @@ final class PipeTest extends HackTest {
 
   public async function testReadFixedSize(): Awaitable<void> {
     list($r, $w) = IO\pipe();
-    $w->write("Hello");
+    await $w->writeAllAsync("Hello");
     expect(await $r->readFixedSizeAsync(3))->toEqual('Hel');
 
     concurrent {
       await async {
         await HH\Asio\later();
-        $w->write(", world");
+        await $w->writeAllAsync(", world");
         $w->close();
       };
       expect(await $r->readFixedSizeAsync(3))->toEqual('lo,', 'multi-packet');
@@ -193,7 +193,7 @@ final class PipeTest extends HackTest {
     concurrent {
       await async {
         await HH\Asio\later();
-        expect($w->write(Str\repeat('a', 1024 * 1024)))->toBeLessThan(
+        expect(await $w->writeAllowPartialSuccessAsync(Str\repeat('a', 1024 * 1024)))->toBeLessThan(
           1024 * 1024,
         );
       };

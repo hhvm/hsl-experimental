@@ -15,20 +15,19 @@ use namespace HH\Lib\_Private;
 
 /** An interface for a writable Handle.
  *
- * Order of operations is guaranteed, *except* for `rawWriteBlocking`;
- * `rawWriteBlocking()` will immediately try to write to the handle.
+ * Order of operations is guaranteed, *except* for `writeImplBlocking`;
+ * `writeImplBlocking()` will immediately try to write to the handle.
  */
 interface WriteHandle extends Handle {
   /** An immediate unordered write.
    *
+   * @see `writeAllAsync()`
    * @see `writeAllowPartialSuccessAsync()`
    * @throws `OS\BlockingIOException` if the handle is a socket or similar,
    *   and the write would block.
-   * @returns the number of bytes written on success
-   *
-   * Returns the number of bytes written, which may be 0.
+   * @returns the number of bytes written on success, which may be 0
    */
-  public function write(string $bytes): int;
+  protected function writeImpl(string $bytes): int;
 
   /** Write data, waiting if necessary.
    *

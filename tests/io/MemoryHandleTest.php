@@ -52,20 +52,19 @@ final class MemoryHandleTest extends HackTest {
     );
   }
 
-  public function testWrite(): void {
+  public async function testWrite(): Awaitable<void> {
     $h = new IO\MemoryHandle();
-    $h->write('herp');
+    await $h->writeAllowPartialSuccessAsync('herp');
     expect($h->getBuffer())->toEqual('herp');
-    $h->write('derp');
-    expect($h->getBuffer())->toEqual('herpderp');
+    await $h->writeAllowPartialSuccessAsync('derp');
     $h->reset();
-    $h->write('foo');
+    await $h->writeAllowPartialSuccessAsync('foo');
     expect($h->getBuffer())->toEqual('foo');
   }
 
   public async function testOverwrite(): Awaitable<void> {
     $h = new IO\MemoryHandle('xxxxderp');
-    $h->write('herp');
+    await $h->writeAllowPartialSuccessAsync('herp');
     expect($h->getBuffer())->toEqual('herpderp');
     expect(await $h->readAllAsync())->toEqual('derp');
     $h->seek(0);
@@ -74,7 +73,7 @@ final class MemoryHandleTest extends HackTest {
 
   public async function testAppend(): Awaitable<void> {
     $h = new IO\MemoryHandle('herp', IO\MemoryHandleWriteMode::APPEND);
-    $h->write('derp');
+    await $h->writeAllowPartialSuccessAsync('derp');
     expect($h->getBuffer())->toEqual('herpderp');
     expect(await $h->readAllAsync())->toEqual('');
     $h->seek(0);
@@ -97,7 +96,7 @@ final class MemoryHandleTest extends HackTest {
     $ex = expect(() ==> $h->read(1024))->toThrow(OS\ErrnoException::class);
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
     $h->reset('herp');
-    $h->write('derp');
+    await $h->writeAllowPartialSuccessAsync('derp');
     $h->seek(0);
     expect($h->read(1024))->toEqual('herpderp');
   }
