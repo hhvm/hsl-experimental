@@ -18,7 +18,7 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 final class MemoryHandleTest extends HackTest {
   public async function testRead(): Awaitable<void> {
     $h = new IO\MemoryHandle('herpderp');
-    expect($h->read(4))->toEqual('herp');
+    expect(await $h->readFixedSizeAsync(4))->toEqual('herp');
     expect(await $h->readAllAsync())->toEqual('derp');
     expect(await $h->readAllAsync())->toEqual('');
     expect($h->tell())->toEqual(8);
@@ -30,12 +30,14 @@ final class MemoryHandleTest extends HackTest {
     expect(await $h->readAllAsync())->toEqual('derp');
   }
 
-  public function testCloseWhenDisposed(): void {
+  public async function testCloseWhenDisposed(): Awaitable<void> {
     $h = new IO\MemoryHandle('foobar');
     using ($h->closeWhenDisposed()) {
-      expect($h->read(3))->toEqual('foo');
+      expect(await $h->readFixedSizeAsync(3))->toEqual('foo');
     }
-    $ex = expect(() ==> $h->read(3))->toThrow(OS\ErrnoException::class);
+    $ex = expect(async () ==> await $h->readFixedSizeAsync(3))->toThrow(
+      OS\ErrnoException::class,
+    );
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
   }
 
@@ -94,11 +96,13 @@ final class MemoryHandleTest extends HackTest {
     $h = new IO\MemoryHandle('herp', IO\MemoryHandleWriteMode::APPEND);
     $h->close();
     expect($h->getBuffer())->toEqual('herp');
-    $ex = expect(() ==> $h->read(1024))->toThrow(OS\ErrnoException::class);
+    $ex = expect(async () ==> await $h->readFixedSizeAsync(1024))->toThrow(
+      OS\ErrnoException::class,
+    );
     expect($ex->getErrno())->toEqual(OS\Errno::EBADF);
     $h->reset('herp');
     $h->write('derp');
     $h->seek(0);
-    expect($h->read(1024))->toEqual('herpderp');
+    expect(await $h->readAllAsync(1024))->toEqual('herpderp');
   }
 }

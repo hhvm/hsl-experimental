@@ -36,7 +36,7 @@ interface ReadHandle extends Handle {
    *   - the read data on success.
    *   - the empty string if the end of file is reached.
    */
-  public function read(?int $max_bytes = null): string;
+  public function readImpl(?int $max_bytes = null): string;
 
   /** Read from the handle, waiting for data if necessary.
    *

@@ -35,7 +35,7 @@ final class BufferedReader implements IO\ReadHandle {
   private string $buffer = '';
 
   // implementing interface
-  public function read(?int $max_bytes = null): string {
+  public function readImpl(?int $max_bytes = null): string {
     _OS\arg_assert(
       $max_bytes is null || $max_bytes > 0,
       "Max bytes must be null, or greater than 0",
@@ -45,7 +45,7 @@ final class BufferedReader implements IO\ReadHandle {
       return '';
     }
     if ($this->buffer === '') {
-      $this->buffer = $this->getHandle()->read();
+      $this->buffer = $this->getHandle()->readImpl();
       if ($this->buffer === '') {
         $this->eof = true;
         return '';
@@ -84,7 +84,7 @@ final class BufferedReader implements IO\ReadHandle {
 
     // We either have a buffer, or reached EOF; either way, behavior matches
     // read, so just delegate
-    return $this->read($max_bytes);
+    return $this->readImpl($max_bytes);
   }
 
   /** Read until the specified suffix is seen.
@@ -301,7 +301,7 @@ final class BufferedReader implements IO\ReadHandle {
       // Calling the non-async (but still non-blocking) version as the async
       // version could wait for the other end to send data - which could lead
       // to both ends of a pipe/socket waiting on each other.
-      $this->buffer = $this->handle->read();
+      $this->buffer = $this->handle->readImpl();
       if ($this->buffer === '') {
         $this->eof = true;
         return true;
