@@ -17,7 +17,7 @@ trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
   require extends FileDescriptorHandle;
   use IO\ReadHandleConvenienceMethodsTrait;
 
-  final public function read(?int $max_bytes = null): string {
+  final public function readImpl(?int $max_bytes = null): string {
     $max_bytes ??= DEFAULT_READ_BUFFER_SIZE;
 
     _OS\arg_assert($max_bytes > 0, '$max_bytes must be null, or > 0');
@@ -38,12 +38,12 @@ trait FileDescriptorReadHandleTrait implements IO\ReadHandle {
     $timeout_ns ??= 0;
 
     try {
-      return $this->read($max_bytes);
+      return $this->readImpl($max_bytes);
     } catch (OS\BlockingIOException $_) {
       // this means we need to wait for data, which we do below...
     }
 
     await $this->selectAsync(\STREAM_AWAIT_READ, $timeout_ns);
-    return $this->read($max_bytes);
+    return $this->readImpl($max_bytes);
   }
 }

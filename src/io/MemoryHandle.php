@@ -51,10 +51,10 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
     ?int $max_bytes = null,
     ?int $_timeout_nanos = null,
   ): Awaitable<string> {
-    return $this->read($max_bytes);
+    return $this->readImpl($max_bytes);
   }
 
-  public function read(?int $max_bytes = null): string {
+  public function readImpl(?int $max_bytes = null): string {
     $this->checkIsOpen();
 
     $max_bytes ??= Math\INT64_MAX;

@@ -30,7 +30,7 @@ final class BufferedReaderTest extends HackTest {
 
     $r = new IO\BufferedReader(new IO\MemoryHandle('abcdef'));
     expect(await $r->readByteAsync())->toEqual('a');
-    expect($r->read(2))->toEqual('bc');
+    expect(await $r->readFixedSizeAsync(2))->toEqual('bc');
     expect(await $r->readAllowPartialSuccessAsync(2))->toEqual('de');
     expect(await $r->readByteAsync())->toEqual('f');
 
@@ -55,13 +55,13 @@ final class BufferedReaderTest extends HackTest {
 
     $r = new IO\BufferedReader(new IO\MemoryHandle('abcdef'));
     expect(await $r->readFixedSizeAsync(2))->toEqual('ab');
-    expect($r->read(2))->toEqual('cd');
+    expect(await $r->readFixedSizeAsync(2))->toEqual('cd');
     expect(await $r->readFixedSizeAsync(2))->toEqual('ef');
   }
 
   public async function testReadTooMuch(): Awaitable<void> {
     $newbuf = () ==> new IO\BufferedReader(new IO\MemoryHandle('abc'));
-    expect($newbuf()->read(6))->toEqual('abc');
+    expect(await $newbuf()->readAllAsync(6))->toEqual('abc');
     expect(await $newbuf()->readAllowPartialSuccessAsync(6))->toEqual('abc');
     expect(async () ==> await $newbuf()->readFixedSizeAsync(6))->toThrow(
       OS\BrokenPipeException::class,
