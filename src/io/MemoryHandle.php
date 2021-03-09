@@ -83,7 +83,7 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
     return $this->offset;
   }
 
-  public function write(string $data): int {
+  protected function writeImpl(string $data): int {
     $this->checkIsOpen();
     $length = Str\length($this->buffer);
     if ($length < $this->offset) {
@@ -116,7 +116,7 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
     string $data,
     ?int $timeout_nanos = null,
   ): Awaitable<int> {
-    return $this->write($data);
+    return $this->writeImpl($data);
   }
 
   public function getBuffer(): string {

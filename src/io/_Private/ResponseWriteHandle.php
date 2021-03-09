@@ -15,7 +15,7 @@ use namespace HH\Lib\{IO, OS};
 final class ResponseWriteHandle implements IO\WriteHandle {
   use IO\WriteHandleConvenienceMethodsTrait;
 
-  public function write(string $bytes): int {
+  protected function writeImpl(string $bytes): int {
     return namespace\response_write($bytes);
   }
 
@@ -23,6 +23,6 @@ final class ResponseWriteHandle implements IO\WriteHandle {
     string $bytes,
     ?int $_timeout_ns = null,
   ): Awaitable<int> {
-    return $this->write($bytes);
+    return $this->writeImpl($bytes);
   }
 }

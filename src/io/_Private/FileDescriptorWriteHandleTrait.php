@@ -17,7 +17,7 @@ trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
   require extends FileDescriptorHandle;
   use IO\WriteHandleConvenienceMethodsTrait;
 
-  final public function write(string $bytes): int {
+  final protected function writeImpl(string $bytes): int {
     return OS\write($this->impl, $bytes);
   }
 
@@ -32,11 +32,11 @@ trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {
     $timeout_ns ??= 0;
 
     try {
-      return $this->write($bytes);
+      return $this->writeImpl($bytes);
     } catch (OS\BlockingIOException $_) {
       // We need to wait, which we do below...
     }
     await $this->selectAsync(\STREAM_AWAIT_WRITE, $timeout_ns);
-    return $this->write($bytes);
+    return $this->writeImpl($bytes);
   }
 }
