@@ -42,31 +42,36 @@ final class FileTest extends HackTest {
     using ($tf = File\temporary_file()) {
       $f = $tf->getHandle();
       $path = $f->getPath();
-      $path_s = $path->toString();
       // Make sure we didn't get the template
-      expect($path->exists())->toBeTrue();
-      expect($path_s)->toNotContainSubstring('XXXXXX');
+      /* HH_FIXME[2049] PHP stdlib */
+      /* HH_FIXME[4107] PHP stdlib*/
+      expect(file_exists($path))->toBeTrue();
+      expect($path)->toNotContainSubstring('XXXXXX');
 
       // Make sure it works :)
       await $f->writeAllowPartialSuccessAsync('Hello, world');
-      $content = file_get_contents($path_s);
+      $content = file_get_contents($path);
       expect($content)->toEqual('Hello, world');
 
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      expect(Str\starts_with($path_s, sys_get_temp_dir()))->toBeTrue();
+      expect(Str\starts_with($path, sys_get_temp_dir()))->toBeTrue();
       /* HH_IGNORE_ERROR[2049] __PHPStdLib */
       /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-      $mode = stat($path_s)['mode'];
+      $mode = stat($path)['mode'];
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
       expect($mode & 0777)->toEqual(
         0600,
         'File should only be readable/writable by current user',
       );
     }
-    expect($path->exists())->toBeFalse();
+      /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+      /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+    expect(file_exists($path))->toBeFalse();
 
     using ($tf = File\temporary_file('foo', '.bar')) {
-      $path = $tf->getHandle()->getPath()->toString();
+      $path = $tf->getHandle()->getPath();
       expect($path)->toContainSubstring('/foo');
       expect(Str\ends_with($path, '.bar'))->toBeTrue();
       expect(Str\ends_with($path, '..bar'))->toBeFalse();
@@ -80,7 +85,7 @@ final class FileTest extends HackTest {
     mkdir($dir);
     using ($tf = File\temporary_file($dir.'/foo')) {
       expect(
-        Str\starts_with($tf->getHandle()->getPath()->toString(), $dir.'/foo'),
+        Str\starts_with($tf->getHandle()->getPath(), $dir.'/foo'),
       )
         ->toBeTrue();
     }
@@ -96,7 +101,7 @@ final class FileTest extends HackTest {
       $c = Str\repeat('c', 10 * 1024 * 1024);
       await $f->writeAllowPartialSuccessAsync($a.$b.$c);
 
-      $fr = File\open_read_only($f->getPath()->toString());
+      $fr = File\open_read_only($f->getPath());
       // FIXME: autoclose
       concurrent {
         $r1 = await $fr->readAllowPartialSuccessAsync(10 * 1024 * 1024);
@@ -124,7 +129,7 @@ final class FileTest extends HackTest {
     $f = $tf->getHandle();
     await $f->writeAllowPartialSuccessAsync('Hello, world');
 
-    $path = $f->getPath()->toString();
+    $path = $f->getPath();
     $fr = File\open_read_only($path);
     $content = await $fr->readAllowPartialSuccessAsync();
     $fr->close();
@@ -144,7 +149,7 @@ final class FileTest extends HackTest {
     $f = $tf->getHandle();
     await $f->writeAllowPartialSuccessAsync('Hello, world');
 
-    $path = $f->getPath()->toString();
+    $path = $f->getPath();
     $f = File\open_write_only($path, File\WriteMode::APPEND);
     await $f->writeAllowPartialSuccessAsync("\nGoodbye, cruel world");
     $f->close();
@@ -157,7 +162,7 @@ final class FileTest extends HackTest {
   public async function testLock(): Awaitable<void> {
     using $tf = File\temporary_file();
     $f = $tf->getHandle();
-    $path = $f->getPath()->toString();
+    $path = $f->getPath();
 
     // With a shared lock held open...
     using ($f->tryLockx(File\LockType::SHARED)) {

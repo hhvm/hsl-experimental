@@ -27,8 +27,8 @@ abstract class CloseableFileHandle
   }
 
   <<__Memoize>>
-  final public function getPath(): File\Path {
-    return new File\Path($this->filename);
+  final public function getPath(): string {
+    return $this->filename;
   }
 
   final public function getSize(): int {

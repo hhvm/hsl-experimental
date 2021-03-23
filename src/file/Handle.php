@@ -16,7 +16,7 @@ interface Handle extends IO\SeekableFDHandle {
   /**
    * Get the name of this file.
    */
-  public function getPath(): Path;
+  public function getPath(): string;
 
   /**
    * Get the size of the file.

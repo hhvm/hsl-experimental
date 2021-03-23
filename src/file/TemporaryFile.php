@@ -30,6 +30,6 @@ final class TemporaryFile implements \IDisposable {
     }
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    \unlink($f->getPath()->toString());
+    \unlink($f->getPath());
   }
 }
