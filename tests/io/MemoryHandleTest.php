@@ -16,6 +16,22 @@ use type Facebook\HackTest\HackTest; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class MemoryHandleTest extends HackTest {
+  public async function testWriteOverwriteOutOfBound(): Awaitable<void> {
+    $handle = new IO\MemoryHandle('f', IO\MemoryHandleWriteMode::OVERWRITE);
+
+    await $handle->writeAllAsync('Hello, World!');
+
+    expect($handle->getBuffer())->toEqual('Hello, World!');
+  }
+
+  public async function testWriteAppendOutOfBound(): Awaitable<void> {
+    $handle = new IO\MemoryHandle('f', IO\MemoryHandleWriteMode::APPEND);
+
+    await $handle->writeAllAsync('Hello, World!');
+
+    expect($handle->getBuffer())->toEqual('fHello, World!');
+  }
+
   public async function testRead(): Awaitable<void> {
     $h = new IO\MemoryHandle('herpderp');
     expect(await $h->readFixedSizeAsync(4))->toEqual('herp');

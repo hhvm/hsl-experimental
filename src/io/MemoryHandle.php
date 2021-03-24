@@ -105,7 +105,10 @@ final class MemoryHandle implements CloseableSeekableReadWriteHandle {
     $data_length = Str\length($data);
     $new = Str\slice($this->buffer, 0, $this->offset).$data;
     if ($this->offset < $length) {
-      $new .= Str\slice($this->buffer, $this->offset + $data_length);
+      $new .= Str\slice(
+        $this->buffer,
+        Math\minva($this->offset + $data_length, $length),
+      );
     }
     $this->buffer = $new;
     $this->offset += $data_length;
