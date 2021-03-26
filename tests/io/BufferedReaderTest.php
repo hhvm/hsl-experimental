@@ -8,7 +8,8 @@
  *
  */
 
-use namespace HH\Lib\{IO, OS, Str, Vec};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Str, Vec};
 use namespace HH\Lib\_Private\_IO;
 
 use function Facebook\FBExpect\expect; // @oss-enable

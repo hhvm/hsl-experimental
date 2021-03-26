@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_TCP;
 
-use namespace HH\Lib\{IO, Network, OS, TCP};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Network, TCP};
 use namespace HH\Lib\_Private\{_IO, _Network};
 
 final class CloseableTCPSocket

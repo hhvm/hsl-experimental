@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\{IO, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO};
 
 final class ResponseWriteHandle implements IO\WriteHandle {
   use IO\WriteHandleConvenienceMethodsTrait;

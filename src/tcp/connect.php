@@ -10,7 +10,8 @@
 
 namespace HH\Lib\TCP;
 
-use namespace HH\Lib\{Network, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Network};
 use namespace HH\Lib\_Private\{_Network, _OS, _TCP};
 
 /** Connect to a socket asynchronously, returning a non-disposable handle.

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 use namespace HH\Lib\_Private\_OS;
 
 /** Asynchronously connect to a socket.

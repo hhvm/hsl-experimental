@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_OS;
 
-use namespace HH\Lib\{C, OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{C, Str};
 
 <<__Memoize>>
 function get_throw_errno_impl(): (function(OS\Errno, string): noreturn) {

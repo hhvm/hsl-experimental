@@ -1,4 +1,4 @@
-# `HH\Lib\OS`
+# `HH\Staging\OS`
 
 The namespace is intended to contain very low-level functions, primarily as a
 base layer for implementing higher-level libraries (e.g. `HH\Lib\IO`), and
@@ -15,7 +15,7 @@ this document over time.
 - Similar low-level functions that are portably found in libc, if there is a
   strong reason to use prefer them to POSIX functions (e.g. `mkostemps`)
 - Hack-specific functions that allow interoperation between `OS\` and other
-  key Hack functionality, e.g. `HH\Lib\OS\poll_async()`, allowing `await`ing
+  key Hack functionality, e.g. `HH\Staging\OS\poll_async()`, allowing `await`ing
   on `HH\Lib\FileDescriptor`s.
 
 For now, functions for use in HSL IO are high priority; it is expected that

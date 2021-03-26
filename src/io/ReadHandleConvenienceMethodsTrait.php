@@ -10,7 +10,8 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\{Math, Str, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Math, Str};
 use namespace HH\Lib\_Private\{_IO, _OS};
 
 /** Trait implementing `ReadHandle` methods that can be implemented in terms

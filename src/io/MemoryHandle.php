@@ -10,7 +10,8 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\{Math, OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Math, Str};
 use namespace HH\Lib\_Private\{_IO, _OS};
 
 enum MemoryHandleWriteMode: int {

@@ -12,7 +12,8 @@ namespace HH\Lib\_Private\_File;
 
 use namespace HH\Lib\Str;
 use namespace HH\Lib\_Private\{_IO, _OS};
-use namespace HH\Lib\{IO, File, OS};
+use namespace HH\Lib\{IO, File};
+use namespace HH\Staging\OS;
 
 <<__ConsistentConstruct>>
 abstract class CloseableFileHandle

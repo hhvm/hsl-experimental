@@ -10,7 +10,8 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\{_Private\_IO, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{_Private\_IO};
 
 /** Create a pair of handles, where writes to the `WriteHandle` can be
  * read from the `ReadHandle`.
@@ -18,7 +19,7 @@ use namespace HH\Lib\{_Private\_IO, OS};
  * @see `Network\Socket`
  */
 function pipe(): (CloseableReadFDHandle, CloseableWriteFDHandle) {
-  list($r, $w) = \HH\Lib\OS\pipe();
+  list($r, $w) = \HH\Staging\OS\pipe();
   return tuple(
     new _IO\PipeReadHandle($r),
     new _IO\PipeWriteHandle($w),

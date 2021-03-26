@@ -9,7 +9,8 @@
  */
 
 use namespace HH\Lib\Vec;
-use namespace HH\Lib\{IO, Network, OS, Str, TCP};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Network, Str, TCP};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable

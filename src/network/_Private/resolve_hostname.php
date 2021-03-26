@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\{Network, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Network};
 use namespace HH\Lib\_Private\{_Network, _OS, _TCP};
 
 /** A poor alternative to OS\getaddrinfo, which doesn't exist yet. */

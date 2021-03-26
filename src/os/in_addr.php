@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\OS;
+namespace HH\Staging\OS;
 
 /** The type of the network form of an INET (IPv4) address, in host byte order.
  *

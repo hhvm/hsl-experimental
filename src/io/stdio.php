@@ -10,7 +10,7 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 use namespace HH\Lib\_Private\_IO;
 
 /** Return the output handle for the current request.

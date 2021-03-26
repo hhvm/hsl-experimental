@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_OS;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 
 // hackfmt-ignore
 /** OS-level host error number constants from `netdb.h`.

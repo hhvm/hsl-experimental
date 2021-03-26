@@ -8,7 +8,8 @@
  *
  */
 
-use namespace HH\Lib\{IO, OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Str};
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\HackTest; // @oss-enable

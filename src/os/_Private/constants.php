@@ -10,6 +10,6 @@
 
 namespace HH\Lib\_Private\_OS;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 
 const bool IS_MACOS = \PHP_OS === 'Darwin';

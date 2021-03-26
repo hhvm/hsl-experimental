@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_OS;
 
-use namespace HH\Lib\{Str, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Str};
 
 /** Raises EINVAL if condition is false */
 function arg_assert(bool $condition, Str\SprintfFormatString $message, mixed ...$args): void {

@@ -10,7 +10,8 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\{Str, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Str};
 use namespace HH\Lib\_Private\_OS;
 
 /** Trait implementing `WriteHandle` methods that can be implemented in terms

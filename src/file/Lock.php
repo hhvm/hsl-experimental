@@ -10,7 +10,8 @@
 
 namespace HH\Lib\File;
 
-use namespace HH\Lib\{OS, _Private\_OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{_Private\_OS};
 
 /**
  * A File Lock, which is unlocked as a disposable. To acquire one, call `lock`

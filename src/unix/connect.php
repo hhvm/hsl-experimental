@@ -10,7 +10,8 @@
 
 namespace HH\Lib\Unix;
 
-use namespace HH\Lib\{Network, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Network};
 use namespace HH\Lib\_Private\{_Network, _Unix};
 
 /** Asynchronously connect to the specified unix socket. */

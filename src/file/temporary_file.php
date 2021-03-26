@@ -10,7 +10,8 @@
 
 namespace HH\Lib\File;
 
-use namespace HH\Lib\{OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Str};
 use namespace HH\Lib\_Private\_File;
 
 /** Create a new temporary file.

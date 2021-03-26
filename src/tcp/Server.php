@@ -10,7 +10,8 @@
 
 namespace HH\Lib\TCP;
 
-use namespace HH\Lib\{OS, Network};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Network};
 use namespace HH\Lib\_Private\{_Network, _OS, _TCP};
 
 final class Server implements Network\Server<CloseableSocket> {

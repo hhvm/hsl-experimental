@@ -9,7 +9,8 @@
  */
 
 namespace HH\Lib\_Private\_OS;
-use namespace HH\Lib\{Dict, Keyset, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Dict, Keyset};
 
 <<__Memoize>>
 function get_errno_names(): dict<OS\Errno, keyset<string>> {

@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 use namespace HH\Lib\_Private\_OS;
 /** Accept a socket connection, waiting if necessary */
 async function socket_accept_async(

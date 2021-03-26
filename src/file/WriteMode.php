@@ -10,7 +10,7 @@
 
 namespace HH\Lib\File;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 
 enum WriteMode: int {
   /**

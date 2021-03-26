@@ -10,7 +10,7 @@
 
 namespace HH\Lib\_Private\_OS;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 
 function wrap_impl<T>((function(): T) $impl): T {
   try {

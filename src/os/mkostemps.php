@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\OS;
+namespace HH\Staging\OS;
 
 use namespace HH\Lib\Str;
 use namespace HH\Lib\_Private\_OS;

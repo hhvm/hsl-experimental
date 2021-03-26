@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_Network;
 
-use namespace HH\Lib\{Network, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{Network};
 use namespace HH\Lib\_Private\_OS;
 
 /** Create a server socket and start listening */

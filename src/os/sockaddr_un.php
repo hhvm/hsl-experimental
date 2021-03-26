@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\OS;
+namespace HH\Staging\OS;
 
 /** Address of a UNIX-domain socket.
  *

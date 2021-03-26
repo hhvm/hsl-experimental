@@ -10,7 +10,7 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 
 final class BufferedReaderLineIterator implements AsyncIterator<string> {
   public function __construct(private BufferedReader $reader) {

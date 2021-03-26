@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\OS;
+namespace HH\Staging\OS;
 
 // hackfmt-ignore
 /** OS-level host error number constants from `netdb.h`.

@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_OS;
 
-use namespace HH\Lib\{C, OS};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{C};
 
 trait ErrnoExceptionWithMultipleErrnosTrait {
   require extends OS\ErrnoException;

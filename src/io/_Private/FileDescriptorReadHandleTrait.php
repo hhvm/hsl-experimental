@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\{IO, Str, OS, Math};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Str, Math};
 use namespace HH\Lib\_Private\_OS;
 
 trait FileDescriptorReadHandleTrait implements IO\ReadHandle {

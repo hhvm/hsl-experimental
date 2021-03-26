@@ -9,7 +9,7 @@
  */
 
 namespace HH\Lib\_Private\_OS;
-use namespace HH\Lib\OS;
+use namespace HH\Staging\OS;
 
 function native_sockaddr_from_sockaddr(OS\sockaddr $sa): namespace\sockaddr {
   if ($sa is OS\sockaddr_un) {

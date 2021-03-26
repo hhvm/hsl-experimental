@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\{IO, OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Str};
 use namespace HH\Lib\_Private\{_IO, _OS};
 
 abstract class FileDescriptorHandle implements IO\CloseableHandle, IO\FDHandle {

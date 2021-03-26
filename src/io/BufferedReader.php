@@ -12,7 +12,8 @@
 
 namespace HH\Lib\IO;
 
-use namespace HH\Lib\{IO, Math, OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Math, Str};
 use namespace HH\Lib\_Private\_OS;
 
 /** Wrapper for `ReadHandle`s, with buffered line-based byte-based accessors.

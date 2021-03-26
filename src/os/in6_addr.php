@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\OS {
+namespace HH\Staging\OS {
 
   /** The type of the network form of an INET6 (IPv6) address.
    *
@@ -19,7 +19,7 @@ namespace HH\Lib\OS {
 }
 
 namespace HH\Lib\_Private\_OS {
-  function string_as_in6_addr_UNSAFE(string $in): \HH\Lib\OS\in6_addr {
+  function string_as_in6_addr_UNSAFE(string $in): \HH\Staging\OS\in6_addr {
     return $in;
   }
 }

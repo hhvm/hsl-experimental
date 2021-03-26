@@ -9,7 +9,8 @@
  */
 
 namespace HH\Lib\File;
-use namespace HH\Lib\{OS, _Private\_File};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{_Private\_File};
 
 function open_read_only(string $path): CloseableReadHandle {
   return OS\open($path, OS\O_RDONLY)

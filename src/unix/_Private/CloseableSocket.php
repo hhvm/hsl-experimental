@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_Unix;
 
-use namespace HH\Lib\{IO, Network, OS, Unix};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Network, Unix};
 use namespace HH\Lib\_Private\{_IO, _Network};
 
 final class CloseableSocket

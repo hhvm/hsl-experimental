@@ -10,7 +10,8 @@
 
 namespace HH\Lib\_Private\_IO;
 
-use namespace HH\Lib\{IO, Math, OS, Str};
+use namespace HH\Staging\OS;
+use namespace HH\Lib\{IO, Math, Str};
 use namespace HH\Lib\_Private\_OS;
 
 trait FileDescriptorWriteHandleTrait implements IO\WriteHandle {

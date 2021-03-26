@@ -8,10 +8,7 @@
  *
  */
 
-namespace HH\Lib\IO;
+namespace HH\Staging\OS;
 
-use namespace HH\Staging\OS;
-
-interface FDHandle extends Handle {
-  public function getFileDescriptor(): OS\FileDescriptor;
-}
+// built in
+type FileDescriptor = \HH\Lib\OS\FileDescriptor;
