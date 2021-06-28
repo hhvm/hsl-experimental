@@ -8,9 +8,9 @@
  *
  */
 
-use namespace HH\Lib\DateTime;
-use type HH\Lib\Time;
-use const HH\Lib\DateTime\_Private\NS_IN_SEC;
+use namespace HH\Lib\Experimental\DateTime;
+use type HH\Lib\Experimental\Time;
+use const HH\Lib\Experimental\DateTime\_Private\NS_IN_SEC;
 
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable

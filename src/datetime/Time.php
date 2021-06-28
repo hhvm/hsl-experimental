@@ -8,9 +8,10 @@
  *
  */
 
-namespace HH\Lib;
+namespace HH\Lib\Experimental;
 
-use const HH\Lib\DateTime\_Private\NS_IN_SEC;
+use namespace HH\Lib\{C, Math, Str};
+use const HH\Lib\Experimental\DateTime\_Private\NS_IN_SEC;
 
 /**
  * Represents a time interval (a specific number of hours, minutes, seconds, and

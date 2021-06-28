@@ -8,7 +8,7 @@
  *
  */
 
-namespace HH\Lib\DateTime\_Private;
+namespace HH\Lib\Experimental\DateTime\_Private;
 
 const int NS_IN_SEC = 1000000000;
 
