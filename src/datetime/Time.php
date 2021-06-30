@@ -11,7 +11,7 @@
 namespace HH\Lib\Experimental;
 
 use namespace HH\Lib\{C, Math, Str};
-use const HH\Lib\Experimental\DateTime\_Private\NS_IN_SEC;
+use const HH\Lib\Experimental\_Private\_DateTime\NS_IN_SEC;
 
 /**
  * Represents a time interval (a specific number of hours, minutes, seconds, and
@@ -48,56 +48,57 @@ final class Time {
    * optionally minutes, seconds, nanoseconds). Due to normalization, the
    * actual values in the returned instance may differ from the provided ones.
    */
-  public static function hours(
+  public static function fromParts(
     int $hours,
     int $minutes = 0,
     int $seconds = 0,
     int $nanoseconds = 0,
   ): this {
-    return self::minutes(60 * $hours + $minutes, $seconds, $nanoseconds);
-  }
-
-  /**
-   * Returns an instance representing the specified number of minutes (and
-   * optionally seconds, nanoseconds). Due to normalization, the actual values
-   * in the returned instance may differ from the provided ones, and the
-   * resulting instance may contain larger units (e.g. `Time::minutes(63)` is
-   * normalized to "1hr 3min").
-   */
-  public static function minutes(
-    int $minutes,
-    int $seconds = 0,
-    int $nanoseconds = 0,
-  ): this {
-    return self::seconds(60 * $minutes + $seconds, $nanoseconds);
-  }
-
-  /**
-   * Returns an instance representing the specified number of seconds (and
-   * optionally nanoseconds). Due to normalization, the actual values in the
-   * returned instance may differ from the provided ones, and the resulting
-   * instance may contain larger units (e.g. `Time::seconds(63)` is normalized
-   * to "1min 3sec").
-   */
-  public static function seconds(
-    int $seconds,
-    int $nanoseconds = 0,
-  ): this {
     // This is where the normalization happens.
-    $seconds += (int)($nanoseconds / NS_IN_SEC);
-    $nanoseconds %= NS_IN_SEC;
-    if ($seconds < 0 && $nanoseconds > 0) {
-      ++$seconds;
-      $nanoseconds -= NS_IN_SEC;
-    } else if ($seconds > 0 && $nanoseconds < 0) {
-      --$seconds;
-      $nanoseconds += NS_IN_SEC;
+    $s = 3600 * $hours +
+      60 * $minutes +
+      $seconds +
+      (int)($nanoseconds / NS_IN_SEC);
+    $ns = $nanoseconds % NS_IN_SEC;
+    if ($s < 0 && $ns > 0) {
+      ++$s;
+      $ns -= NS_IN_SEC;
+    } else if ($s > 0 && $ns < 0) {
+      --$s;
+      $ns += NS_IN_SEC;
     }
-    $minutes = (int)($seconds / 60);
-    $seconds %= 60;
-    $hours = (int)($minutes / 60);
-    $minutes %= 60;
-    return new self($hours, $minutes, $seconds, $nanoseconds);
+    $m = (int)($s / 60);
+    $s %= 60;
+    $h = (int)($m / 60);
+    $m %= 60;
+    return new self($h, $m, $s, $ns);
+  }
+
+  /**
+   * Returns an instance representing the specified number of hours.
+   */
+  public static function hours(int $hours): this {
+    return self::fromParts($hours);
+  }
+
+  /**
+   * Returns an instance representing the specified number of minutes. Due to
+   * normalization, the actual value in the returned instance may differ from
+   * the provided one, and the resulting instance may contain larger units (e.g.
+   * `Time::minutes(63)` is normalized to "1hr 3min").
+   */
+  public static function minutes(int $minutes): this {
+    return self::fromParts(0, $minutes);
+  }
+
+  /**
+   * Returns an instance representing the specified number of seconds. Due to
+   * normalization, the actual value in the returned instance may differ from
+   * the provided one, and the resulting instance may contain larger units (e.g.
+   * `Time::seconds(63)` is normalized to "1min 3sec").
+   */
+  public static function seconds(int $seconds): this {
+    return self::fromParts(0, 0, $seconds);
   }
 
   /**
@@ -110,7 +111,7 @@ final class Time {
    * Note: 1 ms = 1/1000 s = 1000000 ns
    */
   public static function milliseconds(int $milliseconds): this {
-    return self::seconds(0, 1000000 * $milliseconds);
+    return self::fromParts(0, 0, 0, 1000000 * $milliseconds);
   }
 
   /**
@@ -123,7 +124,7 @@ final class Time {
    * Note: 1 us = 1/1000000 s = 1000 ns
    */
   public static function microseconds(int $microseconds): this {
-    return self::seconds(0, 1000 * $microseconds);
+    return self::fromParts(0, 0, 0, 1000 * $microseconds);
   }
 
   /**
@@ -134,7 +135,7 @@ final class Time {
    * Note: 1 s = 1000000000 ns (1e9)
    */
   public static function nanoseconds(int $nanoseconds): this {
-    return self::seconds(0, $nanoseconds);
+    return self::fromParts(0, 0, 0, $nanoseconds);
   }
 
   /**
@@ -245,7 +246,7 @@ final class Time {
    * `Time::hours(-1, 30)` which is normalized to "-30min".
    */
   public function withHours(int $hours): this {
-    return self::hours(
+    return self::fromParts(
       $hours,
       $this->minutes,
       $this->seconds,
@@ -261,7 +262,7 @@ final class Time {
    * `Time::minutes(-1, 30)` which is normalized to "-30sec".
    */
   public function withMinutes(int $minutes): this {
-    return self::hours(
+    return self::fromParts(
       $this->hours,
       $minutes,
       $this->seconds,
@@ -277,7 +278,7 @@ final class Time {
    * to `Time::minutes(2, -30)` which is normalized to "1min 30sec".
    */
   public function withSeconds(int $seconds): this {
-    return self::hours(
+    return self::fromParts(
       $this->hours,
       $this->minutes,
       $seconds,
@@ -293,7 +294,7 @@ final class Time {
    * to `Time::seconds(2, -1)` which is normalized to "1sec 999999999ns".
    */
   public function withNanoseconds(int $nanoseconds): this {
-    return self::hours(
+    return self::fromParts(
       $this->hours,
       $this->minutes,
       $this->seconds,
@@ -400,7 +401,7 @@ final class Time {
     } else if ($this->isZero()) {
       return $other;
     }
-    return self::hours(
+    return self::fromParts(
       $this->hours + $other->hours,
       $this->minutes + $other->minutes,
       $this->seconds + $other->seconds,
@@ -423,7 +424,7 @@ final class Time {
     } else if ($this->isZero()) {
       return $other;
     }
-    return self::hours(
+    return self::fromParts(
       $this->hours - $other->hours,
       $this->minutes - $other->minutes,
       $this->seconds - $other->seconds,
@@ -434,12 +435,21 @@ final class Time {
   //////////////////////////////////////////////////////////////////////////////
   // output
 
+  public function __debugInfo(): dict<string, int> {
+    return dict[
+      'hours' => $this->hours,
+      'minutes' => $this->minutes,
+      'seconds' => $this->seconds,
+      'nanoseconds' => $this->nanoseconds,
+    ];
+  }
+
   /**
    * Returns the time interval as string, useful e.g. for debugging. This is not
    * meant to be a comprehensive way to format time intervals for user-facing
    * output.
    */
-  public function toString(int $max_decimals = 3): string {
+  public function __toString(int $max_decimals = 3): string {
     invariant(
       $max_decimals >= 0,
       'Expected a non-negative number of decimals.',
