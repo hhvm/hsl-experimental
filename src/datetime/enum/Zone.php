@@ -1,11 +1,10 @@
-<?hh // strict
+<?hh
 /**
  * This file is generated. Do not modify it manually!
- *
- * @generated SignedSource<<5bc750875803bec3d1944c574246ccb2>>
+ * Regenerate using: bin/codegen-timezones.php
  */
-namespace HH\Lib\Experimental\DateTime;
 
+namespace HH\Lib\Experimental\DateTime;
 
 /**
  * All supported timezones. This includes:
@@ -22,7 +21,6 @@ namespace HH\Lib\Experimental\DateTime;
  * which correctly resolves to either PST or PDT for any specified date; or
  * you can use an explicit offset like UTC-08:00 which is always unambiguous.
  */
-
 enum Zone : string {
   UTC = 'UTC';
   MINUS_1100 = '-11:00';

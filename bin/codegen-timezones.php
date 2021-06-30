@@ -9,15 +9,9 @@
  *
  */
 
-namespace HH\Lib\Experimental\DateTime\_Private;
+namespace HH\Lib\Experimental\_Private\_DateTime;
 
 use namespace HH\Lib\{Keyset, Regex, Str};
-use type Facebook\HackCodegen\{
-  CodegenFileType,
-  HackBuilderValues,
-  HackCodegenConfig,
-  HackCodegenFactory,
-};
 
 /**
  * Generate the HH\Lib\Experimental\DateTime\Zone enum based on the timezones
@@ -25,22 +19,6 @@ use type Facebook\HackCodegen\{
  */
 <<__EntryPoint>>
 function codegen_timezones(): void {
-  $docblock = <<<END
-All supported timezones. This includes:
-
-- UTC
-- all supported tzdata timezones like "America/Los_Angeles"
-- all UTC offsets that at least one supported timezone uses for either its
-  winter time or its summer time
-
-We intentionally don't include common aliases like PST (Pacific Standard
-Time) because these can be confusing and ambiguous, e.g. the meaning of PST
-is unclear when dealing with dates that fall in PDT (Pacific Daylight Time)
-range. Instead, use the standard tzdata timezone like "America/Los_Angeles"
-which correctly resolves to either PST or PDT for any specified date; or
-you can use an explicit offset like UTC-08:00 which is always unambiguous.
-END;
-
   require_once(__DIR__.'/../vendor/autoload.hack');
   \Facebook\AutoloadMap\initialize();
 
@@ -108,27 +86,39 @@ END;
       $id;
   }
 
-  //\print_r($enum_values);
+  // Write output file.
+  $code = Str\ends_with($output_path, '.php') ? "<?hh\n" : '';
+  $code .= <<<END
+/**
+ * This file is generated. Do not modify it manually!
+ * Regenerate using: bin/codegen-timezones.php
+ */
 
-  $cg = new HackCodegenFactory(
-    (new HackCodegenConfig())->withRootDir(\getcwd()),
-  );
+namespace HH\Lib\Experimental\DateTime;
 
-  $enum = $cg->codegenEnum('Zone', 'string')->setDocBlock($docblock);
+/**
+ * All supported timezones. This includes:
+ *
+ * - UTC
+ * - all supported tzdata timezones like "America/Los_Angeles"
+ * - all UTC offsets that at least one supported timezone uses for either its
+ *   winter time or its summer time
+ *
+ * We intentionally don't include common aliases like PST (Pacific Standard
+ * Time) because these can be confusing and ambiguous, e.g. the meaning of PST
+ * is unclear when dealing with dates that fall in PDT (Pacific Daylight Time)
+ * range. Instead, use the standard tzdata timezone like "America/Los_Angeles"
+ * which correctly resolves to either PST or PDT for any specified date; or
+ * you can use an explicit offset like UTC-08:00 which is always unambiguous.
+ */
+enum Zone : string {
+
+END;
+
   foreach ($enum_values as $name => $value) {
-    $enum->addMember(
-      $cg->codegenEnumMember($name)
-        ->setValue($value, HackBuilderValues::export()),
-    );
+    $code .= '  '.$name.' = '.\var_export($value, true).";\n";
   }
+  $code .= "}\n";
 
-  $cg->codegenFile($output_path)
-    ->setFileType(
-      Str\ends_with($output_path, '.php')
-        ? CodegenFileType::HACK_STRICT
-        : CodegenFileType::DOT_HACK,
-    )
-    ->setNamespace('HH\\Lib\\Experimental\\DateTime')
-    ->addEnum($enum)
-    ->save();
+  \file_put_contents($output_path, $code);
 }
