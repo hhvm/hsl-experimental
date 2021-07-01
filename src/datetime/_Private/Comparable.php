@@ -70,7 +70,7 @@ abstract class Comparable {
    * instance is equal to `$a` and/or `$b`. Returns false if this instance is
    * before or after both `$a` and `$b`.
    */
-  final public function isBetweenIncl(
+  final public function isBetweenInclusive(
     this::TComparableTo $a,
     this::TComparableTo $b,
   ): bool {
@@ -85,7 +85,7 @@ abstract class Comparable {
    * this instance is equal to `$a` and/or `$b`, or if this instance is before
    * or after both `$a` and `$b`.
    */
-  final public function isBetweenExcl(
+  final public function isBetweenExclusive(
     this::TComparableTo $a,
     this::TComparableTo $b,
   ): bool {
