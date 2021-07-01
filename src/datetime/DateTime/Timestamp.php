@@ -77,9 +77,9 @@ final class Timestamp extends _DateTime\Timestamp implements Instant {
    * different timezones.
    */
   public function format(
-    ZonedDateFormatString $format_string,
     Zone $timezone,
-    // TODO: locale
+    // TODO: locale?
+    ZonedDateFormatString $format_string,
   ): string {
     using new _DateTime\ZoneOverride($timezone);
     // The nanosecond part is ignored because strftime doesn't have any %
@@ -101,8 +101,8 @@ final class Timestamp extends _DateTime\Timestamp implements Instant {
    * @see https://www.php.net/manual/en/datetime.formats.php
    */
   public static function parse(
-    string $raw_string,
     Zone $timezone,
+    string $raw_string,
     ?Instant $relative_to = null,
   ): this {
     using new _DateTime\ZoneOverride($timezone);

@@ -76,7 +76,7 @@ abstract class Comparable {
   ): bool {
     $a = $this->compare($a);
     $b = $this->compare($b);
-    return $a !== 0 && $b !== 0 && $a !== $b;
+    return $a === 0 || $a !== $b;
   }
 
   /**
@@ -91,7 +91,7 @@ abstract class Comparable {
   ): bool {
     $a = $this->compare($a);
     $b = $this->compare($b);
-    return $a === 0 || $a !== $b;
+    return $a !== 0 && $b !== 0 && $a !== $b;
   }
 
   //////////////////////////////////////////////////////////////////////////////
