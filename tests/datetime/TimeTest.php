@@ -13,11 +13,9 @@ use namespace HH\Lib\Experimental\DateTime;
 use type HH\Lib\Experimental\Time;
 use const HH\Lib\Experimental\_Private\_DateTime\NS_IN_SEC;
 
-use function Facebook\FBExpect\expect; // @oss-enable
-use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
-// @oss-disable: use type HackTest;
+use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\{DataProvider, HackTest};
 
-// @oss-disable: <<Oncalls('hhvm_oss')>>
 final class TimeTest extends HackTest {
 
   public function testGetters(): void {
@@ -148,28 +146,28 @@ final class TimeTest extends HackTest {
     expect($a->isShorterOrEqual($b))->toEqual($expected !== 1);
     expect($a->isLonger($b))->toEqual($expected === 1);
     expect($a->isLongerOrEqual($b))->toEqual($expected !== -1);
-    expect($a->isBetweenExcl($a, $a))->toBeFalse();
-    expect($a->isBetweenExcl($a, $b))->toBeFalse();
-    expect($a->isBetweenExcl($b, $a))->toBeFalse();
-    expect($a->isBetweenExcl($b, $b))->toBeFalse();
-    expect($a->isBetweenIncl($a, $a))->toBeTrue();
-    expect($a->isBetweenIncl($a, $b))->toBeTrue();
-    expect($a->isBetweenIncl($b, $a))->toBeTrue();
-    expect($a->isBetweenIncl($b, $b))->toEqual($expected === 0);
+    expect($a->isBetweenExclusive($a, $a))->toBeFalse();
+    expect($a->isBetweenExclusive($a, $b))->toBeFalse();
+    expect($a->isBetweenExclusive($b, $a))->toBeFalse();
+    expect($a->isBetweenExclusive($b, $b))->toBeFalse();
+    expect($a->isBetweenInclusive($a, $a))->toBeTrue();
+    expect($a->isBetweenInclusive($a, $b))->toBeTrue();
+    expect($a->isBetweenInclusive($b, $a))->toBeTrue();
+    expect($a->isBetweenInclusive($b, $b))->toEqual($expected === 0);
   }
 
   public function testIsBetween(): void {
     $a = Time::hours(1);
     $b = Time::minutes(64);
     $c = Time::fromParts(1, 30);
-    expect($b->isBetweenExcl($a, $c))->toBeTrue();
-    expect($b->isBetweenExcl($c, $a))->toBeTrue();
-    expect($b->isBetweenIncl($a, $c))->toBeTrue();
-    expect($b->isBetweenIncl($c, $a))->toBeTrue();
-    expect($a->isBetweenExcl($b, $c))->toBeFalse();
-    expect($a->isBetweenIncl($c, $b))->toBeFalse();
-    expect($c->isBetweenIncl($a, $b))->toBeFalse();
-    expect($c->isBetweenExcl($b, $a))->toBeFalse();
+    expect($b->isBetweenExclusive($a, $c))->toBeTrue();
+    expect($b->isBetweenExclusive($c, $a))->toBeTrue();
+    expect($b->isBetweenInclusive($a, $c))->toBeTrue();
+    expect($b->isBetweenInclusive($c, $a))->toBeTrue();
+    expect($a->isBetweenExclusive($b, $c))->toBeFalse();
+    expect($a->isBetweenInclusive($c, $b))->toBeFalse();
+    expect($c->isBetweenInclusive($a, $b))->toBeFalse();
+    expect($c->isBetweenExclusive($b, $a))->toBeFalse();
   }
 
   public function testOperations(): void {

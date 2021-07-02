@@ -348,7 +348,7 @@ final class Time {
    * this instance is equal to $a and/or $b. Returns false if this instance is
    * shorter/longer than both.
    */
-  public function isBetweenIncl(this $a, this $b): bool {
+  public function isBetweenInclusive(this $a, this $b): bool {
     $a = $this->compare($a);
     $b = $this->compare($b);
     return $a === 0 || $a !== $b;
@@ -360,7 +360,7 @@ final class Time {
    * Returns false if this instance is equal to $a and/or $b, or shorter/longer
    * than both.
    */
-  public function isBetweenExcl(this $a, this $b): bool {
+  public function isBetweenExclusive(this $a, this $b): bool {
     $a = $this->compare($a);
     $b = $this->compare($b);
     return $a !== 0 && $b !== 0 && $a !== $b;
