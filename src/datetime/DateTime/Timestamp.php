@@ -44,11 +44,9 @@ final class Timestamp extends _DateTime\Timestamp implements Instant {
     return $this;
   }
 
-  /* TODO
   public function convertToTimezone(Zone $zone): Zoned {
     return Zoned::fromTimestamp($zone, $this);
   }
-  */
 
   //////////////////////////////////////////////////////////////////////////////
   // comparisons
