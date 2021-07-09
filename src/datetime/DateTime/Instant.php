@@ -25,7 +25,9 @@ interface Instant {
    */
   public function getTimestamp(): Timestamp;
 
-  /* TODO
+   /**
+   * Returns a new `Zoned` instance representing the same point in time as this
+   * `Instant`, but with date/time parts adjusted for the specified timezone.
+   */
   public function convertToTimezone(Zone $timezone): Zoned;
-  */
 }
