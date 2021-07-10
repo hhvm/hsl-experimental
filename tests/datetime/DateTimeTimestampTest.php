@@ -34,6 +34,12 @@ final class DateTimeTimestampTest extends TimestampTestBase {
   public function testConversions(): void {
     $ts = DateTime\Timestamp::now();
     expect($ts->getTimestamp())->toEqual($ts);
+
+    $ts = DateTime\Timestamp::fromRaw(1234567890, 42);
+    expect($ts->convertToTimezone(DateTime\Zone::UTC)->getParts())
+      ->toEqual(tuple(2009, 2, 13, 23, 31, 30, 42));
+    expect($ts->convertToTimezone(DateTime\Zone::EUROPE_PRAGUE)->getParts())
+      ->toEqual(tuple(2009, 2, 14, 0, 31, 30, 42));
   }
 
   public function testFormat(): void {

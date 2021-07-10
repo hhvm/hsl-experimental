@@ -80,24 +80,22 @@ final class Unzoned extends DateTime {
   }
 
   /**
-   * Returns an instance matching the date/time from the provided string. This
-   * requires specifying a valid timezone, since the date/time string may be in
-   * a format that would otherwise be ambiguous (e.g. "3 days ago").
+   * Returns an instance matching the date/time from the provided string.
    *
    * An optional `$relative_to` argument can be provided, which will be used if
-   * the input string is relative like "3 days ago" or "12:30 today". If not
-   * provided, `$relative_to` defaults to the current time.
+   * the input string is relative like "3 days ago" or "12:30 today". If the
+   * input string is relative but `$relative_to` isn't provided, the result is
+   * undefined.
    *
    * @see https://www.php.net/manual/en/datetime.formats.php
    */
   public static function parse(
-    Zone $timezone,
     string $str,
     ?Unzoned $relative_to = null,
   ): this {
     return self::fromTimestampImpl(
-      $timezone,
-      Timestamp::parse($timezone, $str, $relative_to?->timestamp),
+      Zone::UTC,
+      Timestamp::parse(Zone::UTC, $str, $relative_to?->timestamp),
     );
   }
 

@@ -44,4 +44,44 @@ final class UnzonedDateTimeTest extends DateTimeTestBase {
   ): DateTime\Unzoned {
     return $dt;
   }
+
+  public function testConversions(): void {
+    $unzoned = DateTime\Unzoned::fromPartsX(2009, 2, 13, 23, 31, 30, 42);
+
+    $utc = expect($unzoned->withTimezone(DateTime\Zone::UTC)->exactX())
+      ->toBeInstanceOf(DateTime\Zoned::class);
+    expect($utc->getParts())->toEqual(tuple(2009, 2, 13, 23, 31, 30, 42));
+    expect($utc->getTimestamp()->toRaw())->toEqual(tuple(1234567890, 42));
+
+    $cet =
+      expect($unzoned->withTimezone(DateTime\Zone::EUROPE_PRAGUE)->exactX())
+        ->toBeInstanceOf(DateTime\Zoned::class);
+    expect($cet->getParts())->toEqual(tuple(2009, 2, 13, 23, 31, 30, 42));
+    expect($cet->getTimestamp()->toRaw())
+      ->toEqual(tuple(1234567890 - 3600, 42));
+  }
+
+  public function testFormat(): void {
+    // $datetime->format() just delegates to strftime() so we don't need to
+    // thoroughly test it here, we only do some basic sanity checks.
+    expect(
+      DateTime\Unzoned::fromPartsX(2021, 2, 3, 4, 5, 6, 7)
+        ->format('%Y-%m-%d %H:%M:%S'),
+    )->toEqual('2021-02-03 04:05:06');
+  }
+
+  public function testParse(): void {
+    // Unzoned::parse() just delegates to strtotime() so we don't need to
+    // thoroughly test it here, we only do some basic sanity checks.
+    expect(
+      DateTime\Unzoned::parse('2009-02-13 23:31:30')->getParts()
+    )->toEqual(tuple(2009, 2, 13, 23, 31, 30, 0));
+
+    expect(
+      DateTime\Unzoned::parse(
+        '-2 days',
+        DateTime\Unzoned::fromPartsX(2021, 2, 3, 4, 5, 6, 7),
+      )->getParts()
+    )->toEqual(tuple(2021, 2, 1, 4, 5, 6, 0));
+  }
 }

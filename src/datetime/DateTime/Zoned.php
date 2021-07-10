@@ -189,16 +189,14 @@ final class Zoned extends DateTime implements Instant {
   }
 
   /**
-   * Returns the offset (hours, minutes) from UTC for the timezone stored in
-   * this instance that applies on the date/time stored in this instance (this
-   * will be either the stored timezone's standard offset or its DST offset
-   * depending on whether the stored date/time is during DST).
+   * Returns the offset from UTC for the timezone stored in this instance that
+   * applies on the date/time stored in this instance (this will be either the
+   * stored timezone's standard offset or its DST offset depending on whether
+   * the stored date/time is during DST).
    */
-  public function getTimezoneOffset(): (int, int) {  // hour, min
-    $offset = $this->format('%z');
-    $h = (int)Str\slice($offset, 0, Str\length($offset) - 2);
-    $m = (int)Str\slice($offset, -2);
-    return tuple($h, $m);
+  public function getTimezoneOffset(): Time {
+    using new _DateTime\ZoneOverride($this->getTimezone());
+    return Time::seconds((int)\date('Z', $this->getTimestamp()->getSeconds()));
   }
 
   <<__Override>>
@@ -211,7 +209,8 @@ final class Zoned extends DateTime implements Instant {
    * Savings Time (summer time) in the timezone stored in this instance.
    */
   public function isDST(): bool {
-    return $this->format('I') === '1';
+    using new _DateTime\ZoneOverride($this->getTimezone());
+    return \date('I', $this->getTimestamp()->getSeconds()) === '1';
   }
 
   <<__Override>>
@@ -238,7 +237,7 @@ final class Zoned extends DateTime implements Instant {
    *   $a->withoutTimezone()->isAtTheSameTime($b->withoutTimezone())
    */
   public function isEqualIncludingTimezone(this $other): bool {
-    return $this->timestamp === $other->timestamp &&
+    return $this->isAtTheSameTime($other) &&
       $this->timezone === $other->timezone;
   }
 
