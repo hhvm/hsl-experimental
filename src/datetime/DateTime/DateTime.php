@@ -22,6 +22,14 @@ abstract class DateTime extends _DateTime\Comparable {
   //////////////////////////////////////////////////////////////////////////////
   // getters
 
+  /**
+   * ISO-8601 compliant year number. For positive numbers, this is equivalent to
+   * the standard Gregorian year number (returns 1 for 1 AD, 2021 for 2021 AD,
+   * etc.). For 0 or negative numbers, the ISO-8601 year number differs from the
+   * commonly used AD/BC system (1 BC = 0 in ISO-8601, 2 BC = -1, 3 BC = -2,
+   * etc.). These ISO-8601 year numbers make math operations more consistent,
+   * but may need to be converted before displaying to users.
+   */
   final public function getYear(): int {
     return $this->year;
   }
