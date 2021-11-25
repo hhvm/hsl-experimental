@@ -18,7 +18,7 @@ use type HH\Lib\Experimental\Time;
 <<__ConsistentConstruct>>
 abstract class Timestamp extends Comparable {
 
-  final private function __construct(
+  private function __construct(
     private int $seconds,
     private int $nanoseconds,
   ) {}
