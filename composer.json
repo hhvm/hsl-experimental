@@ -13,10 +13,15 @@
     "hhvm/hhvm-autoload": "^2.0|^3.0"
   },
   "require": {
-    "hhvm": "^4.108",
+    "hhvm": "^4.128",
     "hhvm/hsl": "^4.15"
   },
   "provide": {
     "hhvm/hsl-io": "0.3.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "hhvm/hhvm-autoload": true
+    }
   }
 }
