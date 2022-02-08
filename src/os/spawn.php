@@ -2,7 +2,7 @@
 
 namespace HH\Lib\Experimental\OS;
 use namespace HH\Lib\C;
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{C, Vec};
 use namespace HH\Lib\_Private\_OS;
 use type HH\Lib\OS\{FileDescriptor, IsNotADirectoryException};
 use function HH\Lib\OS\{close, open};
