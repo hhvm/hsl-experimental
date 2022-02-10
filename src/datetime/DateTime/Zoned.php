@@ -214,7 +214,7 @@ final class Zoned extends DateTime implements Instant {
   }
 
   <<__Override>>
-  public function getISOWeekNumberImpl(): int {
+  protected function getISOWeekNumberImpl(): int {
     return (int)$this->format('%V');
   }
 
