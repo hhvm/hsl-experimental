@@ -1,4 +1,5 @@
 vendor/
+.var/
 *.hhast.parser-cache
 *.swp
 *~

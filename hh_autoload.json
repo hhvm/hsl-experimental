@@ -5,5 +5,5 @@
   "devRoots": [
     "tests/"
   ],
-  "parser": "ext-factparse"
+  "useFactsIfAvailable": true
 }
